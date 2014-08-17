@@ -8,45 +8,45 @@ using ServiceStack.Web;
 
 namespace Test.ServiceInterface
 {
-    [Route("/imagegraphics")]
-    public class GetImageGraphics
+    [Route("/image-stream")]
+    public class ImageAsStream
     {
         public string Format { get; set; }
     }
 
-    [Route("/imageresponse")]
-    public class GetImageResponse
+    [Route("/image-bytes")]
+    public class ImageAsBytes
     {
         public string Format { get; set; }
     }
 
-    [Route("/imagehttpresult")]
-    public class GetImageHttpResult
+    [Route("/image-result")]
+    public class ImageAsImageResult
     {
         public string Format { get; set; }
     }
 
-    [Route("/imageresult")]
-    public class GetImageResult
+    [Route("/image-response")]
+    public class ImageWriteToResponse
     {
         public string Format { get; set; }
     }
 
-    [Route("/imagefile")]
-    public class GetImageFile
+    [Route("/image-file")]
+    public class ImageAsFile
     {
         public string Format { get; set; }
     }
 
-    [Route("/imageredirect")]
-    public class GetImageRedirect
+    [Route("/image-redirect")]
+    public class ImageAsRedirect
     {
         public string Format { get; set; }
     }
 
     public class ImageService : Service
     {
-        public object Any(GetImageGraphics request)
+        public object Any(ImageAsStream request)
         {
             using (var image = new Bitmap(100, 100))
             {
@@ -60,22 +60,7 @@ namespace Test.ServiceInterface
             }
         }
 
-        public void Any(GetImageResponse request)
-        {
-            using (var image = new Bitmap(100, 100))
-            {
-                using (var g = Graphics.FromImage(image))
-                {
-                    g.Clear(request.Format.ToImageColor());
-                }
-
-                base.Response.ContentType = request.Format.ToImageMimeType();
-                image.Save(base.Response.OutputStream, request.Format.ToImageFormat());
-                base.Response.Close();
-            }
-        }
-
-        public object Any(GetImageHttpResult request)
+        public object Any(ImageAsBytes request)
         {
             using (var image = new Bitmap(100, 100))
             {
@@ -92,7 +77,7 @@ namespace Test.ServiceInterface
             }
         }
 
-        public object Any(GetImageResult request)
+        public object Any(ImageAsImageResult request)
         {
             var image = new Bitmap(100, 100);
             using (var g = Graphics.FromImage(image))
@@ -103,13 +88,28 @@ namespace Test.ServiceInterface
             }
         }
 
-        public object Any(GetImageFile request)
+        public void Any(ImageWriteToResponse request)
+        {
+            using (var image = new Bitmap(100, 100))
+            {
+                using (var g = Graphics.FromImage(image))
+                {
+                    g.Clear(request.Format.ToImageColor());
+                }
+
+                base.Response.ContentType = request.Format.ToImageMimeType();
+                image.Save(base.Response.OutputStream, request.Format.ToImageFormat());
+                base.Response.Close();
+            }
+        }
+
+        public object Any(ImageAsFile request)
         {
             var fileName = "sample.{0}".Fmt(request.Format ?? "png");
             return new HttpResult(new FileInfo("~/img/{0}".Fmt(fileName).MapHostAbsolutePath()), request.Format.ToImageMimeType());
         }
 
-        public object Any(GetImageRedirect request)
+        public object Any(ImageAsRedirect request)
         {
             var fileName = "sample.{0}".Fmt(request.Format ?? "png");
             return HttpResult.Redirect("/img/" + fileName);
