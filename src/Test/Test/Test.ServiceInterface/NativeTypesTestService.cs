@@ -6,11 +6,6 @@ namespace Test.ServiceInterface
 {
     public class NativeTypesTestService : Service
     {
-        public object Any(Hello request)
-        {
-            return new HelloResponse { Result = request.Name };
-        }
-
         public object Any(HelloAnnotated request)
         {
             return new HelloAnnotatedResponse { Result = request.Name };

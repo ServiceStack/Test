@@ -1,4 +1,5 @@
 ﻿using System;
+using ServiceStack;
 
 namespace Test
 {
@@ -6,6 +7,7 @@ namespace Test
     {
         protected void Application_Start(object sender, EventArgs e)
         {
+            Licensing.RegisterLicenseFromFileIfExists(@"~/appsettings.license.txt".MapHostAbsolutePath());
             new AppHost().Init();
         }
     }
