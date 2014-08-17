@@ -20,8 +20,8 @@ namespace Test.ServiceInterface
         public string Format { get; set; }
     }
 
-    [Route("/image-result")]
-    public class ImageAsImageResult
+    [Route("/image-custom")]
+    public class ImageAsCustomResult
     {
         public string Format { get; set; }
     }
@@ -77,7 +77,7 @@ namespace Test.ServiceInterface
             }
         }
 
-        public object Any(ImageAsImageResult request)
+        public object Any(ImageAsCustomResult request)
         {
             var image = new Bitmap(100, 100);
             using (var g = Graphics.FromImage(image))
