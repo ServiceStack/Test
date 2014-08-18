@@ -65,6 +65,7 @@
     <Compile Include="MyServices.cs" />
     <Compile Include="NativeTypesTestService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PingService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
