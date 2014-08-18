@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using ServiceStack;
+using ServiceStack.Text;
 using ServiceStack.Web;
 
 namespace Test.ServiceInterface
@@ -42,6 +43,19 @@ namespace Test.ServiceInterface
     public class ImageAsRedirect
     {
         public string Format { get; set; }
+    }
+
+    [Route("/image-draw/{Name}")]
+    public class DrawImage
+    {
+        public string Name { get; set; }
+        public string Format { get; set; }
+
+        public int? Width { get; set; }
+        public int? Height { get; set; }
+        public int? FontSize { get; set; }
+        public string Foreground { get; set; }
+        public string Background { get; set; }
     }
 
     public class ImageService : Service
@@ -113,6 +127,40 @@ namespace Test.ServiceInterface
         {
             var fileName = "sample.{0}".Fmt(request.Format ?? "png");
             return HttpResult.Redirect("/img/" + fileName);
+        }
+
+        public Stream Get(DrawImage request)
+        {
+            var width = request.Width.GetValueOrDefault(640);
+            var height = request.Height.GetValueOrDefault(360);
+            var bgColor = request.Background != null ? Color.FromName(request.Background) : Color.ForestGreen;
+            var fgColor = request.Foreground != null ? Color.FromName(request.Foreground) : Color.White;
+
+            var image = new Bitmap(width, height);
+            using (var g = Graphics.FromImage(image))
+            {
+                g.Clear(bgColor);
+
+                var drawString = "Hello, {0}!".Fmt(request.Name);
+                var drawFont = new Font("Times", request.FontSize.GetValueOrDefault(40));
+                var drawBrush = new SolidBrush(fgColor);
+                var drawRect = new RectangleF(0, 0, width, height);
+
+                var drawFormat = new StringFormat
+                {
+                    LineAlignment = StringAlignment.Center,
+                    Alignment = StringAlignment.Center
+                };
+
+                g.DrawString(drawString, drawFont, drawBrush, drawRect, drawFormat);
+
+                var imageFmt = request.Format.ToImageFormat();
+                base.Response.ContentType = imageFmt.ToImageMimeType();
+
+                var ms = new MemoryStream();
+                image.Save(ms, imageFmt);
+                return ms;
+            }
         }
     }
 
