@@ -61,6 +61,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -75,6 +76,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="LocalTest.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LocalTest.tt</DependentUpon>
+    </Compile>
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -89,7 +95,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="LocalTest.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>LocalTest.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

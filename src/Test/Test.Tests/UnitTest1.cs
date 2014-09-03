@@ -30,14 +30,14 @@ namespace Test.Tests
             appHost.Dispose();
         }
 
-        [Test]
-        public void TestMethod1()
-        {
-            var service = appHost.Container.Resolve<MyServices>();
+        //[Test]
+        //public void TestMethod1()
+        //{
+        //    var service = appHost.Container.Resolve<MyServices>();
 
-            var response = (HelloResponse)service.Any(new Hello { Name = "World" });
+        //    var response = (HelloResponse)service.Any(new Hello { Name = "World" });
 
-            Assert.That(response.Result, Is.EqualTo("Hello, World!"));
-        }
+        //    Assert.That(response.Result, Is.EqualTo("Hello, World!"));
+        //}
     }
 }
