@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Login";
+    var userName = IsAuthenticated
+        ? base.SessionAs<CustomUserSession>().UserName
+        : "test";
+}
+        
+@if (IsAuthenticated)
+{
+    <h2 style="color: green">Authenticated!</h2>
+    <p>UserName: @userName</p>
+}
+else
+{
+    <h2 style="color: red">Not Authenticated</h2>
+}
+
+<h1>Login</h1>
+
+<form action="/auth/credentials">
+    <input type="hidden" name="Continue" value="@Request.QueryString["redirect"]"/>
+    <h4>Username</h4>
+    <input type="text" name="UserName" value="@userName" />
+    <h4>Password</h4>
+    <input type="text" name="Password" value="@userName" />
+    <input type="submit"/>
+</form>
+        
+<a href="/requires-role"><h3>/requires-role</h3></a>
+<a href="/auth/logout"><h3>/auth/logout</h3></a>
