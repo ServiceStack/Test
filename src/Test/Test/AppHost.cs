@@ -3,10 +3,12 @@ using System.IO;
 using Funq;
 using ServiceStack;
 using ServiceStack.Auth;
+using ServiceStack.Caching;
 using ServiceStack.Configuration;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
 using ServiceStack.Razor;
+using ServiceStack.Redis;
 using Test.ServiceInterface;
 
 namespace Test
@@ -45,6 +47,10 @@ namespace Test
                     new BasicAuthProvider(AppSettings),     
                     new CredentialsAuthProvider(AppSettings),
                 }));
+
+            container.Register<IRedisClientsManager>(c =>
+                new PooledRedisClientManager("localhost:6379"));
+            container.Register(c => c.Resolve<IRedisClientsManager>().GetCacheClient());
 
             container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(
                 AppSettings.GetString("AppDb"), PostgreSqlDialect.Provider));
@@ -88,8 +94,4 @@ namespace Test
         }
     }
 
-    public class CustomUserSession : AuthUserSession
-    {
-        public string CustomName { get; set; }
-    }
 }
