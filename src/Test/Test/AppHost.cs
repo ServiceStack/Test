@@ -35,6 +35,8 @@ namespace Test
         /// <param name="container"></param>
         public override void Configure(Container container)
         {
+            SetConfig(new HostConfig { DebugMode = true });
+
             //Config examples
             Plugins.Add(new PostmanFeature());
             Plugins.Add(new CorsFeature());

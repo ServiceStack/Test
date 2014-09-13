@@ -1,5 +1,7 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using ServiceStack;
+using ServiceStack.Auth;
 
 namespace Test.ServiceInterface
 {
@@ -7,6 +9,23 @@ namespace Test.ServiceInterface
     {
         [DataMember]
         public string CustomName { get; set; }
+
+        [DataMember]
+        public string CustomInfo { get; set; }
+
+        public override void OnAuthenticated(IServiceBase authService, IAuthSession session, 
+            IAuthTokens tokens, Dictionary<string, string> authInfo)
+        {
+            var unAuthInfo = authService.GetSessionBag().Get<UnAuthInfo>();
+
+            if (unAuthInfo != null)
+                this.CustomInfo = unAuthInfo.CustomInfo;
+        }
+    }
+
+    public class UnAuthInfo
+    {
+        public string CustomInfo { get; set; }
     }
 
     [Route("/session")]
@@ -24,6 +43,8 @@ namespace Test.ServiceInterface
     {
         public CustomUserSession Result { get; set; }
 
+        public UnAuthInfo UnAuthInfo { get; set; }
+
         public ResponseStatus ResponseStatus { get; set; }
     }
 
@@ -34,6 +55,7 @@ namespace Test.ServiceInterface
             return new GetSessionResponse
             {
                 Result = SessionAs<CustomUserSession>(),
+                UnAuthInfo = SessionBag.Get<UnAuthInfo>(typeof(UnAuthInfo).Name),
             };
         }
 
@@ -42,11 +64,16 @@ namespace Test.ServiceInterface
             var session = SessionAs<CustomUserSession>();
             session.CustomName = request.CustomName;
 
+            var unAuthInfo = SessionBag.Get<UnAuthInfo>() ?? new UnAuthInfo();
+            unAuthInfo.CustomInfo = request.CustomName + " - CustomInfo";
+            SessionBag.Set(unAuthInfo);
+
             this.SaveSession(session);
 
             return new GetSessionResponse
             {
                 Result = SessionAs<CustomUserSession>(),
+                UnAuthInfo = unAuthInfo,
             };
         }
     }
