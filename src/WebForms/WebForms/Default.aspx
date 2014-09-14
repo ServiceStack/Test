@@ -46,6 +46,10 @@
             <th>Edit Session Info</th>
             <td><a href="/api/session/edit/ZZZ">/api/session/edit/ZZZ</a></td>
         </tr>
+        <tr>
+            <th>AuthOnly Page</th>
+            <td><a href="/AuthOnly.aspx">/AuthOnly.aspx</a></td>
+        </tr>
     </table>
 
 </asp:Content>

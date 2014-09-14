@@ -108,6 +108,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AuthOnly.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="MasterPage.master" />
     <None Include="Properties\PublishProfiles\WebDeploy.pubxml" />
@@ -125,6 +126,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppHost.cs" />
+    <Compile Include="AuthOnly.aspx.cs">
+      <DependentUpon>AuthOnly.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AuthOnly.aspx.designer.cs">
+      <DependentUpon>AuthOnly.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
