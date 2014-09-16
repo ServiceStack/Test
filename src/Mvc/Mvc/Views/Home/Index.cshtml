@@ -37,6 +37,8 @@
 
         <form action="/Home/Login">
             @Html.ValidationSummary()
+            <input type="hidden" name="redirect" value="@Request.QueryString["redirect"]"/>
+
             <div class="form-group">
                 <input class="form-control input-lg" id="userName" name="userName" type="text" placeholder="UserName" value="test">
             </div>
@@ -70,6 +72,10 @@
             <tr>
                 <th>AuthOnly Page</th>
                 <td><a href="/AuthOnly">/AuthOnly</a></td>
+            </tr>
+            <tr>
+                <th>Requires Role Page</th>
+                <td><a href="/RequiresRole">/RequiresRole</a></td>
             </tr>
         </table>
 

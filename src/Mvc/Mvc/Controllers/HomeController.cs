@@ -19,7 +19,7 @@ namespace Mvc.Controllers
             return View(session);
         }
 
-        public ActionResult Login(string userName, string password)
+        public ActionResult Login(string userName, string password, string redirect=null)
         {
             if (ModelState.IsValid)
             {
@@ -38,7 +38,7 @@ namespace Mvc.Controllers
                         // add ASP.NET auth cookie
                         FormsAuthentication.SetAuthCookie(userName, true);
 
-                        return Redirect("/");
+                        return Redirect(string.IsNullOrEmpty(redirect) ? "/" : redirect);
                     }
                 }
                 catch (Exception ex)
