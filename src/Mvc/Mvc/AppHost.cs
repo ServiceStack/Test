@@ -48,6 +48,7 @@ namespace Mvc
 
             //Set MVC to use the same Funq IOC as ServiceStack
             ControllerBuilder.Current.SetControllerFactory(new FunqControllerFactory(container));
+            ServiceStackController.LoginPath = "/";
 
             //Config examples
             Plugins.Add(new PostmanFeature());

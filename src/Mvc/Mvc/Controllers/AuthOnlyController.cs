@@ -5,7 +5,7 @@ using ServiceStack.Mvc;
 
 namespace Mvc.Controllers
 {
-    [Authenticate(HtmlRedirect = "/")]
+    [Authenticate]
     public class AuthOnlyController : ServiceStackController 
     {
         public ActionResult Index()
