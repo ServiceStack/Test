@@ -1,6 +1,7 @@
-﻿@using Mvc.ServiceModel
+﻿@model Mvc.ServiceInterface.CustomUserSession
 @{
     ViewBag.Title = "Home Page";
+    var userName = Model.UserName ?? "test";        
 }
 
 @section scripts {
@@ -40,10 +41,10 @@
             <input type="hidden" name="redirect" value="@Request.QueryString["redirect"]"/>
 
             <div class="form-group">
-                <input class="form-control input-lg" id="userName" name="userName" type="text" placeholder="UserName" value="test">
+                <input class="form-control input-lg" id="userName" name="userName" type="text" placeholder="UserName" value="@userName">
             </div>
             <div class="form-group form-inline">
-                <input class="form-control input-lg" id="password" name="password" type="text" placeholder="Password" value="test">
+                <input class="form-control input-lg" id="password" name="password" type="text" placeholder="Password" value="@userName">
                 <button type="submit" class="btn btn-lg btn-default">Login</button>
             </div>
         </form>
