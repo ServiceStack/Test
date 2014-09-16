@@ -3,6 +3,7 @@ using System.Web.Security;
 using ServiceStack;
 using ServiceStack.AspNet;
 using ServiceStack.Auth;
+using ServiceStack.Text;
 
 namespace WebForms
 {
@@ -25,7 +26,7 @@ namespace WebForms
                         provider = CredentialsAuthProvider.Name,
                         UserName = txtUserName.Text,
                         Password = txtPassword.Text,
-                        RememberMe = true
+                        RememberMe = true,
                     });
 
                     // add ASP.NET auth cookie

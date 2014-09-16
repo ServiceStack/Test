@@ -1,0 +1,77 @@
+﻿@using Mvc.ServiceModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+@section scripts {
+<script type="text/javascript">
+    $.getJSON("/api/auth", function (r) {
+        var html = "<h4 style='color:green'>Authenticated!</h4>"
+                    + "<table>"
+                    + $.map(r, function(k, v) {
+                        return "<tr><th>" + v + "<th>"
+                            + "<td>" + (typeof k == 'string' ? k : JSON.stringify(k)) + "</td></tr>";
+                    }).join('')
+                    + "</table>";
+        $("#status").html(html);
+    }).error(function () {
+        $("#status").html("<h4 style='color:red'>Not Authenticated</h4>");
+    });
+</script>    
+}
+
+<div class="jumbotron">
+    <h1>ASP.NET</h1>
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        
+        @if (Model.IsAuthenticated) {
+            <h2 style="color: green">Authenticated!</h2>  
+        } else {
+            <h2 style="color: red">Not Authenticated</h2>  
+        }
+
+        <form action="/Home/Login">
+            @Html.ValidationSummary()
+            <div class="form-group">
+                <input class="form-control input-lg" id="userName" name="userName" type="text" placeholder="UserName" value="test">
+            </div>
+            <div class="form-group form-inline">
+                <input class="form-control input-lg" id="password" name="password" type="text" placeholder="Password" value="test">
+                <button type="submit" class="btn btn-lg btn-default">Login</button>
+            </div>
+        </form>
+
+        <form action="/Home/Logout">
+            <button type="submit" class="btn btn-default">Logout</button>
+        </form>
+
+    </div>
+    <div class="col-lg-6">
+
+        <h2 style="margin: 30px 0 0 0;">ServiceStack Status</h2>
+        <div id="status"></div>
+
+        <h4>ServiceStack Session Links</h4>
+    
+        <table>
+            <tr>
+                <th>View Session Info</th>
+                <td><a href="/api/session">/api/session</a></td>
+            </tr>
+            <tr>
+                <th>Edit Session Info</th>
+                <td><a href="/api/session/edit/ZZZ">/api/session/edit/ZZZ</a></td>
+            </tr>
+            <tr>
+                <th>AuthOnly Page</th>
+                <td><a href="/AuthOnly">/AuthOnly</a></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
