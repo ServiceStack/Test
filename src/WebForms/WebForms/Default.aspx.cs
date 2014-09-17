@@ -3,7 +3,6 @@ using System.Web.Security;
 using ServiceStack;
 using ServiceStack.AspNet;
 using ServiceStack.Auth;
-using ServiceStack.Text;
 
 namespace WebForms
 {
@@ -11,6 +10,11 @@ namespace WebForms
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(txtUserName.Text))
+            {
+                var session = GetSession();
+                txtUserName.Text = txtPassword.Text = session.UserName ?? "test";
+            }
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
@@ -31,6 +35,12 @@ namespace WebForms
 
                     // add ASP.NET auth cookie
                     FormsAuthentication.SetAuthCookie(txtUserName.Text, true);
+
+                    var redirectUrl = Request.QueryString["redirect"];
+                    if (!string.IsNullOrEmpty(redirectUrl))
+                    {
+                        Response.Redirect(redirectUrl);
+                    }
                 }
             }
             catch (Exception ex)

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Funq;
+using ServiceStack.AspNet;
 using ServiceStack.Auth;
 using ServiceStack.Configuration;
 using ServiceStack.Data;
@@ -47,7 +48,9 @@ namespace WebForms
                 {
                     new BasicAuthProvider(AppSettings),     
                     new CredentialsAuthProvider(AppSettings),
-                }));
+                }) {
+                    HtmlRedirect = "/"
+                });
 
             container.Register<IRedisClientsManager>(c =>
                 new PooledRedisClientManager("localhost:6379"));

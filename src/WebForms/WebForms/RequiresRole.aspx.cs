@@ -4,12 +4,11 @@ using ServiceStack.AspNet;
 
 namespace WebForms
 {
-    [Authenticate]
-    public partial class AuthOnly : ServiceStackPage
+    [RequiredRole("TheRole")]
+    public partial class RequiresRole : ServiceStackPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
         }
     }
 }

@@ -10,8 +10,8 @@
         <h2 style="color: red">Not Authenticated</h2>  
     <% }  %>
 
-    <asp:TextBox ID="txtUserName" runat="server" Text="test"></asp:TextBox>
-    <asp:TextBox ID="txtPassword" runat="server" Text="test"></asp:TextBox>
+    <asp:TextBox ID="txtUserName" runat="server"></asp:TextBox>
+    <asp:TextBox ID="txtPassword" runat="server"></asp:TextBox>
     <asp:Button ID="btnLogin" runat="server" OnClick="btnLogin_Click" Text="Login" />
     <asp:Button ID="btnLogout" runat="server" OnClick="btnLogout_Click" Text="Logout" />
         
@@ -49,6 +49,10 @@
         <tr>
             <th>AuthOnly Page</th>
             <td><a href="/AuthOnly.aspx">/AuthOnly.aspx</a></td>
+        </tr>
+        <tr>
+            <th>Requires Role Page</th>
+            <td><a href="/RequiresRole.aspx">/RequiresRole.aspx</a></td>
         </tr>
     </table>
 

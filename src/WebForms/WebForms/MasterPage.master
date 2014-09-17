@@ -40,12 +40,16 @@
             text-align: left;
             padding: 0 5px;
         }
+        h1 a {
+            color: #999;
+            text-decoration: none;
+        }
     </style>
     <script src="Scripts/jquery-2.1.1.min.js"></script>
     <asp:ContentPlaceHolder id="Head" runat="server"></asp:ContentPlaceHolder>
 </head>
 <body>
-    <h1 class="navbar">ServiceStack with WebForms</h1>
+    <h1 class="navbar"><a href="/">ServiceStack with WebForms</a></h1>
     <form id="form" runat="server">
         <asp:ContentPlaceHolder id="Body" runat="server"></asp:ContentPlaceHolder>
     </form>
