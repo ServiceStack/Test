@@ -48,7 +48,6 @@ namespace Mvc
 
             //Set MVC to use the same Funq IOC as ServiceStack
             ControllerBuilder.Current.SetControllerFactory(new FunqControllerFactory(container));
-            ServiceStackController.LoginPath = "/";
 
             //Config examples
             Plugins.Add(new PostmanFeature());
@@ -59,7 +58,9 @@ namespace Mvc
                 {
                     new BasicAuthProvider(AppSettings),     
                     new CredentialsAuthProvider(AppSettings),
-                }));
+                }) {
+                    HtmlRedirect = "/"
+                });
 
             container.Register<IRedisClientsManager>(c =>
                 new PooledRedisClientManager("localhost:6379"));
