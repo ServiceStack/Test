@@ -55,6 +55,52 @@
             <td><a href="/RequiresRole.aspx">/RequiresRole.aspx</a></td>
         </tr>
     </table>
+    
+    <h2 style="margin: 30px 0 0 0">Register a new User</h2>
+    
+    <% if (!string.IsNullOrEmpty(Request.QueryString["NewUserCreated"])) { %>
+        <h3 style="color:green">Success! new '<%= Request.QueryString["NewUserCreated"] %>' account was created.</h3>
+    <% } %>
+    
+    <asp:Literal ID="litRegisterError" runat="server"></asp:Literal>
+
+    <table>
+        <tr>
+            <th>Email</th>
+            <td>
+                <asp:TextBox ID="txtEmail" ToolTip="Email" runat="server"></asp:TextBox>
+                <asp:Literal ID="litEmailError" runat="server"></asp:Literal>
+            </td>
+        </tr>
+        <tr>
+            <th>Password</th>
+            <td>
+                <asp:TextBox ID="txtNewPassword" ToolTip="Password" runat="server"></asp:TextBox>
+                <asp:Literal ID="litPasswordError" runat="server"></asp:Literal>
+            </td>
+        </tr>
+        <tr>
+            <th>First Name</th>
+            <td>
+                <asp:TextBox ID="txtFirstName" ToolTip="FirstName" runat="server"></asp:TextBox>
+                <asp:Literal ID="litFirstNameError" runat="server"></asp:Literal>
+            </td>
+        </tr>
+        <tr>
+            <th>Last Name</th>
+            <td>
+                <asp:TextBox ID="txtLastName" ToolTip="LastName" runat="server"></asp:TextBox>
+                <asp:Literal ID="litLastNameError" runat="server"></asp:Literal>
+            </td>
+        </tr>
+        <tr>
+            <th></th>
+            <td>
+                <asp:Button ID="btnRegister" runat="server" OnClick="btnRegister_Click" Text="Register New User" />
+            </td>
+        </tr>
+    </table>
+
 
 </asp:Content>
 

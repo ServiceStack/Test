@@ -49,7 +49,8 @@ namespace WebForms
                     new BasicAuthProvider(AppSettings),     
                     new CredentialsAuthProvider(AppSettings),
                 }) {
-                    HtmlRedirect = "/"
+                    IncludeRegistrationService = true,
+                    HtmlRedirect = "/",
                 });
 
             container.Register<IRedisClientsManager>(c =>

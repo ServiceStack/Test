@@ -40,6 +40,9 @@
             text-align: left;
             padding: 0 5px;
         }
+        th, td {
+            vertical-align: top;
+        }
         h1 a {
             color: #999;
             text-decoration: none;
