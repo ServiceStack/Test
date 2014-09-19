@@ -59,7 +59,8 @@ namespace Mvc
                     new BasicAuthProvider(AppSettings),     
                     new CredentialsAuthProvider(AppSettings),
                 }) {
-                    HtmlRedirect = "/"
+                    HtmlRedirect = "/",
+                    IncludeRegistrationService = true,
                 });
 
             container.Register<IRedisClientsManager>(c =>

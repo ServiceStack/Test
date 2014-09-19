@@ -1,10 +1,12 @@
 ﻿@model Mvc.ServiceInterface.CustomUserSession
 @{
     ViewBag.Title = "Home Page";
-    var userName = Model.UserName ?? "test";        
+    var userName = Model.UserName ?? Model.Email ?? "test";        
 }
 
 @section scripts {
+<script src="/api/js/ss-utils.js"></script>
+
 <script type="text/javascript">
     $.getJSON("/api/auth", function (r) {
         var html = "<h4 style='color:green'>Authenticated!</h4>"
@@ -17,6 +19,12 @@
         $("#status").html(html);
     }).error(function () {
         $("#status").html("<h4 style='color:red'>Not Authenticated</h4>");
+    });
+
+    $("#form-register").bindForm({
+        success: function (r) {
+            location.href = '/';
+        }
     });
 </script>    
 }
@@ -44,7 +52,7 @@
                 <input class="form-control input-lg" id="userName" name="userName" type="text" placeholder="UserName" value="@userName">
             </div>
             <div class="form-group form-inline">
-                <input class="form-control input-lg" id="password" name="password" type="text" placeholder="Password" value="@userName">
+                <input class="form-control input-lg" id="password" name="password" type="text" placeholder="Password" value="test">
                 <button type="submit" class="btn btn-lg btn-default">Login</button>
             </div>
         </form>
@@ -79,6 +87,37 @@
                 <td><a href="/RequiresRole">/RequiresRole</a></td>
             </tr>
         </table>
-
     </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-lg-6">
+        <h2>Register New User</h2>
+        <form id="form-register" action="/api/register" method="POST">
+            <div class="form-group">
+                <input class="form-control input-lg" type="text" name="FirstName" value="New" placeholder="First Name">
+                <span class="help-block"></span>
+            </div>
+            <div class="form-group">
+                <input class="form-control input-lg" type="text" name="LastName" value="User" placeholder="Last Name">
+                <span class="help-block"></span>
+            </div>
+            <div class="form-group">
+                <input class="form-control input-lg" type="text" name="Email" value="new.user@gmail.com" placeholder="Email">
+                <span class="help-block"></span>
+            </div>
+            <div class="form-group">
+                <input class="form-control input-lg" type="text" name="Password" value="test" placeholder="Password">
+                <span class="help-block"></span>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="chkAutoLogin" name="AutoLogin" value="true" checked="checked">
+                <label for="chkAutoLogin">Auto Login</label>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-lg btn-default" type="submit">Register</button>
+            </div>
+            <div class="clearfix"></div>
+        </form>            
+    </div>    
 </div>
