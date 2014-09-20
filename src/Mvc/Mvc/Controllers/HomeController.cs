@@ -1,22 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using Mvc.Models;
 using Mvc.ServiceInterface;
 using ServiceStack;
 using ServiceStack.Auth;
 using ServiceStack.Mvc;
+using ServiceStack.OrmLite;
 
 namespace Mvc.Controllers
 {
     public class HomeController : ServiceStackController
     {
+        public HomeViewModel GetViewModel()
+        {
+            var response = new HomeViewModel { Session = SessionAs<CustomUserSession>() };
+            if (response.Session.UserAuthId != null)
+            {
+                var userAuthId = int.Parse(response.Session.UserAuthId);
+                response.UserAuths = Db.Select<UserAuth>(x => x.Id == userAuthId);
+                response.UserAuthDetails = Db.Select<UserAuthDetails>(x => x.UserAuthId == userAuthId);
+            }
+            return response;
+        }
+
         public ActionResult Index()
         {
-            var session = SessionAs<CustomUserSession>();
-            return View(session);
+            return View(GetViewModel());
         }
 
         public ActionResult Login(string userName, string password, string redirect=null)
@@ -47,8 +57,7 @@ namespace Mvc.Controllers
                 }
             }
 
-            var session = SessionAs<CustomUserSession>();
-            return View("Index", session);
+            return View("Index", GetViewModel());
         }
 
         public ActionResult Logout()

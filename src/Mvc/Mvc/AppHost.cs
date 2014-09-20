@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.DirectoryServices.AccountManagement;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Web;
 using System.Web.Mvc;
 using Funq;
 using ServiceStack;
 using ServiceStack.Auth;
+using ServiceStack.Authentication.OAuth2;
+using ServiceStack.Authentication.OpenId;
 using ServiceStack.Configuration;
 using ServiceStack.Data;
 using ServiceStack.Mvc;
@@ -56,9 +55,24 @@ namespace Mvc
             Plugins.Add(new AuthFeature(() => new CustomUserSession(),
                 new IAuthProvider[]
                 {
-                    new BasicAuthProvider(AppSettings),     
-                    new CredentialsAuthProvider(AppSettings),
-                }) {
+                    new AspNetWindowsAuthProvider(this) {  // Integrated Windows Auth
+                        LoadUserAuthFilter = LoadUserAuthInfo,
+                        AllowAllWindowsAuthUsers = true
+                    }, 
+                    new CredentialsAuthProvider(),        //HTML Form post of UserName/Password credentials
+                    new BasicAuthProvider(),                    //Sign-in with HTTP Basic Auth
+                    new DigestAuthProvider(AppSettings),        //Sign-in with HTTP Digest Auth
+                    new TwitterAuthProvider(AppSettings),       //Sign-in with Twitter
+                    new FacebookAuthProvider(AppSettings),      //Sign-in with Facebook
+                    new YahooOpenIdOAuthProvider(AppSettings),  //Sign-in with Yahoo OpenId
+                    new OpenIdOAuthProvider(AppSettings),       //Sign-in with Custom OpenId
+                    new GoogleOAuth2Provider(AppSettings),      //Sign-in with Google OAuth2 Provider
+                    new LinkedInOAuth2Provider(AppSettings),    //Sign-in with LinkedIn OAuth2 Provider
+                    new GithubAuthProvider(AppSettings),        //Sign-in with GitHub OAuth Provider
+                    new YandexAuthProvider(AppSettings),        //Sign-in with Yandex OAuth Provider        
+                    new VkAuthProvider(AppSettings),            //Sign-in with VK.com OAuth Provider 
+                })
+                {
                     HtmlRedirect = "/",
                     IncludeRegistrationService = true,
                 });
@@ -77,35 +91,27 @@ namespace Mvc
                 });
 
             var authRepo = (OrmLiteAuthRepository)container.Resolve<IAuthRepository>();
-            authRepo.DropAndReCreateTables();
-
-            CreateUser(authRepo, 1, "test", "test", new List<string> { "TheRole" }, new List<string> { "ThePermission" });
-            CreateUser(authRepo, 2, "test2", "test2");
-
+            MyServices.ResetUsers(authRepo);
         }
 
-        private void CreateUser(OrmLiteAuthRepository authRepo,
-            int id, string username, string password, List<string> roles = null, List<string> permissions = null)
+        public void LoadUserAuthInfo(AuthUserSession userSession, IAuthTokens tokens, Dictionary<string, string> authInfo)
         {
-            string hash;
-            string salt;
-            new SaltedHash().GetHashAndSaltString(password, out hash, out salt);
+            if (userSession == null)
+                return;
 
-            authRepo.CreateUserAuth(new UserAuth
+            using (var pc = new PrincipalContext(ContextType.Domain))
             {
-                Id = id,
-                DisplayName = username + " DisplayName",
-                Email = username + "@gmail.com",
-                UserName = username,
-                FirstName = "First " + username,
-                LastName = "Last " + username,
-                PasswordHash = hash,
-                Salt = salt,
-                Roles = roles,
-                Permissions = permissions
-            }, password);
+                var user = UserPrincipal.FindByIdentity(pc, userSession.UserAuthName);
 
-            authRepo.AssignRoles(id.ToString(), roles, permissions);
+                tokens.DisplayName = user.DisplayName;
+                tokens.Email = user.EmailAddress;
+                tokens.FirstName = user.GivenName;
+                tokens.LastName = user.Surname;
+                tokens.FullName = string.IsNullOrWhiteSpace(user.MiddleName)
+                    ? "{0} {1}".Fmt(user.GivenName, user.Surname)
+                    : "{0} {1} {2}".Fmt(user.GivenName, user.MiddleName, user.Surname);
+                tokens.PhoneNumber = user.VoiceTelephoneNumber;
+            }
         }
     }
 

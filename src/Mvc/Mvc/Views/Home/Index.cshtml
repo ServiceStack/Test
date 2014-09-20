@@ -1,48 +1,70 @@
-﻿@model Mvc.ServiceInterface.CustomUserSession
+﻿@using ServiceStack.Html
+@model Mvc.Models.HomeViewModel
 @{
     ViewBag.Title = "Home Page";
-    var userName = Model.UserName ?? Model.Email ?? "test";        
+    var session = Model.Session;
+    var userName = session.UserName ?? session.Email ?? "test";        
 }
 
 @section scripts {
 <script src="/api/js/ss-utils.js"></script>
+<script src="/Scripts/autogrid.js"></script>
 
-<script type="text/javascript">
-    $.getJSON("/api/auth", function (r) {
-        var html = "<h4 style='color:green'>Authenticated!</h4>"
-                    + "<table>"
-                    + $.map(r, function(k, v) {
-                        return "<tr><th>" + v + "<th>"
-                            + "<td>" + (typeof k == 'string' ? k : JSON.stringify(k)) + "</td></tr>";
-                    }).join('')
-                    + "</table>";
-        $("#status").html(html);
-    }).error(function () {
-        $("#status").html("<h4 style='color:red'>Not Authenticated</h4>");
-    });
-
-    $("#form-register").bindForm({
-        success: function (r) {
-            location.href = '/';
+    <script type="text/javascript">
+        var hashVars = $.ss.queryString(location.hash.replace('#','?'));
+        if (hashVars['f']) {
+            $("#autherror").html($.ss.humanize(hashVars['f']));
         }
-    });
-</script>    
+
+        $.getJSON("/api/auth", function (r) {
+            var html = "<h4 class='success'>Authenticated!</h4>"
+                + "<table>"
+                + $.map(r, function(k, v) {
+                    return "<tr><th>" + v + "<th>"
+                        + "<td>" + (typeof k == 'string' ? k : JSON.stringify(k)) + "</td></tr>";
+                }).join('')
+                + "</table>";
+            $("#status").html(html);
+        }).error(function () {
+            $("#status").html("<h4 class='error'>Not Authenticated</h4>");
+        });
+
+        $("#form-register").bindForm({
+            success: function (r) { location.href = '/'; }
+        });
+
+        var html = autogrid( @(Model.UserAuths.AsRawJson()) );
+        $("#userauths").html(html);
+        html = autogrid( @(Model.UserAuthDetails.AsRawJson()) );
+        $("#userauthdetails").html(html);
+    </script>    
 }
 
 <div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <h1>ASP.NET MVC with ServiceStack</h1>
+    <p class="lead">
+        Make use of ServiceStack's clean, high-performance, testable components integrated within MVC: 
+        <ul>
+            <li>Simple, declarative <a href="https://github.com/ServiceStack/ServiceStack/wiki/Authentication-and-authorization">Multi-Authentication Provider model</a></li>
+            <li>Distributed and In-Memory <a href="https://github.com/ServiceStack/ServiceStack/wiki/Caching">Caching Providers</a></li>
+            <li>Typed and dynamic <a href="https://github.com/ServiceStack/ServiceStack/wiki/Sessions">Sessions</a></li>
+            <li>Clean, Flexible, Modifyable <a href="https://github.com/ServiceStack/ServiceStack/wiki/AppSettings">AppSettings Config</a></li>
+            <li><a href="https://github.com/ServiceStack/ServiceStack.OrmLite">OrmLite</a> - Fast, Simple, Typed ORM</li>
+            <li><a href="https://github.com/ServiceStack/ServiceStack.Redis">ServiceStack.Redis</a> - Full-featured Redis Client</li>
+            <li>Offload tasks to <a href="https://github.com/ServiceStack/ServiceStack/wiki/Messaging">Redis or RabbitMQ MQ Servers</a></li>
+        </ul>
+    </p>
 </div>
 
 <div class="row">
     <div class="col-lg-6">
         
-        @if (Model.IsAuthenticated) {
-            <h2 style="color: green">Authenticated!</h2>  
+        @if (session.IsAuthenticated) {
+            <h2 class="success">Authenticated!</h2>  
         } else {
-            <h2 style="color: red">Not Authenticated</h2>  
+            <h2 class="error">Not Authenticated</h2>
         }
+        <div id="autherror" class="error"></div>
 
         <form action="/Home/Login">
             @Html.ValidationSummary()
@@ -64,19 +86,20 @@
     </div>
     <div class="col-lg-6">
 
-        <h2 style="margin: 30px 0 0 0;">ServiceStack Status</h2>
+        <h2 style="margin: 30px 0 0 0;">ServiceStack Status (Ajax)</h2>
         <div id="status"></div>
 
-        <h4>ServiceStack Session Links</h4>
-    
-        <table>
+        <table class="table table-striped" style="margin: 20px 0 0 0">
+            <tr>
+                <th colspan="2">ServiceStack Auth &amp; Session Links:</th>
+            </tr>
             <tr>
                 <th>View Session Info</th>
                 <td><a href="/api/session">/api/session</a></td>
             </tr>
             <tr>
                 <th>Edit Session Info</th>
-                <td><a href="/api/session/edit/ZZZ">/api/session/edit/ZZZ</a></td>
+                <td><a href="/api/session/edit/ANYTEXT">/api/session/edit/ANYTEXT</a></td>
             </tr>
             <tr>
                 <th>AuthOnly Page</th>
@@ -86,13 +109,52 @@
                 <th>Requires Role Page</th>
                 <td><a href="/RequiresRole">/RequiresRole</a></td>
             </tr>
+            <tr>
+                <th>Reset All User Info</th>
+                <td><a href="/api/reset">/api/reset</a></td>
+            </tr>
         </table>
     </div>
 </div>
 <hr/>
 <div class="row">
     <div class="col-lg-6">
-        <h2>Register New User</h2>
+        <h3>Sign in with 3rd Party Providers</h3>
+        <div style="float: left; width: 250px; padding: 0 0 0 0;">
+            <a class="btn btn-block btn-social btn-twitter" href="/api/auth/twitter">
+                <b class="fa fa-twitter">T</b>Sign in with Twitter
+            </a>
+            <a class="btn btn-block btn-social btn-facebook" href="/api/auth/facebook">
+                <b class="fa fa-facebook">fb</b>Sign in with Facebook
+            </a>
+            <a class="btn btn-block btn-social btn-github" href="/api/auth/github">
+                <b class="fa fa-github"></b>Sign in with GitHub
+            </a>
+            <a class="btn btn-block btn-social btn-google-plus" href="/api/auth/GoogleOAuth">
+                <b class="fa fa-google-plus">G</b>Sign in with Google
+            </a>
+            <a class="btn btn-block btn-social btn-yahoo" href="/api/auth/YahooOpenId">
+                <b class="fa fa-yahoo">Y!</b>Sign in with Yahoo
+            </a>
+            <a class="btn btn-block btn-social btn-linkedin" href="/api/auth/LinkedIn">
+                <b class="fa fa-linkedin">in</b>Sign in with LinkedIn
+            </a>
+            <a class="btn btn-block btn-social btn-vk" href="/api/auth/vkcom">
+                <b class="fa fa-vk"></b>Sign in with VK
+            </a>
+            <a class="btn btn-block btn-social btn-yandex" href="/api/auth/Yandex">
+                <b class="fa fa-yandex">Y</b>Sign in with <b>Y</b>andex
+            </a>
+
+            <br/>
+
+            <a class="btn btn-block btn-social btn-windows" href="/api/auth/windowsauth">
+                Sign in with Windows Auth
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <h3>Register New User</h3>
         <form id="form-register" action="/api/register" method="POST">
             <div class="form-group">
                 <input class="form-control input-lg" type="text" name="FirstName" value="New" placeholder="First Name">
@@ -121,3 +183,19 @@
         </form>            
     </div>    
 </div>
+
+@section footer {
+    <div style="padding: 10px">
+    @if (!Model.UserAuths.IsEmpty())
+    {
+        <h3>User Auths</h3>
+        <div class="autogrid" id="userauths"></div>
+    }
+
+    @if (!Model.UserAuthDetails.IsEmpty())
+    {
+        <h3>User Auth Details</h3>
+        <div class="autogrid" id="userauthdetails"></div>
+    }
+    </div>
+}
