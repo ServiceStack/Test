@@ -5,8 +5,6 @@ using System.Web.UI.WebControls;
 using ServiceStack;
 using ServiceStack.AspNet;
 using ServiceStack.Auth;
-using ServiceStack.Text;
-using ServiceStack.Web;
 
 namespace WebForms
 {
@@ -49,7 +47,7 @@ namespace WebForms
             }
             catch (Exception ex)
             {
-                litError.Text = "<h3 style='color:red'>{0}</h3>".Fmt(ex.Message);
+                litError.Text = "<h3 class='error'>{0}</h3>".Fmt(ex.Message);
             }
         }
 
@@ -89,7 +87,7 @@ namespace WebForms
             catch (Exception ex)
             {
                 var status = ex.ToResponseStatus();
-                litRegisterError.Text = "<pre style='color:red'>{0}</pre>".Fmt(ex.Message);
+                litRegisterError.Text = "<pre class='error'>{0}</pre>".Fmt(ex.Message);
 
                 ShowIfError(status, "Email", litEmailError);
                 ShowIfError(status, "Password", litPasswordError);
@@ -102,7 +100,7 @@ namespace WebForms
         {
             var fieldError = status.Errors.FirstOrDefault(x => field.EqualsIgnoreCase(x.FieldName));
             lit.Text = fieldError != null 
-                ? "<span style='color:red'> - {0}</span>".Fmt(fieldError.Message ?? fieldError.ErrorCode)
+                ? "<span class='error'> - {0}</span>".Fmt(fieldError.Message ?? fieldError.ErrorCode)
                 : "";
         }
     }

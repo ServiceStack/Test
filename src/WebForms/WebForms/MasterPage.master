@@ -47,6 +47,12 @@
             color: #999;
             text-decoration: none;
         }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
     </style>
     <script src="Scripts/jquery-2.1.1.min.js"></script>
     <asp:ContentPlaceHolder id="Head" runat="server"></asp:ContentPlaceHolder>

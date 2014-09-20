@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Funq;
-using ServiceStack.AspNet;
 using ServiceStack.Auth;
 using ServiceStack.Configuration;
 using ServiceStack.Data;
 using ServiceStack.OrmLite;
 using ServiceStack.Redis;
 using WebForms.ServiceInterface;
-using ServiceStack.Razor;
 using ServiceStack;
 
 namespace WebForms
@@ -41,8 +39,6 @@ namespace WebForms
             Plugins.Add(new PostmanFeature());
             Plugins.Add(new CorsFeature());
 
-            Plugins.Add(new RazorFormat());
-
             Plugins.Add(new AuthFeature(() => new CustomUserSession(),
                 new IAuthProvider[]
                 {
@@ -67,35 +63,7 @@ namespace WebForms
                 });
 
             var authRepo = (OrmLiteAuthRepository)container.Resolve<IAuthRepository>();
-            authRepo.DropAndReCreateTables();
-
-            CreateUser(authRepo, 1, "test", "test", new List<string> { "TheRole" }, new List<string> { "ThePermission" });
-            CreateUser(authRepo, 2, "test2", "test2");
-        }
-
-
-        private void CreateUser(OrmLiteAuthRepository authRepo,
-            int id, string username, string password, List<string> roles = null, List<string> permissions = null)
-        {
-            string hash;
-            string salt;
-            new SaltedHash().GetHashAndSaltString(password, out hash, out salt);
-
-            authRepo.CreateUserAuth(new UserAuth
-            {
-                Id = id,
-                DisplayName = username + " DisplayName",
-                Email = username + "@gmail.com",
-                UserName = username,
-                FirstName = "First " + username,
-                LastName = "Last " + username,
-                PasswordHash = hash,
-                Salt = salt,
-                Roles = roles,
-                Permissions = permissions
-            }, password);
-
-            authRepo.AssignRoles(id.ToString(), roles, permissions);
+            MyServices.ResetUsers(authRepo);
         }
     }
 }
