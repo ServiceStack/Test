@@ -10,34 +10,41 @@
 <script src="/api/js/ss-utils.js"></script>
 <script src="/Scripts/autogrid.js"></script>
 
-    <script type="text/javascript">
-        var hashVars = $.ss.queryString(location.hash.replace('#','?'));
-        if (hashVars['f']) {
-            $("#autherror").html($.ss.humanize(hashVars['f']));
-        }
+<script type="text/javascript">
+    var hashVars = $.ss.queryString(location.hash.replace('#','?'));
+    if (hashVars['f']) {
+        $("#autherror").html($.ss.humanize(hashVars['f']));
+    }
 
-        $.getJSON("/api/auth", function (r) {
-            var html = "<h4 class='success'>Authenticated!</h4>"
-                + "<table>"
-                + $.map(r, function(k, v) {
-                    return "<tr><th>" + v + "<th>"
-                        + "<td>" + (typeof k == 'string' ? k : JSON.stringify(k)) + "</td></tr>";
-                }).join('')
-                + "</table>";
-            $("#status").html(html);
-        }).error(function () {
-            $("#status").html("<h4 class='error'>Not Authenticated</h4>");
-        });
+    $.getJSON("/api/auth", function (r) {
+        var html = "<h4 class='success'>Authenticated!</h4>"
+            + "<table>"
+            + $.map(r, function(k, v) {
+                return "<tr><th>" + v + "<th>"
+                    + "<td>" + (typeof k == 'string' ? k : JSON.stringify(k)) + "</td></tr>";
+            }).join('')
+            + "</table>";
+        $("#status").html(html);
+    }).error(function () {
+        $("#status").html("<h4 class='error'>Not Authenticated</h4>");
+    });
 
-        $("#form-register").bindForm({
-            success: function (r) { location.href = '/'; }
-        });
+    $(document).bindHandlers({
+       switchUser: function(u) {
+           $("#userName").val(u);
+           $("#password").val('test');
+       }         
+    });
 
-        var html = autogrid( @(Model.UserAuths.AsRawJson()) );
-        $("#userauths").html(html);
-        html = autogrid( @(Model.UserAuthDetails.AsRawJson()) );
-        $("#userauthdetails").html(html);
-    </script>    
+    $("#form-register").bindForm({
+        success: function (r) { location.href = '/'; }
+    });
+
+    var html = autogrid( @(Model.UserAuths.AsRawJson()) );
+    $("#userauths").html(html);
+    html = autogrid( @(Model.UserAuthDetails.AsRawJson()) );
+    $("#userauthdetails").html(html);
+</script>    
 }
 
 <div class="jumbotron">
@@ -76,6 +83,12 @@
             <div class="form-group form-inline">
                 <input class="form-control input-lg" id="password" name="password" type="text" placeholder="Password" value="test">
                 <button type="submit" class="btn btn-lg btn-default">Login</button>
+            </div>
+            <div style="margin:10px">
+                <b>Quick Login:</b> 
+                <span data-click="switchUser:test">test</span>, 
+                <span data-click="switchUser:test2">test2</span>,                
+                <span data-click="switchUser:new.user@@gmail.com">new.user</span>                
             </div>
         </form>
 

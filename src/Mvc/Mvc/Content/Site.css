@@ -23,6 +23,14 @@ textarea {
     color: green;
 }
 
+[data-click] {
+    cursor: pointer;
+    color: #428bca;
+}
+[data-click]:hover {
+    color: #2a6496;
+}
+
 .validation-summary-errors {
     color: red;
     padding: 10px;
