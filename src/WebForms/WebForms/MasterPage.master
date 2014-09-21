@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-    <title>ServiceStack with Razor</title>
+    <title>ServiceStack with WebForms</title>
     <style type="text/css">
         body, h1, h2, input, button {
             margin: 0;

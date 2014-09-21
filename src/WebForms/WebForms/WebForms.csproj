@@ -109,6 +109,7 @@
   <ItemGroup>
     <Content Include="AuthOnly.aspx" />
     <Content Include="Default.aspx" />
+    <Content Include="favicon.ico" />
     <Content Include="MasterPage.master" />
     <None Include="Properties\PublishProfiles\WebDeploy.pubxml" />
     <None Include="Web.Debug.config">
