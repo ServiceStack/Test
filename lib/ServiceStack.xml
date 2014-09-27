@@ -311,6 +311,23 @@
             Default redirct URL if Required Role or Permission attributes doesn't permit access.
             </summary>
         </member>
+        <member name="M:ServiceStack.Configuration.ISettings.Get(System.String)">
+            <summary>
+            Provides a common interface for Settings providers such as
+            ConfigurationManager or Azure's RoleEnvironment. The only
+            requirement is that if the implementation cannot find the
+            specified key, the return value must be null
+            </summary>
+            <param name="key">The key for the setting</param>
+            <returns>The string value of the specified key, or null if the key
+            was invalid</returns>
+        </member>
+        <member name="M:ServiceStack.Configuration.ISettings.GetAllKeys">
+            <summary>
+            Return all keys in this configuration source.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:ServiceStack.ServiceStackProvider.SessionAs``1">
             <summary>
             Typed UserSession
@@ -444,23 +461,6 @@
             <summary>
             Creates the required missing tables or DB schema 
             </summary>
-        </member>
-        <member name="M:ServiceStack.Configuration.ISettings.Get(System.String)">
-            <summary>
-            Provides a common interface for Settings providers such as
-            ConfigurationManager or Azure's RoleEnvironment. The only
-            requirement is that if the implementation cannot find the
-            specified key, the return value must be null
-            </summary>
-            <param name="key">The key for the setting</param>
-            <returns>The string value of the specified key, or null if the key
-            was invalid</returns>
-        </member>
-        <member name="M:ServiceStack.Configuration.ISettings.GetAllKeys">
-            <summary>
-            Return all keys in this configuration source.
-            </summary>
-            <returns></returns>
         </member>
         <member name="T:ServiceStack.Service">
             <summary>
