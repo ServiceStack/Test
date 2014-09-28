@@ -34,6 +34,8 @@ namespace Test.ServiceInterface
             "http://redisstackoverflow.servicestack.net",
             "http://northwind.servicestack.net",
             "http://docs.servicestack.net",
+            "http://mvc.servicestack.net",
+            "http://webforms.servicestack.net",
         };
 
         public object Any(Ping request)
