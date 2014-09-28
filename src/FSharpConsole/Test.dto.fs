@@ -1,4 +1,4 @@
-﻿(* Options:
+(* Options:
 Version: 1
 BaseUrl: http://test.servicestack.net
 
@@ -325,3 +325,4 @@ open ServiceStack.DataAnnotations
     type UpdateSession() = 
         interface IReturn<GetSessionResponse>
         member val CustomName:String = null with get,set
+
