@@ -22,13 +22,28 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
+using Test.ServiceModel;
 using Test.ServiceModel.Types;
 using Test.ServiceInterface;
-using Test.ServiceModel;
 
 
 namespace Test.ServiceInterface
 {
+
+    public partial class Account
+    {
+        public virtual string Name { get; set; }
+    }
+
+    public partial class CustomUserSession
+        : AuthUserSession
+    {
+        [DataMember]
+        public virtual string CustomName { get; set; }
+
+        [DataMember]
+        public virtual string CustomInfo { get; set; }
+    }
 
     [Route("/image-draw/{Name}")]
     public partial class DrawImage
@@ -41,6 +56,32 @@ namespace Test.ServiceInterface
         public virtual int? FontSize { get; set; }
         public virtual string Foreground { get; set; }
         public virtual string Background { get; set; }
+    }
+
+    public partial class GetAccount
+        : IReturn<Account>
+    {
+        public virtual string Account { get; set; }
+    }
+
+    public partial class GetProject
+        : IReturn<Project>
+    {
+        public virtual string Account { get; set; }
+        public virtual string Project { get; set; }
+    }
+
+    [Route("/session")]
+    public partial class GetSession
+        : IReturn<GetSessionResponse>
+    {
+    }
+
+    public partial class GetSessionResponse
+    {
+        public virtual CustomUserSession Result { get; set; }
+        public virtual UnAuthInfo UnAuthInfo { get; set; }
+        public virtual ResponseStatus ResponseStatus { get; set; }
     }
 
     [Route("/image-bytes")]
@@ -95,6 +136,30 @@ namespace Test.ServiceInterface
         public virtual Dictionary<string, ResponseStatus> Responses { get; set; }
         public virtual ResponseStatus ResponseStatus { get; set; }
     }
+
+    public partial class Project
+    {
+        public virtual string Account { get; set; }
+        public virtual string Name { get; set; }
+    }
+
+    [Route("/{Path*}")]
+    public partial class RootPathRoutes
+    {
+        public virtual string Path { get; set; }
+    }
+
+    public partial class UnAuthInfo
+    {
+        public virtual string CustomInfo { get; set; }
+    }
+
+    [Route("/session/edit/{CustomName}")]
+    public partial class UpdateSession
+        : IReturn<GetSessionResponse>
+    {
+        public virtual string CustomName { get; set; }
+    }
 }
 
 namespace Test.ServiceModel
@@ -104,28 +169,42 @@ namespace Test.ServiceModel
     ///AllowedAttributes Description
     ///</summary>
     [Route("/allowed-attributes", "GET")]
-    [ApiResponse(400, "Your request was not understood")]
     [Api("AllowedAttributes Description")]
+    [ApiResponse(400, "Your request was not understood")]
     [DataContract]
     public partial class AllowedAttributes
     {
-        [Required]
         [Default(5)]
+        [Required]
         public virtual int Id { get; set; }
 
         [DataMember(Name="Aliased")]
         [ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)]
         public virtual double Range { get; set; }
 
-        [StringLength(20)]
-        [Meta("Foo", "Bar")]
         [References(typeof(Test.ServiceModel.Hello))]
+        [Meta("Foo", "Bar")]
+        [StringLength(20)]
         public virtual string Name { get; set; }
+    }
+
+    [Flags]
+    public enum EnumFlags
+    {
+        Value1 = 1,
+        Value2 = 2,
+        Value3 = 4,
+    }
+
+    public enum EnumType
+    {
+        Value1,
+        Value2,
     }
 
     [Route("/hello/{Name}")]
     public partial class Hello
-        : IReturn<HelloResponse>
+        : IReturn<Hello>
     {
         public virtual string Name { get; set; }
     }
@@ -164,6 +243,18 @@ namespace Test.ServiceModel
     {
         [DataMember]
         public virtual string Result { get; set; }
+    }
+
+    public partial class HelloBase<T>
+    {
+        public HelloBase()
+        {
+            Items = new List<T>{};
+            Counts = new List<int>{};
+        }
+
+        public virtual List<T> Items { get; set; }
+        public virtual List<int> Counts { get; set; }
     }
 
     public partial class HelloResponse
@@ -222,6 +313,25 @@ namespace Test.ServiceModel
         public virtual string Result { get; set; }
     }
 
+    public partial class HelloWithEnum
+    {
+        public virtual EnumType EnumProp { get; set; }
+        public virtual EnumType? NullableEnumProp { get; set; }
+        public virtual EnumFlags EnumFlags { get; set; }
+    }
+
+    public partial class HelloWithGenericInheritance
+        : HelloBase<Poco>
+    {
+        public virtual string Result { get; set; }
+    }
+
+    public partial class HelloWithGenericInheritance2
+        : HelloBase<Hello>
+    {
+        public virtual string Result { get; set; }
+    }
+
     public partial class HelloWithInheritance
         : HelloBase, IReturn<HelloWithInheritance>
     {
@@ -232,6 +342,33 @@ namespace Test.ServiceModel
         : HelloResponseBase
     {
         public virtual string Result { get; set; }
+    }
+
+    public partial class HelloWithListInheritance
+        : List<InheritedItem>
+    {
+    }
+
+    public partial class HelloWithNestedClass
+        : IReturn<HelloResponse>
+    {
+        public virtual string Name { get; set; }
+        public virtual NestedClass NestedClassProp { get; set; }
+
+        public partial class NestedClass
+        {
+            public virtual string Value { get; set; }
+        }
+    }
+
+    public partial class HelloWithNestedInheritance
+        : HelloBase<HelloWithNestedInheritance.Item>
+    {
+
+        public partial class Item
+        {
+            public virtual string Value { get; set; }
+        }
     }
 
     public partial class HelloWithReturn
@@ -261,6 +398,23 @@ namespace Test.ServiceModel
     public partial class HelloWithTypeResponse
     {
         public virtual HelloType Result { get; set; }
+    }
+
+    public partial class InheritedItem
+    {
+        public virtual string Name { get; set; }
+    }
+
+    [Route("/requires-role")]
+    public partial class RequiresRole
+        : IReturn<RequiresRole>
+    {
+    }
+
+    public partial class RequiresRoleResponse
+    {
+        public virtual string Result { get; set; }
+        public virtual ResponseStatus ResponseStatus { get; set; }
     }
 
     public partial class RestrictedAttributes

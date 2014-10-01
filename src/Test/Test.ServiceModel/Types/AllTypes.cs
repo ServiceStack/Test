@@ -33,7 +33,7 @@ namespace Test.ServiceModel.Types
     {
         public int[] IntArray { get; set; }
         public List<int> IntList { get; set; }
-        
+
         public string[] StringArray { get; set; }
         public List<string> StringList { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
 using ServiceStack;
@@ -7,6 +8,51 @@ using Test.ServiceModel.Types;
 
 namespace Test.ServiceModel
 {
+    [Route("/hello/{Name}")]
+    public class Hello
+    {
+        public string Name { get; set; }
+    }
+
+    public class HelloResponse
+    {
+        public string Result { get; set; }
+    }
+
+    public class HelloWithNestedClass : IReturn<HelloResponse>
+    {
+        public string Name { get; set; }
+        public NestedClass NestedClassProp { get; set; }
+
+        // This will generate a class definition "public partial class Hello.NestedClass"
+        public class NestedClass
+        {
+            public string Value { get; set; }
+        }
+    }
+
+    public class HelloWithEnum
+    {
+        public EnumType EnumProp { get; set; }
+        public EnumType? NullableEnumProp { get; set; }
+
+        public EnumFlags EnumFlags { get; set; }
+    }
+
+    public enum EnumType
+    {
+        Value1,
+        Value2
+    }
+
+    [Flags]
+    public enum EnumFlags
+    {
+        Value1 = 1,
+        Value2 = 2,
+        Value3 = 4,
+    }
+
     [Restrict(InternalOnly = true)]
     [System.ComponentModel.Description("Description on HelloAll type")]
     [DataContract]
@@ -39,7 +85,7 @@ namespace Test.ServiceModel
     }
 
     [DataContract]
-    [Route("/allowed-attributes","GET")]
+    [Route("/allowed-attributes", "GET")]
     [Api("AllowedAttributes Description")]
     [ApiResponse(HttpStatusCode.BadRequest, "Your request was not understood")]
     [Description("Description on AllowedAttributes")]
@@ -58,7 +104,7 @@ namespace Test.ServiceModel
 
         [StringLength(20)]
         [References(typeof(Hello))]
-        [Meta("Foo","Bar")]
+        [Meta("Foo", "Bar")]
         public string Name { get; set; }
     }
 
@@ -133,6 +179,37 @@ namespace Test.ServiceModel
         : HelloResponseBase
     {
         public string Result { get; set; }
+    }
+
+    public class HelloWithGenericInheritance : HelloBase<Poco>
+    {
+        public string Result { get; set; }
+    }
+
+    public class HelloWithGenericInheritance2 : HelloBase<Hello>
+    {
+        public string Result { get; set; }
+    }
+
+    public class HelloWithNestedInheritance : HelloBase<HelloWithNestedInheritance.Item>
+    {
+        public class Item
+        {
+            public string Value { get; set; }
+        }
+    }
+
+    public class HelloWithListInheritance : List<InheritedItem> { }
+
+    public class InheritedItem
+    {
+        public string Name { get; set; }
+    }
+
+    public abstract class HelloBase<T>
+    {
+        public List<T> Items { get; set; }
+        public virtual List<int> Counts { get; set; }
     }
 
     public class HelloWithReturn
