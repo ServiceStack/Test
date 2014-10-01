@@ -302,7 +302,7 @@ open ServiceStack.DataAnnotations
         member val Id:Int32 = new Int32() with get,set
 
         [<DataMember(Name="Aliased")>]
-        [<ApiMember(ParameterType="path", Description="Range Description", DataType="double", IsRequired=true)>]
+        [<ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)>]
         member val Range:Double = new Double() with get,set
 
         [<References(typeof<Hello>)>]
@@ -403,3 +403,4 @@ open ServiceStack.DataAnnotations
     type UpdateSession() = 
         interface IReturn<GetSessionResponse>
         member val CustomName:String = null with get,set
+
