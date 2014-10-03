@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using ServiceStack;
+using ServiceStack.OrmLite;
 
 namespace Test.ServiceInterface
 {
@@ -73,9 +74,27 @@ namespace Test.ServiceInterface
             if (ret.ResponseStatus != null)
             {
                 Response.StatusCode = 500;
+
+                try {
+                    Any(new ResetConnections());
+                } catch {}
             }
 
             return ret;
         }
+
+        [Route("/reset-connections")]
+        public class ResetConnections {}
+
+        public object Any(ResetConnections request)
+        {
+            return Db.Column<bool>(
+                @"SELECT pg_terminate_backend(pid)
+                    FROM pg_stat_activity
+                    WHERE pid <> pg_backend_pid()
+                      AND state = 'idle'
+                      AND state_change < current_timestamp - INTERVAL '5' MINUTE");
+        }
     }
+
 }
