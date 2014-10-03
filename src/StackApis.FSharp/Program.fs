@@ -10,4 +10,5 @@ let main argv =
         Tags = new List<string>([| "redis"; "ormlite"; |])))        
 
     TypeSerializer.PrintDump(response)
+    System.Console.ReadLine()
     0 // return an integer exit code
