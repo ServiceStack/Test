@@ -37,8 +37,7 @@ namespace Mvc.Controllers
                 {
                     using (var authService = ResolveService<AuthenticateService>())
                     {
-                        var response = authService.Authenticate(new Authenticate
-                        {
+                        var response = authService.Authenticate(new Authenticate {
                             provider = CredentialsAuthProvider.Name,
                             UserName = userName,
                             Password = password,
@@ -62,15 +61,8 @@ namespace Mvc.Controllers
 
         public ActionResult Logout()
         {
-            using (var authService = ResolveService<AuthenticateService>())
-            {
-                var response = authService.Authenticate(new Authenticate {
-                    provider = AuthenticateService.LogoutAction,
-                });
-
-                // add ASP.NET auth cookie
-                FormsAuthentication.SignOut();
-            }
+            Execute(new Authenticate { provider = "logout" });
+            FormsAuthentication.SignOut(); 
 
             return Redirect("/");
         }
