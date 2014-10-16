@@ -99,6 +99,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="StackApis.dtos.vb" />
     <Compile Include="Test.dtos.vb" />
   </ItemGroup>
   <ItemGroup>
