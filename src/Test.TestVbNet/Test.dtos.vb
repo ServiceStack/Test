@@ -1,5 +1,5 @@
-﻿' Options:
-'Date: 2014-10-08 17:42:21
+' Options:
+'Date: 2014-10-28 23:36:37
 'Version: 1
 'BaseUrl: http://localhost:56500
 '
@@ -29,11 +29,11 @@ Namespace Global
 
     Namespace Test.ServiceInterface
 
-        Partial Public Class Account
+        Public Partial Class Account
             Public Overridable Property Name As String
         End Class
 
-        Partial Public Class CustomUserSession
+        Public Partial Class CustomUserSession
             Inherits AuthUserSession
             <DataMember>
             Public Overridable Property CustomName As String
@@ -43,7 +43,7 @@ Namespace Global
         End Class
 
         <Route("/image-draw/{Name}")>
-        Partial Public Class DrawImage
+        Public Partial Class DrawImage
             Implements IReturn(Of DrawImage)
             Public Overridable Property Name As String
             Public Overridable Property Format As String
@@ -54,64 +54,64 @@ Namespace Global
             Public Overridable Property Background As String
         End Class
 
-        Partial Public Class GetAccount
+        Public Partial Class GetAccount
             Implements IReturn(Of Account)
             Public Overridable Property Account As String
         End Class
 
-        Partial Public Class GetProject
+        Public Partial Class GetProject
             Implements IReturn(Of Project)
             Public Overridable Property Account As String
             Public Overridable Property Project As String
         End Class
 
         <Route("/session")>
-        Partial Public Class GetSession
+        Public Partial Class GetSession
             Implements IReturn(Of GetSessionResponse)
         End Class
 
-        Partial Public Class GetSessionResponse
+        Public Partial Class GetSessionResponse
             Public Overridable Property Result As CustomUserSession
             Public Overridable Property UnAuthInfo As UnAuthInfo
             Public Overridable Property ResponseStatus As ResponseStatus
         End Class
 
         <Route("/image-bytes")>
-        Partial Public Class ImageAsBytes
+        Public Partial Class ImageAsBytes
             Public Overridable Property Format As String
         End Class
 
         <Route("/image-custom")>
-        Partial Public Class ImageAsCustomResult
+        Public Partial Class ImageAsCustomResult
             Public Overridable Property Format As String
         End Class
 
         <Route("/image-file")>
-        Partial Public Class ImageAsFile
+        Public Partial Class ImageAsFile
             Public Overridable Property Format As String
         End Class
 
         <Route("/image-redirect")>
-        Partial Public Class ImageAsRedirect
+        Public Partial Class ImageAsRedirect
             Public Overridable Property Format As String
         End Class
 
         <Route("/image-stream")>
-        Partial Public Class ImageAsStream
+        Public Partial Class ImageAsStream
             Public Overridable Property Format As String
         End Class
 
         <Route("/image-response")>
-        Partial Public Class ImageWriteToResponse
+        Public Partial Class ImageWriteToResponse
             Public Overridable Property Format As String
         End Class
 
         <Route("/ping")>
-        Partial Public Class Ping
+        Public Partial Class Ping
             Implements IReturn(Of Ping)
         End Class
 
-        Partial Public Class PingResponse
+        Public Partial Class PingResponse
             Public Sub New()
                 Responses = New Dictionary(Of String, ResponseStatus)
             End Sub
@@ -120,22 +120,22 @@ Namespace Global
             Public Overridable Property ResponseStatus As ResponseStatus
         End Class
 
-        Partial Public Class Project
+        Public Partial Class Project
             Public Overridable Property Account As String
             Public Overridable Property Name As String
         End Class
 
         <Route("/{Path*}")>
-        Partial Public Class RootPathRoutes
+        Public Partial Class RootPathRoutes
             Public Overridable Property Path As String
         End Class
 
-        Partial Public Class UnAuthInfo
+        Public Partial Class UnAuthInfo
             Public Overridable Property CustomInfo As String
         End Class
 
         <Route("/session/edit/{CustomName}")>
-        Partial Public Class UpdateSession
+        Public Partial Class UpdateSession
             Implements IReturn(Of GetSessionResponse)
             Public Overridable Property CustomName As String
         End Class
@@ -150,13 +150,13 @@ Namespace Global
         <Api("AllowedAttributes Description")>
         <ApiResponse(400, "Your request was not understood")>
         <DataContract>
-        Partial Public Class AllowedAttributes
+        Public Partial Class AllowedAttributes
             <[Default](5)>
             <Required>
             Public Overridable Property Id As Integer
 
             <DataMember(Name:="Aliased")>
-            <ApiMember(Description:="Range Description", ParameterType:="path", DataType:="double", IsRequired:=True)>
+            <ApiMember(Description:="Range Description", ParameterType:="path", DataType:="double", IsRequired:=true)>
             Public Overridable Property Range As Double
 
             <References(GetType(Hello))>
@@ -178,19 +178,19 @@ Namespace Global
         End Enum
 
         <Route("/hello/{Name}")>
-        Partial Public Class Hello
+        Public Partial Class Hello
             Implements IReturn(Of Hello)
             Public Overridable Property Name As String
         End Class
 
-        Partial Public Class HelloAllTypes
+        Public Partial Class HelloAllTypes
             Implements IReturn(Of HelloAllTypes)
             Public Overridable Property Name As String
             Public Overridable Property AllTypes As AllTypes
             Public Overridable Property AllCollectionTypes As AllCollectionTypes
         End Class
 
-        Partial Public Class HelloAllTypesResponse
+        Public Partial Class HelloAllTypesResponse
             Public Overridable Property Result As String
             Public Overridable Property AllTypes As AllTypes
             Public Overridable Property AllCollectionTypes As AllCollectionTypes
@@ -200,7 +200,7 @@ Namespace Global
         '''Description on HelloAll type
         '''</Summary>
         <DataContract>
-        Partial Public Class HelloAnnotated
+        Public Partial Class HelloAnnotated
             Implements IReturn(Of HelloAnnotatedResponse)
             <DataMember>
             Public Overridable Property Name As String
@@ -210,12 +210,12 @@ Namespace Global
         '''Description on HelloAllResponse type
         '''</Summary>
         <DataContract>
-        Partial Public Class HelloAnnotatedResponse
+        Public Partial Class HelloAnnotatedResponse
             <DataMember>
             Public Overridable Property Result As String
         End Class
 
-        Partial Public Class HelloBase(Of T)
+        Public Partial Class HelloBase(Of T)
             Public Sub New()
                 Items = New List(Of T)
                 Counts = New List(Of Integer)
@@ -225,43 +225,43 @@ Namespace Global
             Public Overridable Property Counts As List(Of Integer)
         End Class
 
-        Partial Public Class HelloResponse
+        Public Partial Class HelloResponse
             Public Overridable Property Result As String
         End Class
 
-        Partial Public Class HelloString
+        Public Partial Class HelloString
             Public Overridable Property Name As String
         End Class
 
-        Partial Public Class HelloVoid
+        Public Partial Class HelloVoid
             Public Overridable Property Name As String
         End Class
 
-        Partial Public Class HelloWithAlternateReturnResponse
+        Public Partial Class HelloWithAlternateReturnResponse
             Inherits HelloWithReturnResponse
             Public Overridable Property AltResult As String
         End Class
 
         <DataContract>
-        Partial Public Class HelloWithDataContract
+        Public Partial Class HelloWithDataContract
             Implements IReturn(Of HelloWithDataContract)
-            <DataMember(Name:="name", Order:=1, IsRequired:=True, EmitDefaultValue:=False)>
+            <DataMember(Name:="name", Order:=1, IsRequired:=true, EmitDefaultValue:=false)>
             Public Overridable Property Name As String
 
-            <DataMember(Name:="id", Order:=2, EmitDefaultValue:=False)>
+            <DataMember(Name:="id", Order:=2, EmitDefaultValue:=false)>
             Public Overridable Property Id As Integer
         End Class
 
         <DataContract>
-        Partial Public Class HelloWithDataContractResponse
-            <DataMember(Name:="result", Order:=1, IsRequired:=True, EmitDefaultValue:=False)>
+        Public Partial Class HelloWithDataContractResponse
+            <DataMember(Name:="result", Order:=1, IsRequired:=true, EmitDefaultValue:=false)>
             Public Overridable Property Result As String
         End Class
 
         '''<Summary>
         '''Description on HelloWithDescription type
         '''</Summary>
-        Partial Public Class HelloWithDescription
+        Public Partial Class HelloWithDescription
             Implements IReturn(Of HelloWithDescription)
             Public Overridable Property Name As String
         End Class
@@ -269,98 +269,98 @@ Namespace Global
         '''<Summary>
         '''Description on HelloWithDescriptionResponse type
         '''</Summary>
-        Partial Public Class HelloWithDescriptionResponse
+        Public Partial Class HelloWithDescriptionResponse
             Public Overridable Property Result As String
         End Class
 
-        Partial Public Class HelloWithEnum
+        Public Partial Class HelloWithEnum
             Public Overridable Property EnumProp As EnumType
             Public Overridable Property NullableEnumProp As Nullable(Of EnumType)
             Public Overridable Property EnumFlags As EnumFlags
         End Class
 
-        Partial Public Class HelloWithGenericInheritance
+        Public Partial Class HelloWithGenericInheritance
             Inherits HelloBase(Of Poco)
             Public Overridable Property Result As String
         End Class
 
-        Partial Public Class HelloWithGenericInheritance2
+        Public Partial Class HelloWithGenericInheritance2
             Inherits HelloBase(Of Hello)
             Public Overridable Property Result As String
         End Class
 
-        Partial Public Class HelloWithInheritance
+        Public Partial Class HelloWithInheritance
             Inherits HelloBase
             Implements IReturn(Of HelloWithInheritance)
             Public Overridable Property Name As String
         End Class
 
-        Partial Public Class HelloWithInheritanceResponse
+        Public Partial Class HelloWithInheritanceResponse
             Inherits HelloResponseBase
             Public Overridable Property Result As String
         End Class
 
-        Partial Public Class HelloWithListInheritance
+        Public Partial Class HelloWithListInheritance
             Inherits List(Of InheritedItem)
         End Class
 
-        Partial Public Class HelloWithNestedClass
+        Public Partial Class HelloWithNestedClass
             Implements IReturn(Of HelloResponse)
             Public Overridable Property Name As String
             Public Overridable Property NestedClassProp As NestedClass
 
-            Partial Public Class NestedClass
+            Public Partial Class NestedClass
                 Public Overridable Property Value As String
             End Class
         End Class
 
-        Partial Public Class HelloWithNestedInheritance
+        Public Partial Class HelloWithNestedInheritance
             Inherits HelloBase(Of HelloWithNestedInheritance.Item)
 
-            Partial Public Class Item
+            Public Partial Class Item
                 Public Overridable Property Value As String
             End Class
         End Class
 
-        Partial Public Class HelloWithReturn
+        Public Partial Class HelloWithReturn
             Implements IReturn(Of HelloWithAlternateReturnResponse)
             Public Overridable Property Name As String
         End Class
 
         <Route("/helloroute")>
-        Partial Public Class HelloWithRoute
+        Public Partial Class HelloWithRoute
             Implements IReturn(Of HelloWithRoute)
             Public Overridable Property Name As String
         End Class
 
-        Partial Public Class HelloWithRouteResponse
+        Public Partial Class HelloWithRouteResponse
             Public Overridable Property Result As String
         End Class
 
-        Partial Public Class HelloWithType
+        Public Partial Class HelloWithType
             Implements IReturn(Of HelloWithType)
             Public Overridable Property Name As String
         End Class
 
-        Partial Public Class HelloWithTypeResponse
+        Public Partial Class HelloWithTypeResponse
             Public Overridable Property Result As HelloType
         End Class
 
-        Partial Public Class InheritedItem
+        Public Partial Class InheritedItem
             Public Overridable Property Name As String
         End Class
 
         <Route("/requires-role")>
-        Partial Public Class RequiresRole
+        Public Partial Class RequiresRole
             Implements IReturn(Of RequiresRole)
         End Class
 
-        Partial Public Class RequiresRoleResponse
+        Public Partial Class RequiresRoleResponse
             Public Overridable Property Result As String
             Public Overridable Property ResponseStatus As ResponseStatus
         End Class
 
-        Partial Public Class RestrictedAttributes
+        Public Partial Class RestrictedAttributes
             Public Overridable Property Id As Integer
             Public Overridable Property Name As String
             Public Overridable Property Hello As Hello
@@ -369,13 +369,13 @@ Namespace Global
 
     Namespace Test.ServiceModel.Types
 
-        Partial Public Class AllCollectionTypes
+        Public Partial Class AllCollectionTypes
             Public Sub New()
-                IntArray = New Integer() {}
+                IntArray = New Integer(){}
                 IntList = New List(Of Integer)
-                StringArray = New String() {}
+                StringArray = New String(){}
                 StringList = New List(Of String)
-                PocoArray = New Poco() {}
+                PocoArray = New Poco(){}
                 PocoList = New List(Of Poco)
             End Sub
 
@@ -387,10 +387,10 @@ Namespace Global
             Public Overridable Property PocoList As List(Of Poco)
         End Class
 
-        Partial Public Class AllTypes
+        Public Partial Class AllTypes
             Public Sub New()
                 StringList = New List(Of String)
-                StringArray = New String() {}
+                StringArray = New String(){}
                 StringMap = New Dictionary(Of String, String)
                 IntStringMap = New Dictionary(Of Integer, String)
             End Sub
@@ -419,29 +419,30 @@ Namespace Global
             Public Overridable Property SubType As SubType
         End Class
 
-        Partial Public Class HelloBase
+        Public Partial Class HelloBase
             Public Overridable Property Id As Integer
         End Class
 
-        Partial Public Class HelloResponseBase
+        Public Partial Class HelloResponseBase
             Public Overridable Property RefId As Integer
         End Class
 
-        Partial Public Class HelloType
+        Public Partial Class HelloType
             Public Overridable Property Result As String
         End Class
 
-        Partial Public Class HelloWithReturnResponse
+        Public Partial Class HelloWithReturnResponse
             Public Overridable Property Result As String
         End Class
 
-        Partial Public Class Poco
+        Public Partial Class Poco
             Public Overridable Property Name As String
         End Class
 
-        Partial Public Class SubType
+        Public Partial Class SubType
             Public Overridable Property Id As Integer
             Public Overridable Property Name As String
         End Class
     End Namespace
 End Namespace
+

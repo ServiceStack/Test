@@ -22,5 +22,6 @@ COPY C:\src\ServiceStack\src\ServiceStack.Logging.Log4Net\bin\Release\ServiceSta
 
 COPY C:\src\ServiceStack\src\ServiceStack.Api.Swagger\bin\Release\ServiceStack.Api.Swagger.* .
 COPY C:\src\ServiceStack\src\ServiceStack.Server\bin\Release\ServiceStack.Server.* .
+COPY C:\src\ServiceStack\src\ServiceStack.RabbitMq\bin\Release\ServiceStack.RabbitMq.* .
 COPY C:\src\ServiceStack\src\ServiceStack.Mvc\bin\Release\ServiceStack.Mvc.* .
 COPY C:\src\ServiceStack\src\ServiceStack.Razor\bin\Release\* .
