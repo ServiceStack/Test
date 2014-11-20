@@ -118,6 +118,7 @@
     <Content Include="img\sample.png" />
     <Content Include="login.cshtml" />
     <None Include="Properties\PublishProfiles\WebDeploy.pubxml" />
+    <Content Include="Test.dtos.d.ts" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
