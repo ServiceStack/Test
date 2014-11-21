@@ -9,6 +9,7 @@ using ServiceStack.Data;
 using ServiceStack.OrmLite;
 using ServiceStack.Razor;
 using ServiceStack.Redis;
+using ServiceStack.Text;
 using Test.ServiceInterface;
 
 namespace Test
@@ -35,6 +36,8 @@ namespace Test
         /// <param name="container"></param>
         public override void Configure(Container container)
         {
+            JsConfig.EmitCamelCaseNames = true;
+
             SetConfig(new HostConfig { DebugMode = true });
 
             //Config examples
@@ -57,7 +60,7 @@ namespace Test
             container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(
                 AppSettings.GetString("AppDb"), PostgreSqlDialect.Provider));
 
-            container.Register<IAuthRepository>(c => 
+            container.Register<IAuthRepository>(c =>
                 new OrmLiteAuthRepository(c.Resolve<IDbConnectionFactory>())
                     {
                         UseDistinctRoleTables = AppSettings.Get("UseDistinctRoleTables", true),

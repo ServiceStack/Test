@@ -85,11 +85,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="LocalTest.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>LocalTest.tt</DependentUpon>
-    </Compile>
+    <Compile Include="StackApis.dtos.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -104,10 +100,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="LocalTest.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>LocalTest.cs</LastGenOutput>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
