@@ -244,4 +244,14 @@ namespace Test.ServiceModel
     {
         public HelloType Result { get; set; }
     }
+
+    public class HelloInterface
+    {
+        public IPoco Poco { get; set; }
+    }
+
+    public interface IPoco
+    {
+        string Name { get; set; }        
+    }
 }

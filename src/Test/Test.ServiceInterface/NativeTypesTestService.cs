@@ -112,5 +112,10 @@ namespace Test.ServiceInterface
                 Result = new HelloType { Result = request.Name }
             };
         }
+
+        public object Any(HelloInterface request)
+        {
+            return request;
+        }
     }
 }
