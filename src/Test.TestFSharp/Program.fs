@@ -7,6 +7,9 @@ open ServiceStack.Text
 open System.Collections.Generic
 open Test.ServiceModel
 
+type IPoco =
+    abstract Name:String with get,set
+
 [<EntryPoint>]
 let main argv = 
     let client = new JsonServiceClient("http://localhost:56500")

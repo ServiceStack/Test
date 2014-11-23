@@ -1,5 +1,5 @@
-﻿' Options:
-'Date: 2014-10-08 22:00:25
+' Options:
+'Date: 2014-11-23 05:02:03
 'Version: 1
 'BaseUrl: http://stackapis.servicestack.net
 '
@@ -32,17 +32,17 @@ Namespace Global
         '''Get a list of Answers for a Question
         '''</Summary>
         <Route("/answers/{QuestionId}")>
-        Partial Public Class GetAnswers
+        Public Partial Class GetAnswers
             Implements IReturn(Of GetAnswersResponse)
             Public Overridable Property QuestionId As Integer
         End Class
 
-        Partial Public Class GetAnswersResponse
+        Public Partial Class GetAnswersResponse
             Public Overridable Property Ansnwer As Answer
         End Class
 
         <Route("/questions/search")>
-        Partial Public Class SearchQuestions
+        Public Partial Class SearchQuestions
             Implements IReturn(Of SearchQuestionsResponse)
             Public Sub New()
                 Tags = New List(Of String)
@@ -52,7 +52,7 @@ Namespace Global
             Public Overridable Property UserId As String
         End Class
 
-        Partial Public Class SearchQuestionsResponse
+        Public Partial Class SearchQuestionsResponse
             Public Sub New()
                 Results = New List(Of Question)
             End Sub
@@ -61,7 +61,7 @@ Namespace Global
         End Class
 
         <Route("/questions")>
-        Partial Public Class StackOverflowQuery
+        Public Partial Class StackOverflowQuery
             Inherits QueryBase(Of Question)
             Implements IReturn(Of QueryResponse(Of Question))
             Public Overridable Property ScoreGreaterThan As Nullable(Of Integer)
@@ -70,7 +70,7 @@ Namespace Global
 
     Namespace StackApis.ServiceModel.Types
 
-        Partial Public Class Answer
+        Public Partial Class Answer
             Public Overridable Property AnswerId As Integer
             Public Overridable Property Owner As User
             Public Overridable Property IsAccepted As Boolean
@@ -81,9 +81,9 @@ Namespace Global
             Public Overridable Property QuestionId As Integer
         End Class
 
-        Partial Public Class Question
+        Public Partial Class Question
             Public Sub New()
-                Tags = New String() {}
+                Tags = New String(){}
             End Sub
 
             Public Overridable Property QuestionId As Integer
@@ -101,7 +101,7 @@ Namespace Global
             Public Overridable Property AcceptedAnswerId As Nullable(Of Integer)
         End Class
 
-        Partial Public Class User
+        Public Partial Class User
             Public Overridable Property Reputation As Integer
             Public Overridable Property Userid As Integer
             Public Overridable Property UserType As String
@@ -112,3 +112,4 @@ Namespace Global
         End Class
     End Namespace
 End Namespace
+

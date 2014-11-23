@@ -1,5 +1,5 @@
 ' Options:
-'Date: 2014-10-28 23:36:37
+'Date: 2014-11-23 00:23:10
 'Version: 1
 'BaseUrl: http://localhost:56500
 '
@@ -147,8 +147,8 @@ Namespace Global
         '''AllowedAttributes Description
         '''</Summary>
         <Route("/allowed-attributes", "GET")>
-        <Api("AllowedAttributes Description")>
         <ApiResponse(400, "Your request was not understood")>
+        <Api("AllowedAttributes Description")>
         <DataContract>
         Public Partial Class AllowedAttributes
             <[Default](5)>
@@ -156,13 +156,16 @@ Namespace Global
             Public Overridable Property Id As Integer
 
             <DataMember(Name:="Aliased")>
-            <ApiMember(Description:="Range Description", ParameterType:="path", DataType:="double", IsRequired:=true)>
+            <ApiMember(ParameterType:="path", Description:="Range Description", DataType:="double", IsRequired:=true)>
             Public Overridable Property Range As Double
 
-            <References(GetType(Hello))>
-            <Meta("Foo", "Bar")>
             <StringLength(20)>
+            <Meta("Foo", "Bar")>
+            <References(GetType(Hello))>
             Public Overridable Property Name As String
+        End Class
+
+        Public Partial Class EmptyClass
         End Class
 
         <Flags>
@@ -223,6 +226,12 @@ Namespace Global
 
             Public Overridable Property Items As List(Of T)
             Public Overridable Property Counts As List(Of Integer)
+        End Class
+
+        Public Partial Class HelloInterface
+            Public Overridable Property Poco As IPoco
+            Public Overridable Property EmptyInterface As IEmptyInterface
+            Public Overridable Property EmptyClass As EmptyClass
         End Class
 
         Public Partial Class HelloResponse
@@ -346,9 +355,16 @@ Namespace Global
             Public Overridable Property Result As HelloType
         End Class
 
+        Public Interface IEmptyInterface
+        End Interface
+
         Public Partial Class InheritedItem
             Public Overridable Property Name As String
         End Class
+
+        Public Interface IPoco
+            Property Name As String
+        End Interface
 
         <Route("/requires-role")>
         Public Partial Class RequiresRole

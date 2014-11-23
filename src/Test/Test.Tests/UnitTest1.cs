@@ -1,43 +1,43 @@
-﻿using System;
-using NUnit.Framework;
-using Test.ServiceInterface;
-using Test.ServiceModel;
-using ServiceStack.Testing;
-using ServiceStack;
+﻿//using System;
+//using NUnit.Framework;
+//using Test.ServiceInterface;
+//using Test.ServiceModel;
+//using ServiceStack.Testing;
+//using ServiceStack;
 
-namespace Test.Tests
-{
-    [TestFixture]
-    public class UnitTests
-    {
-        private readonly ServiceStackHost appHost;
+//namespace Test.Tests
+//{
+//    [TestFixture]
+//    public class UnitTests
+//    {
+//        private readonly ServiceStackHost appHost;
 
-        public UnitTests()
-        {
-            appHost = new BasicAppHost(typeof(MyServices).Assembly)
-            {
-                ConfigureContainer = container =>
-                {
-                    //Add your IoC dependencies here
-                }
-            }
-            .Init();
-        }
+//        public UnitTests()
+//        {
+//            appHost = new BasicAppHost(typeof(MyServices).Assembly)
+//            {
+//                ConfigureContainer = container =>
+//                {
+//                    //Add your IoC dependencies here
+//                }
+//            }
+//            .Init();
+//        }
 
-        [TestFixtureTearDown]
-        public void TestFixtureTearDown()
-        {
-            appHost.Dispose();
-        }
+//        [TestFixtureTearDown]
+//        public void TestFixtureTearDown()
+//        {
+//            appHost.Dispose();
+//        }
 
-        //[Test]
-        //public void TestMethod1()
-        //{
-        //    var service = appHost.Container.Resolve<MyServices>();
+//        [Test]
+//        public void TestMethod1()
+//        {
+//            var service = appHost.Container.Resolve<MyServices>();
 
-        //    var response = (HelloResponse)service.Any(new Hello { Name = "World" });
+//            var response = (HelloResponse)service.Any(new Hello { Name = "World" });
 
-        //    Assert.That(response.Result, Is.EqualTo("Hello, World!"));
-        //}
-    }
-}
+//            Assert.That(response.Result, Is.EqualTo("Hello, World!"));
+//        }
+//    }
+//}

@@ -1,15 +1,15 @@
 (* Options:
+Date: 2014-11-23 00:18:30
 Version: 1
 BaseUrl: http://localhost:56500
 
-ServerVersion: 1
 MakeDataContractsExtensible: False
 AddReturnMarker: True
 AddDescriptionAsComments: True
 AddDataContractAttributes: False
 AddIndexesToDataMembers: False
 AddResponseStatus: False
-AddImplicitVersion: 
+//AddImplicitVersion: 
 InitializeCollections: True
 *)
 
@@ -107,6 +107,18 @@ open ServiceStack.DataAnnotations
     [<AllowNullLiteral>]
     type HelloType() = 
         member val Result:String = null with get,set
+
+    [<AllowNullLiteral>]
+    type IPoco = 
+        abstract Name:String with get,set
+
+    [<AllowNullLiteral>]
+    type IEmptyInterface = 
+        interface end
+
+    [<AllowNullLiteral>]
+    type EmptyClass() = 
+        class end
 
     [<AllowNullLiteral>]
     type CustomUserSession() = 
@@ -292,8 +304,8 @@ open ServiceStack.DataAnnotations
     ///AllowedAttributes Description
     ///</summary>
     [<Route("/allowed-attributes", "GET")>]
-    [<Api("AllowedAttributes Description")>]
     [<ApiResponse(400, "Your request was not understood")>]
+    [<Api("AllowedAttributes Description")>]
     [<DataContract>]
     [<AllowNullLiteral>]
     type AllowedAttributes() = 
@@ -305,9 +317,9 @@ open ServiceStack.DataAnnotations
         [<ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)>]
         member val Range:Double = new Double() with get,set
 
-        [<References(typeof<Hello>)>]
-        [<Meta("Foo", "Bar")>]
         [<StringLength(20)>]
+        [<Meta("Foo", "Bar")>]
+        [<References(typeof<Hello>)>]
         member val Name:String = null with get,set
 
     [<AllowNullLiteral>]
@@ -383,10 +395,21 @@ open ServiceStack.DataAnnotations
         interface IReturn<HelloWithType>
         member val Name:String = null with get,set
 
+    [<AllowNullLiteral>]
+    type HelloInterface() = 
+        member val Poco:IPoco = null with get,set
+        member val EmptyInterface:IEmptyInterface = null with get,set
+        member val EmptyClass:EmptyClass = null with get,set
+
     [<Route("/ping")>]
     [<AllowNullLiteral>]
     type Ping() = 
         interface IReturn<Ping>
+
+    [<Route("/reset-connections")>]
+    [<AllowNullLiteral>]
+    type ResetConnections() = 
+        class end
 
     [<Route("/requires-role")>]
     [<AllowNullLiteral>]
