@@ -248,10 +248,15 @@ namespace Test.ServiceModel
     public class HelloInterface
     {
         public IPoco Poco { get; set; }
+        public IEmptyInterface EmptyInterface { get; set; }
+        public EmptyClass EmptyClass { get; set; }
     }
 
     public interface IPoco
     {
-        string Name { get; set; }        
+        string Name { get; set; }
     }
+
+    public interface IEmptyInterface { }
+    public class EmptyClass { }
 }
