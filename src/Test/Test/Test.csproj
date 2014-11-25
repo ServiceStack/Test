@@ -113,12 +113,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\app.ts" />
+    <Content Include="Scripts\app.js" />
     <Content Include="img\sample.gif" />
     <Content Include="img\sample.jpg" />
     <Content Include="img\sample.png" />
     <Content Include="login.cshtml" />
+    <Content Include="Scripts\jquery-2.1.1.min.js" />
+    <Content Include="Scripts\jquery.d.ts" />
+    <TypeScriptCompile Include="Scripts\ss-utils.d.ts" />
+    <TypeScriptCompile Include="Scripts\ss-utils-api-test.d.ts" />
+    <Content Include="test-typescript.cshtml" />
     <None Include="Properties\PublishProfiles\WebDeploy.pubxml" />
-    <Content Include="Test.dtos.d.ts" />
+    <TypeScriptCompile Include="Scripts\Test.dtos.d.ts" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
