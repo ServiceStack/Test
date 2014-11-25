@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GetRandomIds.cs" />
     <Compile Include="RequiresRole.cs" />
     <Compile Include="Types\AllTypes.cs" />
     <Compile Include="CodeGenTestTypes.cs" />

@@ -8,8 +8,9 @@ using Test.ServiceModel.Types;
 
 namespace Test.ServiceModel
 {
+    [Route("/hello")]
     [Route("/hello/{Name}")]
-    public class Hello
+    public class Hello : IReturn<HelloResponse>
     {
         public string Name { get; set; }
     }
