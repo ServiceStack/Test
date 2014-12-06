@@ -6,6 +6,7 @@ using ServiceStack.Auth;
 using ServiceStack.Caching;
 using ServiceStack.Configuration;
 using ServiceStack.Data;
+using ServiceStack.Host;
 using ServiceStack.OrmLite;
 using ServiceStack.Razor;
 using ServiceStack.Redis;
@@ -40,10 +41,29 @@ namespace Test
 
             SetConfig(new HostConfig { DebugMode = true });
 
-            //Config examples
+            container.Register<IRedisClientsManager>(c =>
+                new RedisManagerPool("localhost:6379"));
+            container.Register(c => c.Resolve<IRedisClientsManager>().GetCacheClient());
+
+            container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(
+                AppSettings.GetString("AppDb"), PostgreSqlDialect.Provider));
+
+            container.Register<IAuthRepository>(c =>
+                new OrmLiteAuthRepository(c.Resolve<IDbConnectionFactory>()) {
+                    UseDistinctRoleTables = AppSettings.Get("UseDistinctRoleTables", true),
+                });
+
+            var authRepo = (OrmLiteAuthRepository)container.Resolve<IAuthRepository>();
+            authRepo.DropAndReCreateTables();
+
+            CreateUser(authRepo, 1, "test", "test", new List<string> { "TheRole" }, new List<string> { "ThePermission" });
+            CreateUser(authRepo, 2, "test2", "test2");
+
             Plugins.Add(new PostmanFeature());
             Plugins.Add(new CorsFeature());
-
+            Plugins.Add(new RequestLogsFeature {
+                RequestLogger = new RedisRequestLogger(container.Resolve<IRedisClientsManager>()),
+            });
             Plugins.Add(new RazorFormat());
 
             Plugins.Add(new AuthFeature(() => new CustomUserSession(),
@@ -53,24 +73,6 @@ namespace Test
                     new CredentialsAuthProvider(AppSettings),
                 }));
 
-            container.Register<IRedisClientsManager>(c =>
-                new PooledRedisClientManager("localhost:6379"));
-            container.Register(c => c.Resolve<IRedisClientsManager>().GetCacheClient());
-
-            container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(
-                AppSettings.GetString("AppDb"), PostgreSqlDialect.Provider));
-
-            container.Register<IAuthRepository>(c =>
-                new OrmLiteAuthRepository(c.Resolve<IDbConnectionFactory>())
-                    {
-                        UseDistinctRoleTables = AppSettings.Get("UseDistinctRoleTables", true),
-                    });
-
-            var authRepo = (OrmLiteAuthRepository)container.Resolve<IAuthRepository>();
-            authRepo.DropAndReCreateTables();
-
-            CreateUser(authRepo, 1, "test", "test", new List<string> { "TheRole" }, new List<string> { "ThePermission" });
-            CreateUser(authRepo, 2, "test2", "test2");
         }
 
 
