@@ -51,6 +51,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\ServiceStack\src\ServiceStack.Server\bin\Release\ServiceStack.dll</HintPath>
     </Reference>
+    <Reference Include="ServiceStack.Api.Swagger">
+      <HintPath>..\..\..\lib\ServiceStack.Api.Swagger.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceStack.Client, Version=4.0.32.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\ServiceStack\src\ServiceStack.Server\bin\Release\ServiceStack.Client.dll</HintPath>

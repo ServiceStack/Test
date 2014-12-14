@@ -1,7 +1,6 @@
 ﻿/// <reference path="jquery.d.ts"/>
 /// <reference path="Test.dtos.d.ts"/>
 
-
 function createUrl(path: string, params: any): string {
     for (var key in params) {
         path += path.indexOf('?') <= 0 ? "?" : "&";
@@ -15,6 +14,14 @@ $(document).bindHandlers({
         var request: dtos.Hello = { name: this.value };
         $.getJSON(createUrl("/hello", request), function (r: dtos.HelloResponse) {
             $("#helloResult").html(r.result);
+        });
+    },
+    sayHelloRoute: function () {
+        var request: dtos.Hello = {};
+        request.name = this.value;
+        request.title = "Dr";
+        $.getJSON($.ss.createUrl("/hello/{Name}", request), request, function (r: dtos.HelloResponse) {
+            $("#helloRouteResult").html(r.result);
         });
     },
     generateIds: function () {

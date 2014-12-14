@@ -15,6 +15,14 @@ $(document).bindHandlers({
             $("#helloResult").html(r.result);
         });
     },
+    sayHelloRoute: function () {
+        var request = {};
+        request.name = this.value;
+        request.title = "Dr";
+        $.getJSON($.ss.createUrl("/hello/{Name}", request), request, function (r) {
+            $("#helloRouteResult").html(r.result);
+        });
+    },
     generateIds: function () {
         if (isNaN(parseInt(this.value)))
             return;

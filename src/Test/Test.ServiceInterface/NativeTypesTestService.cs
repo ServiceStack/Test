@@ -8,7 +8,12 @@ namespace Test.ServiceInterface
     {
         public object Any(Hello request)
         {
-            return new HelloResponse { Result = "Hello, {0}!".Fmt(request.Name) };
+            return new HelloResponse
+            {
+                Result = "Hello, {0}{1}!".Fmt(
+                    request.Title != null ? request.Title + ". " : "",
+                    request.Name)
+            };
         }
 
         public object Any(HelloAnnotated request)

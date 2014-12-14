@@ -12,7 +12,9 @@ namespace Test.ServiceModel
     [Route("/hello/{Name}")]
     public class Hello : IReturn<HelloResponse>
     {
+        [Required]
         public string Name { get; set; }
+        public string Title { get; set; }
     }
 
     public class HelloResponse

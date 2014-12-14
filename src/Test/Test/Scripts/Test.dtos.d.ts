@@ -1,616 +1,836 @@
-﻿/* Options:
-Date: 2014-11-24 23:23:28
+/* Options:
+Date: 2014-12-08 18:55:17
 Version: 1
 BaseUrl: http://localhost:56500
 
 GlobalNamespace: dtos
+//MakePropertiesOptional: True
 //AddServiceStackTypes: True
 //AddResponseStatus: False
 //AddImplicitVersion: 
 */
 
-declare module dtos {
+declare module dtos
+{
 
-    interface IReturnVoid {
+    interface IReturnVoid
+    {
     }
 
-    interface IReturn<T> {
+    interface IReturn<T>
+    {
     }
 
-    interface NestedClass {
-        value: string;
+    // @DataContract
+    interface ResponseStatus
+    {
+        // @DataMember(Order=1)
+        ErrorCode?:string;
+
+        // @DataMember(Order=2)
+        Message?:string;
+
+        // @DataMember(Order=3)
+        StackTrace?:string;
+
+        // @DataMember(Order=4)
+        Errors?:ResponseError[];
     }
 
-    enum EnumType {
-        value1,
-        value2,
+    interface MetadataTestChild
+    {
+        Name?:string;
+        Results?:MetadataTestNestedChild[];
+    }
+
+    interface NestedClass
+    {
+        Value?:string;
+    }
+
+    enum EnumType
+    {
+        Value1,
+        Value2,
     }
 
     // @Flags()
-    enum EnumFlags {
-        value1 = 1,
-        value2 = 2,
-        value3 = 4,
+    enum EnumFlags
+    {
+        Value1 = 1,
+        Value2 = 2,
+        Value3 = 4,
     }
 
-    interface AllTypes {
-        id: number;
-        nullableId?: number;
-        byte: number;
-        short: number;
-        int: number;
-        long: number;
-        uShort: number;
-        uInt: number;
-        uLong: number;
-        float: number;
-        double: number;
-        decimal: number;
-        string: string;
-        dateTime: string;
-        timeSpan: string;
-        nullableDateTime?: string;
-        nullableTimeSpan?: string;
-        stringList: string[];
-        stringArray: string[];
-        stringMap: { [index: string]: string; };
-        intStringMap: { [index: number]: string; };
-        subType: SubType;
+    interface AllTypes
+    {
+        Id?:number;
+        NullableId?:number;
+        Byte?:number;
+        Short?:number;
+        Int?:number;
+        Long?:number;
+        UShort?:number;
+        UInt?:number;
+        ULong?:number;
+        Float?:number;
+        Double?:number;
+        Decimal?:number;
+        String?:string;
+        DateTime?:string;
+        TimeSpan?:string;
+        NullableDateTime?:string;
+        NullableTimeSpan?:string;
+        StringList?:string[];
+        StringArray?:string[];
+        StringMap?:{ [index:string]: string; };
+        IntStringMap?:{ [index:number]: string; };
+        SubType?:SubType;
     }
 
-    interface AllCollectionTypes {
-        intArray: number[];
-        intList: number[];
-        stringArray: string[];
-        stringList: string[];
-        pocoArray: Poco[];
-        pocoList: Poco[];
+    interface AllCollectionTypes
+    {
+        IntArray?:number[];
+        IntList?:number[];
+        StringArray?:string[];
+        StringList?:string[];
+        PocoArray?:Poco[];
+        PocoList?:Poco[];
     }
 
-    interface HelloBase {
-        id: number;
+    interface HelloBase
+    {
+        Id?:number;
     }
 
-    interface HelloResponseBase {
-        refId: number;
+    interface HelloResponseBase
+    {
+        RefId?:number;
     }
 
-    interface Poco {
-        name: string;
+    interface Poco
+    {
+        Name?:string;
     }
 
-    interface HelloBase_1<T> {
-        items: T[];
-        counts: number[];
+    interface HelloBase_1<T>
+    {
+        Items?:T[];
+        Counts?:number[];
     }
 
-    interface Item {
-        value: string;
+    interface Item
+    {
+        Value?:string;
     }
 
-    interface InheritedItem {
-        name: string;
+    interface InheritedItem
+    {
+        Name?:string;
     }
 
-    interface HelloWithReturnResponse {
-        result: string;
+    interface HelloWithReturnResponse
+    {
+        Result?:string;
     }
 
-    interface HelloType {
-        result: string;
+    interface HelloType
+    {
+        Result?:string;
     }
 
-    interface IPoco {
-        name: string;
+    interface IPoco
+    {
+        Name?:string;
     }
 
-    interface IEmptyInterface {
+    interface IEmptyInterface
+    {
     }
 
-    interface EmptyClass {
+    interface EmptyClass
+    {
+    }
+
+    interface CustomUserSession extends AuthUserSession
+    {
+        // @DataMember
+        CustomName?:string;
+
+        // @DataMember
+        CustomInfo?:string;
+    }
+
+    interface UnAuthInfo
+    {
+        CustomInfo?:string;
+    }
+
+    interface RequestLogEntry
+    {
+        Id?:number;
+        DateTime?:string;
+        HttpMethod?:string;
+        AbsoluteUri?:string;
+        PathInfo?:string;
+        RequestBody?:string;
+        RequestDto?:Object;
+        UserAuthId?:string;
+        SessionId?:string;
+        IpAddress?:string;
+        ForwardedFor?:string;
+        Referer?:string;
+        Headers?:{ [index:string]: string; };
+        FormData?:{ [index:string]: string; };
+        Items?:{ [index:string]: string; };
+        Session?:Object;
+        ResponseDto?:Object;
+        ErrorResponse?:Object;
+        RequestDuration?:string;
     }
 
     // @DataContract
-    interface ResponseStatus {
-        // @DataMember(Order=1)
-        errorCode: string;
-
-        // @DataMember(Order=2)
-        message: string;
-
-        // @DataMember(Order=3)
-        stackTrace: string;
-
-        // @DataMember(Order=4)
-        errors: ResponseError[];
-    }
-
-    interface CustomUserSession extends AuthUserSession {
-        // @DataMember
-        customName: string;
-
-        // @DataMember
-        customInfo: string;
-    }
-
-    interface UnAuthInfo {
-        customInfo: string;
-    }
-
-    interface SubType {
-        id: number;
-        name: string;
-    }
-
-    // @DataContract
-    interface ResponseError {
+    interface ResponseError
+    {
         // @DataMember(Order=1, EmitDefaultValue=false)
-        errorCode: string;
+        ErrorCode?:string;
 
         // @DataMember(Order=2, EmitDefaultValue=false)
-        fieldName: string;
+        FieldName?:string;
 
         // @DataMember(Order=3, EmitDefaultValue=false)
-        message: string;
+        Message?:string;
     }
 
-    interface IAuthTokens {
-        provider: string;
-        userId: string;
-        accessToken: string;
-        accessTokenSecret: string;
-        refreshToken: string;
-        refreshTokenExpiry?: string;
-        requestToken: string;
-        requestTokenSecret: string;
-        items: { [index: string]: string; };
+    interface MetadataTestNestedChild
+    {
+        Name?:string;
+    }
+
+    interface SubType
+    {
+        Id?:number;
+        Name?:string;
+    }
+
+    interface IAuthTokens
+    {
+        Provider?:string;
+        UserId?:string;
+        AccessToken?:string;
+        AccessTokenSecret?:string;
+        RefreshToken?:string;
+        RefreshTokenExpiry?:string;
+        RequestToken?:string;
+        RequestTokenSecret?:string;
+        Items?:{ [index:string]: string; };
     }
 
     // @DataContract
-    interface AuthUserSession {
+    interface AuthUserSession
+    {
         // @DataMember(Order=1)
-        referrerUrl: string;
+        ReferrerUrl?:string;
 
         // @DataMember(Order=2)
-        id: string;
+        Id?:string;
 
         // @DataMember(Order=3)
-        userAuthId: string;
+        UserAuthId?:string;
 
         // @DataMember(Order=4)
-        userAuthName: string;
+        UserAuthName?:string;
 
         // @DataMember(Order=5)
-        userName: string;
+        UserName?:string;
 
         // @DataMember(Order=6)
-        twitterUserId: string;
+        TwitterUserId?:string;
 
         // @DataMember(Order=7)
-        twitterScreenName: string;
+        TwitterScreenName?:string;
 
         // @DataMember(Order=8)
-        facebookUserId: string;
+        FacebookUserId?:string;
 
         // @DataMember(Order=9)
-        facebookUserName: string;
+        FacebookUserName?:string;
 
         // @DataMember(Order=10)
-        firstName: string;
+        FirstName?:string;
 
         // @DataMember(Order=11)
-        lastName: string;
+        LastName?:string;
 
         // @DataMember(Order=12)
-        displayName: string;
+        DisplayName?:string;
 
         // @DataMember(Order=13)
-        company: string;
+        Company?:string;
 
         // @DataMember(Order=14)
-        email: string;
+        Email?:string;
 
         // @DataMember(Order=15)
-        primaryEmail: string;
+        PrimaryEmail?:string;
 
         // @DataMember(Order=16)
-        phoneNumber: string;
+        PhoneNumber?:string;
 
         // @DataMember(Order=17)
-        birthDate?: string;
+        BirthDate?:string;
 
         // @DataMember(Order=18)
-        birthDateRaw: string;
+        BirthDateRaw?:string;
 
         // @DataMember(Order=19)
-        address: string;
+        Address?:string;
 
         // @DataMember(Order=20)
-        address2: string;
+        Address2?:string;
 
         // @DataMember(Order=21)
-        city: string;
+        City?:string;
 
         // @DataMember(Order=22)
-        state: string;
+        State?:string;
 
         // @DataMember(Order=23)
-        country: string;
+        Country?:string;
 
         // @DataMember(Order=24)
-        culture: string;
+        Culture?:string;
 
         // @DataMember(Order=25)
-        fullName: string;
+        FullName?:string;
 
         // @DataMember(Order=26)
-        gender: string;
+        Gender?:string;
 
         // @DataMember(Order=27)
-        language: string;
+        Language?:string;
 
         // @DataMember(Order=28)
-        mailAddress: string;
+        MailAddress?:string;
 
         // @DataMember(Order=29)
-        nickname: string;
+        Nickname?:string;
 
         // @DataMember(Order=30)
-        postalCode: string;
+        PostalCode?:string;
 
         // @DataMember(Order=31)
-        timeZone: string;
+        TimeZone?:string;
 
         // @DataMember(Order=32)
-        requestTokenSecret: string;
+        RequestTokenSecret?:string;
 
         // @DataMember(Order=33)
-        createdAt: string;
+        CreatedAt?:string;
 
         // @DataMember(Order=34)
-        lastModified: string;
+        LastModified?:string;
 
         // @DataMember(Order=35)
-        providerOAuthAccess: IAuthTokens[];
+        ProviderOAuthAccess?:IAuthTokens[];
 
         // @DataMember(Order=36)
-        roles: string[];
+        Roles?:string[];
 
         // @DataMember(Order=37)
-        permissions: string[];
+        Permissions?:string[];
 
         // @DataMember(Order=38)
-        isAuthenticated: boolean;
+        IsAuthenticated?:boolean;
 
         // @DataMember(Order=39)
-        sequence: string;
+        Sequence?:string;
 
         // @DataMember(Order=40)
-        tag: number;
+        Tag?:number;
     }
 
-    interface Account {
-        name: string;
+    interface CustomHttpErrorResponse
+    {
+        Custom?:string;
+        ResponseStatus?:ResponseStatus;
     }
 
-    interface Project {
-        account: string;
-        name: string;
+    interface Account
+    {
+        Name?:string;
     }
 
-    interface GetRandomIdsResponse {
-        results: string[];
+    interface Project
+    {
+        Account?:string;
+        Name?:string;
     }
 
-    interface HelloResponse {
-        result: string;
+    interface MetadataTestResponse
+    {
+        Id?:number;
+        Results?:MetadataTestChild[];
+    }
+
+    interface GetRandomIdsResponse
+    {
+        Results?:string[];
+    }
+
+    interface HelloResponse
+    {
+        Result?:string;
     }
 
     /**
     * Description on HelloAllResponse type
     */
     // @DataContract
-    interface HelloAnnotatedResponse {
+    interface HelloAnnotatedResponse
+    {
         // @DataMember
-        result: string;
+        Result?:string;
     }
 
-    interface HelloAllTypesResponse {
-        result: string;
-        allTypes: AllTypes;
-        allCollectionTypes: AllCollectionTypes;
+    interface HelloAllTypesResponse
+    {
+        Result?:string;
+        AllTypes?:AllTypes;
+        AllCollectionTypes?:AllCollectionTypes;
     }
 
     // @DataContract
-    interface HelloWithDataContractResponse {
+    interface HelloWithDataContractResponse
+    {
         // @DataMember(Name="result", Order=1, IsRequired=true, EmitDefaultValue=false)
-        result: string;
+        Result?:string;
     }
 
     /**
     * Description on HelloWithDescriptionResponse type
     */
-    interface HelloWithDescriptionResponse {
-        result: string;
+    interface HelloWithDescriptionResponse
+    {
+        Result?:string;
     }
 
-    interface HelloWithInheritanceResponse extends HelloResponseBase {
-        result: string;
+    interface HelloWithInheritanceResponse extends HelloResponseBase
+    {
+        Result?:string;
     }
 
-    interface HelloWithAlternateReturnResponse extends HelloWithReturnResponse {
-        altResult: string;
+    interface HelloWithAlternateReturnResponse extends HelloWithReturnResponse
+    {
+        AltResult?:string;
     }
 
-    interface HelloWithRouteResponse {
-        result: string;
+    interface HelloWithRouteResponse
+    {
+        Result?:string;
     }
 
-    interface HelloWithTypeResponse {
-        result: HelloType;
+    interface HelloWithTypeResponse
+    {
+        Result?:HelloType;
     }
 
-    interface PingResponse {
-        responses: { [index: string]: ResponseStatus; };
-        responseStatus: ResponseStatus;
+    interface PingResponse
+    {
+        Responses?:{ [index:string]: ResponseStatus; };
+        ResponseStatus?:ResponseStatus;
     }
 
-    interface RequiresRoleResponse {
-        result: string;
-        responseStatus: ResponseStatus;
+    interface RequiresRoleResponse
+    {
+        Result?:string;
+        ResponseStatus?:ResponseStatus;
     }
 
-    interface GetSessionResponse {
-        result: CustomUserSession;
-        unAuthInfo: UnAuthInfo;
-        responseStatus: ResponseStatus;
+    interface GetSessionResponse
+    {
+        Result?:CustomUserSession;
+        UnAuthInfo?:UnAuthInfo;
+        ResponseStatus?:ResponseStatus;
     }
 
     // @DataContract
-    interface AuthenticateResponse {
+    interface RequestLogsResponse
+    {
         // @DataMember(Order=1)
-        userId: string;
+        Results?:RequestLogEntry[];
 
         // @DataMember(Order=2)
-        sessionId: string;
+        Usage?:{ [index:string]: string; };
 
         // @DataMember(Order=3)
-        userName: string;
+        ResponseStatus?:ResponseStatus;
+    }
+
+    // @DataContract
+    interface AuthenticateResponse
+    {
+        // @DataMember(Order=1)
+        UserId?:string;
+
+        // @DataMember(Order=2)
+        SessionId?:string;
+
+        // @DataMember(Order=3)
+        UserName?:string;
 
         // @DataMember(Order=4)
-        displayName: string;
+        DisplayName?:string;
 
         // @DataMember(Order=5)
-        referrerUrl: string;
+        ReferrerUrl?:string;
 
         // @DataMember(Order=6)
-        responseStatus: ResponseStatus;
+        ResponseStatus?:ResponseStatus;
 
         // @DataMember(Order=7)
-        meta: { [index: string]: string; };
+        Meta?:{ [index:string]: string; };
     }
 
-    interface AssignRolesResponse {
-        allRoles: string[];
-        allPermissions: string[];
-        responseStatus: ResponseStatus;
+    interface AssignRolesResponse
+    {
+        AllRoles?:string[];
+        AllPermissions?:string[];
+        ResponseStatus?:ResponseStatus;
     }
 
-    interface UnAssignRolesResponse {
-        allRoles: string[];
-        allPermissions: string[];
-        responseStatus: ResponseStatus;
+    interface UnAssignRolesResponse
+    {
+        AllRoles?:string[];
+        AllPermissions?:string[];
+        ResponseStatus?:ResponseStatus;
+    }
+
+    interface CustomHttpError extends IReturn<CustomHttpError>
+    {
+        StatusCode?:number;
+        StatusDescription?:string;
     }
 
     // @Route("/{Path*}")
-    interface RootPathRoutes {
-        path: string;
+    interface RootPathRoutes
+    {
+        Path?:string;
     }
 
-    interface GetAccount extends IReturn<Account> {
-        account: string;
+    interface GetAccount extends IReturn<Account>
+    {
+        Account?:string;
     }
 
-    interface GetProject extends IReturn<Project> {
-        account: string;
-        project: string;
+    interface GetProject extends IReturn<Project>
+    {
+        Account?:string;
+        Project?:string;
     }
 
     // @Route("/image-stream")
-    interface ImageAsStream {
-        format: string;
+    interface ImageAsStream
+    {
+        Format?:string;
     }
 
     // @Route("/image-bytes")
-    interface ImageAsBytes {
-        format: string;
+    interface ImageAsBytes
+    {
+        Format?:string;
     }
 
     // @Route("/image-custom")
-    interface ImageAsCustomResult {
-        format: string;
+    interface ImageAsCustomResult
+    {
+        Format?:string;
     }
 
     // @Route("/image-response")
-    interface ImageWriteToResponse {
-        format: string;
+    interface ImageWriteToResponse
+    {
+        Format?:string;
     }
 
     // @Route("/image-file")
-    interface ImageAsFile {
-        format: string;
+    interface ImageAsFile
+    {
+        Format?:string;
     }
 
     // @Route("/image-redirect")
-    interface ImageAsRedirect {
-        format: string;
+    interface ImageAsRedirect
+    {
+        Format?:string;
     }
 
     // @Route("/image-draw/{Name}")
-    interface DrawImage extends IReturn<DrawImage> {
-        name: string;
-        format: string;
-        width?: number;
-        height?: number;
-        fontSize?: number;
-        foreground: string;
-        background: string;
+    interface DrawImage extends IReturn<DrawImage>
+    {
+        Name?:string;
+        Format?:string;
+        Width?:number;
+        Height?:number;
+        FontSize?:number;
+        Foreground?:string;
+        Background?:string;
+    }
+
+    interface MetadataTest extends IReturn<MetadataTestResponse>
+    {
+        Id?:number;
     }
 
     // @Route("/randomids")
-    interface GetRandomIds extends IReturn<GetRandomIds> {
-        take?: number;
+    interface GetRandomIds extends IReturn<GetRandomIds>
+    {
+        Take?:number;
     }
 
-    // @Route("/hello")
     // @Route("/hello/{Name}")
-    interface Hello extends IReturn<HelloResponse> {
-        name: string;
+    // @Route("/hello")
+    interface Hello extends IReturn<HelloResponse>
+    {
+        // @Required()
+        Name:string;
+
+        Title?:string;
     }
 
     /**
     * Description on HelloAll type
     */
     // @DataContract
-    interface HelloAnnotated extends IReturn<HelloAnnotatedResponse> {
+    interface HelloAnnotated extends IReturn<HelloAnnotatedResponse>
+    {
         // @DataMember
-        name: string;
+        Name?:string;
     }
 
-    interface HelloWithNestedClass extends IReturn<HelloResponse> {
-        name: string;
-        nestedClassProp: NestedClass;
+    interface HelloWithNestedClass extends IReturn<HelloResponse>
+    {
+        Name?:string;
+        NestedClassProp?:NestedClass;
     }
 
-    interface HelloWithEnum {
-        enumProp: EnumType;
-        nullableEnumProp?: EnumType;
-        enumFlags: EnumFlags;
+    interface HelloWithEnum
+    {
+        EnumProp?:EnumType;
+        NullableEnumProp?:EnumType;
+        EnumFlags?:EnumFlags;
     }
 
-    interface RestrictedAttributes {
-        id: number;
-        name: string;
-        hello: Hello;
+    interface RestrictedAttributes
+    {
+        Id?:number;
+        Name?:string;
+        Hello?:Hello;
     }
 
     /**
     * AllowedAttributes Description
     */
     // @Route("/allowed-attributes", "GET")
-    // @Api("AllowedAttributes Description")
     // @ApiResponse(400, "Your request was not understood")
+    // @Api("AllowedAttributes Description")
     // @DataContract
-    interface AllowedAttributes {
-        // @Default(5)
+    interface AllowedAttributes
+    {
         // @Required()
-        id: number;
+        // @Default(5)
+        Id:number;
 
         // @DataMember(Name="Aliased")
         // @ApiMember(ParameterType="path", Description="Range Description", DataType="double", IsRequired=true)
-        range: number;
+        Range?:number;
 
-        // @Meta("Foo", "Bar")
         // @References(typeof(Hello))
         // @StringLength(20)
-        name: string;
+        // @Meta("Foo", "Bar")
+        Name?:string;
     }
 
-    interface HelloAllTypes extends IReturn<HelloAllTypes> {
-        name: string;
-        allTypes: AllTypes;
-        allCollectionTypes: AllCollectionTypes;
+    interface HelloAllTypes extends IReturn<HelloAllTypes>
+    {
+        Name?:string;
+        AllTypes?:AllTypes;
+        AllCollectionTypes?:AllCollectionTypes;
     }
 
-    interface HelloString {
-        name: string;
+    interface HelloString
+    {
+        Name?:string;
     }
 
-    interface HelloVoid {
-        name: string;
+    interface HelloVoid
+    {
+        Name?:string;
     }
 
     // @DataContract
-    interface HelloWithDataContract extends IReturn<HelloWithDataContract> {
+    interface HelloWithDataContract extends IReturn<HelloWithDataContract>
+    {
         // @DataMember(Name="name", Order=1, IsRequired=true, EmitDefaultValue=false)
-        name: string;
+        Name?:string;
 
         // @DataMember(Name="id", Order=2, EmitDefaultValue=false)
-        id: number;
+        Id?:number;
     }
 
     /**
     * Description on HelloWithDescription type
     */
-    interface HelloWithDescription extends IReturn<HelloWithDescription> {
-        name: string;
+    interface HelloWithDescription extends IReturn<HelloWithDescription>
+    {
+        Name?:string;
     }
 
-    interface HelloWithInheritance extends HelloBase, IReturn<HelloWithInheritance> {
-        name: string;
+    interface HelloWithInheritance extends HelloBase, IReturn<HelloWithInheritance>
+    {
+        Name?:string;
     }
 
-    interface HelloWithGenericInheritance extends HelloBase_1<Poco> {
-        result: string;
+    interface HelloWithGenericInheritance extends HelloBase_1<Poco>
+    {
+        Result?:string;
     }
 
-    interface HelloWithGenericInheritance2 extends HelloBase_1<Hello> {
-        result: string;
+    interface HelloWithGenericInheritance2 extends HelloBase_1<Hello>
+    {
+        Result?:string;
     }
 
-    interface HelloWithNestedInheritance extends HelloBase_1<Item> {
+    interface HelloWithNestedInheritance extends HelloBase_1<Item>
+    {
     }
 
-    interface HelloWithListInheritance extends Array<InheritedItem> {
+    interface HelloWithListInheritance extends Array<InheritedItem>
+    {
     }
 
-    interface HelloWithReturn extends IReturn<HelloWithAlternateReturnResponse> {
-        name: string;
+    interface HelloWithReturn extends IReturn<HelloWithAlternateReturnResponse>
+    {
+        Name?:string;
     }
 
     // @Route("/helloroute")
-    interface HelloWithRoute extends IReturn<HelloWithRoute> {
-        name: string;
+    interface HelloWithRoute extends IReturn<HelloWithRoute>
+    {
+        Name?:string;
     }
 
-    interface HelloWithType extends IReturn<HelloWithType> {
-        name: string;
+    interface HelloWithType extends IReturn<HelloWithType>
+    {
+        Name?:string;
     }
 
-    interface HelloInterface {
-        poco: IPoco;
-        emptyInterface: IEmptyInterface;
-        emptyClass: EmptyClass;
+    interface HelloInterface
+    {
+        Poco?:IPoco;
+        EmptyInterface?:IEmptyInterface;
+        EmptyClass?:EmptyClass;
     }
 
     // @Route("/ping")
-    interface Ping extends IReturn<Ping> {
+    interface Ping extends IReturn<Ping>
+    {
     }
 
     // @Route("/reset-connections")
-    interface ResetConnections {
+    interface ResetConnections
+    {
     }
 
     // @Route("/requires-role")
-    interface RequiresRole extends IReturn<RequiresRole> {
+    interface RequiresRole extends IReturn<RequiresRole>
+    {
     }
 
     // @Route("/session")
-    interface GetSession extends IReturn<GetSessionResponse> {
+    interface GetSession extends IReturn<GetSessionResponse>
+    {
     }
 
     // @Route("/session/edit/{CustomName}")
-    interface UpdateSession extends IReturn<GetSessionResponse> {
-        customName: string;
+    interface UpdateSession extends IReturn<GetSessionResponse>
+    {
+        CustomName?:string;
     }
 
     // @Route("/postman")
-    interface Postman {
-        label: string[];
-        exportSession: boolean;
-        ssid: string;
-        sspid: string;
-        ssopt: string;
+    interface Postman
+    {
+        Label?:string[];
+        ExportSession?:boolean;
+        ssid?:string;
+        sspid?:string;
+        ssopt?:string;
+    }
+
+    // @Route("/requestlogs")
+    // @DataContract
+    interface RequestLogs extends IReturn<RequestLogs>
+    {
+        // @DataMember(Order=1)
+        BeforeSecs?:number;
+
+        // @DataMember(Order=2)
+        AfterSecs?:number;
+
+        // @DataMember(Order=3)
+        IpAddress?:string;
+
+        // @DataMember(Order=4)
+        ForwardedFor?:string;
+
+        // @DataMember(Order=5)
+        UserAuthId?:string;
+
+        // @DataMember(Order=6)
+        SessionId?:string;
+
+        // @DataMember(Order=7)
+        Referer?:string;
+
+        // @DataMember(Order=8)
+        PathInfo?:string;
+
+        // @DataMember(Order=9)
+        Ids?:number[];
+
+        // @DataMember(Order=10)
+        BeforeId?:number;
+
+        // @DataMember(Order=11)
+        AfterId?:number;
+
+        // @DataMember(Order=12)
+        HasResponse?:boolean;
+
+        // @DataMember(Order=13)
+        WithErrors?:boolean;
+
+        // @DataMember(Order=14)
+        Skip?:number;
+
+        // @DataMember(Order=15)
+        Take?:number;
+
+        // @DataMember(Order=16)
+        EnableSessionTracking?:boolean;
+
+        // @DataMember(Order=17)
+        EnableResponseTracking?:boolean;
+
+        // @DataMember(Order=18)
+        EnableErrorTracking?:boolean;
+
+        // @DataMember(Order=19)
+        DurationLongerThan?:string;
+
+        // @DataMember(Order=20)
+        DurationLessThan?:string;
     }
 
     // @Route("/auth")
@@ -618,62 +838,65 @@ declare module dtos {
     // @Route("/authenticate")
     // @Route("/authenticate/{provider}")
     // @DataContract
-    interface Authenticate extends IReturn<AuthenticateResponse> {
+    interface Authenticate extends IReturn<AuthenticateResponse>
+    {
         // @DataMember(Order=1)
-        provider: string;
+        provider?:string;
 
         // @DataMember(Order=2)
-        state: string;
+        State?:string;
 
         // @DataMember(Order=3)
-        oauth_token: string;
+        oauth_token?:string;
 
         // @DataMember(Order=4)
-        oauth_verifier: string;
+        oauth_verifier?:string;
 
         // @DataMember(Order=5)
-        userName: string;
+        UserName?:string;
 
         // @DataMember(Order=6)
-        password: string;
+        Password?:string;
 
         // @DataMember(Order=7)
-        rememberMe?: boolean;
+        RememberMe?:boolean;
 
         // @DataMember(Order=8)
-        continue: string;
+        Continue?:string;
 
         // @DataMember(Order=9)
-        nonce: string;
+        nonce?:string;
 
         // @DataMember(Order=10)
-        uri: string;
+        uri?:string;
 
         // @DataMember(Order=11)
-        response: string;
+        response?:string;
 
         // @DataMember(Order=12)
-        qop: string;
+        qop?:string;
 
         // @DataMember(Order=13)
-        nc: string;
+        nc?:string;
 
         // @DataMember(Order=14)
-        cnonce: string;
+        cnonce?:string;
     }
 
     // @Route("/assignroles")
-    interface AssignRoles extends IReturn<AssignRolesResponse> {
-        userName: string;
-        permissions: string[];
-        roles: string[];
+    interface AssignRoles extends IReturn<AssignRolesResponse>
+    {
+        UserName?:string;
+        Permissions?:string[];
+        Roles?:string[];
     }
 
     // @Route("/unassignroles")
-    interface UnAssignRoles extends IReturn<UnAssignRolesResponse> {
-        userName: string;
-        permissions: string[];
-        roles: string[];
+    interface UnAssignRoles extends IReturn<UnAssignRolesResponse>
+    {
+        UserName?:string;
+        Permissions?:string[];
+        Roles?:string[];
     }
 
 }
