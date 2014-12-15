@@ -4,6 +4,7 @@ using ServiceStack;
 
 namespace Test.ServiceModel
 {
+    [Route("/metadatatest")]
     public class MetadataTest : IReturn<MetadataTestResponse>
     {
         public int Id { get; set; }
@@ -25,6 +26,12 @@ namespace Test.ServiceModel
     public class MetadataTestNestedChild
     {
         public string Name { get; set; }
+    }
+
+    [Route("/metadatatest-array")]
+    public class MetadataTestArray : IReturn<MetadataTestChild[]>
+    {
+        public int Id { get; set; }
     }
 
 

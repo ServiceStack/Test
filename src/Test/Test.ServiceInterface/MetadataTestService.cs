@@ -28,6 +28,17 @@ namespace Test.ServiceInterface
             };
         }
 
+        public object Any(MetadataTestArray request)
+        {
+            return new[]
+            {
+                new MetadataTestNestedChild
+                {
+                    Name = "bar",
+                },
+            };
+        }
+
         public object Any(GetExample request)
         {
             return new GetExampleResponse
