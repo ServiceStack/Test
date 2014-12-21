@@ -61,7 +61,12 @@ namespace Test
             CreateUser(authRepo, 2, "test2", "test2");
 
             Plugins.Add(new PostmanFeature());
-            Plugins.Add(new CorsFeature());
+            
+            Plugins.Add(new CorsFeature(
+                allowOriginWhitelist: new [] { "http://localhost", "http://localhost:8080", "http://test.servicestack.net" },
+                allowCredentials: true,
+                allowedHeaders: "Content-Type, Allow, Authorization"));
+
             Plugins.Add(new RequestLogsFeature {
                 RequestLogger = new RedisRequestLogger(container.Resolve<IRedisClientsManager>()),
             });
