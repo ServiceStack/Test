@@ -25,6 +25,8 @@ namespace RabbitMqTest.Server
 
         static void Main(string[] args)
         {
+            QueueNames.SetQueuePrefix("site1.");
+
             using (var mqServer = CreateMqServer())
             {
                 mqServer.RegisterHandler<HelloRabbit>(m =>

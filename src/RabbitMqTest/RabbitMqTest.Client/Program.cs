@@ -25,6 +25,8 @@ namespace RabbitMQTest.Client
 
         static void Main(string[] args)
         {
+            QueueNames.SetQueuePrefix("site1.");
+
             typeof(Program).Namespace.Print();
 
             using (var mqServer = CreateMqServer())
