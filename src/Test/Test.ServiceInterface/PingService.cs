@@ -20,23 +20,25 @@ namespace Test.ServiceInterface
     {
         private static string[] urls = new[] 
         {
+            "http://techstacks.io",
             "https://servicestack.net/pricing",
+            "http://react-chat.servicestack.net",
             "http://chat.servicestack.net",
             //"http://badapi.net/internalservererror",
             "http://stackapis.servicestack.net",
             "http://httpbenchmarks.servicestack.net",
             "http://emailcontacts.servicestack.net",
             "http://imgur.servicestack.net",
-            "http://bootstrapapi.servicestack.net",
+            //"http://bootstrapapi.servicestack.net",
             "http://todos.servicestack.net",
             "http://razor.servicestack.net",
             "http://redisadminui.servicestack.net",
-            "http://restfiles.servicestack.net",
-            "http://redisstackoverflow.servicestack.net",
-            "http://northwind.servicestack.net",
-            "http://docs.servicestack.net",
-            "http://mvc.servicestack.net",
-            "http://webforms.servicestack.net",
+            //"http://restfiles.servicestack.net",
+            //"http://redisstackoverflow.servicestack.net",
+            //"http://northwind.servicestack.net",
+            //"http://docs.servicestack.net",
+            //"http://mvc.servicestack.net",
+            //"http://webforms.servicestack.net",
         };
 
         public object Any(Ping request)
