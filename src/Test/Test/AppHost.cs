@@ -63,7 +63,7 @@ namespace Test
             Plugins.Add(new PostmanFeature());
             
             Plugins.Add(new CorsFeature(
-                allowOriginWhitelist: new [] { "http://localhost", "http://localhost:8080", "http://test.servicestack.net" },
+                allowOriginWhitelist: new[] { "http://localhost", "http://localhost:56500", "http://test.servicestack.net", "http://null.jsbin.com" },
                 allowCredentials: true,
                 allowedHeaders: "Content-Type, Allow, Authorization"));
 
