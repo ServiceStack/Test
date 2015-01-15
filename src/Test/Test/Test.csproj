@@ -129,6 +129,7 @@
     <Content Include="test-typescript.cshtml" />
     <None Include="Properties\PublishProfiles\WebDeploy.pubxml" />
     <TypeScriptCompile Include="Scripts\Test.dtos.d.ts" />
+    <Content Include="textfile.txt" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

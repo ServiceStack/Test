@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Security.Cryptography;
 using ServiceStack;
 using Test.ServiceModel;
@@ -23,5 +24,17 @@ namespace Test.ServiceInterface
                 Results = take.Times(i => CreateRandomBase64Id())
             };
         }
+
+        public object Any(TextFileTest request)
+        {
+            return new HttpResult(new FileInfo("~/textfile.txt".MapHostAbsolutePath()), 
+                asAttachment:request.AsAttachment);
+        }
+    }
+
+    [Route("/textfile-test")]
+    public class TextFileTest
+    {
+        public bool AsAttachment { get; set; }
     }
 }
