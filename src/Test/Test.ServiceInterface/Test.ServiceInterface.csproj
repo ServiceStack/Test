@@ -44,7 +44,7 @@
     </Reference>
     <Reference Include="ServiceStack.Interfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\ServiceStack\src\ServiceStack.Server\bin\Release\ServiceStack.Interfaces.dll</HintPath>
+      <HintPath>..\..\..\..\ServiceStack\lib\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.OrmLite">
       <HintPath>..\..\..\..\ServiceStack\src\ServiceStack.Server\bin\Release\ServiceStack.OrmLite.dll</HintPath>
@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomHttpErrorService.cs" />
+    <Compile Include="ExternalServices.cs" />
     <Compile Include="GitHubServices.cs" />
     <Compile Include="ImageService.cs" />
     <Compile Include="MetadataTestService.cs" />
@@ -83,6 +84,10 @@
     <Compile Include="SessionService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\External.ServiceModel\External.ServiceModel.csproj">
+      <Project>{E813C416-E358-4CC2-A188-6BA11A33091F}</Project>
+      <Name>External.ServiceModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Test.ServiceModel\Test.ServiceModel.csproj">
       <Project>{53E82AC1-DD1D-4C66-B55F-F9F4ACFB2F40}</Project>
       <Name>Test.ServiceModel</Name>
