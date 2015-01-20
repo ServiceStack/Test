@@ -93,6 +93,11 @@
             Not threadsafe use a pooled manager
             </summary>
         </member>
+        <member name="F:ServiceStack.Redis.RedisNativeClient.active">
+            <summary>
+            Used to manage connection pooling
+            </summary>
+        </member>
         <member name="M:ServiceStack.Redis.RedisNativeClient.Exec">
             <summary>
             Requires custom result parsing
@@ -109,11 +114,6 @@
         <member name="M:ServiceStack.Redis.RedisNativeClient.ResetSendBuffer">
             <summary>
             reset buffer index in send buffer
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Redis.RedisNativeClient.Active">
-            <summary>
-            Used to manage connection pooling
             </summary>
         </member>
         <member name="P:ServiceStack.Redis.RedisNativeClient.NamespacePrefix">
