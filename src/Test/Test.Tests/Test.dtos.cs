@@ -1,8 +1,9 @@
 /* Options:
-Date: 2014-11-23 00:26:18
+Date: 2015-01-20 16:44:31
 Version: 1
 BaseUrl: http://localhost:56500
 
+//GlobalNamespace: 
 //MakePartial: True
 //MakeVirtual: True
 //MakeDataContractsExtensible: False
@@ -22,10 +23,174 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
+using External.ServiceModel;
 using Test.ServiceModel;
 using Test.ServiceModel.Types;
 using Test.ServiceInterface;
+using ServiceStack.Caching;
+using ServiceStack.Data;
+using ServiceStack.Redis;
+using ServiceStack.Messaging;
+using ServiceStack.Model;
 
+
+namespace External.ServiceModel
+{
+
+    public enum ExternalEnum
+    {
+        Foo,
+        Bar,
+        Baz,
+    }
+
+    public enum ExternalEnum2
+    {
+        Uno,
+        Due,
+        Tre,
+    }
+
+    public enum ExternalEnum3
+    {
+        Un,
+        Deux,
+        Trois,
+    }
+
+    public partial class ExternalOperation
+        : IReturn<ExternalOperationResponse>
+    {
+        public virtual int Id { get; set; }
+        public virtual string Name { get; set; }
+        public virtual ExternalEnum ExternalEnum { get; set; }
+    }
+
+    public partial class ExternalOperation2
+        : IReturn<ExternalOperation2Response>
+    {
+        public virtual int Id { get; set; }
+    }
+
+    public partial class ExternalOperation2Response
+    {
+        public virtual ExternalType ExternalType { get; set; }
+    }
+
+    public partial class ExternalOperation3
+        : IReturn<ExternalOperation3>
+    {
+        public virtual int Id { get; set; }
+    }
+
+    public partial class ExternalOperation4
+    {
+        public virtual int Id { get; set; }
+    }
+
+    public partial class ExternalOperationResponse
+    {
+        public virtual string Result { get; set; }
+    }
+
+    public partial class ExternalReturnTypeResponse
+    {
+        public virtual ExternalEnum3 ExternalEnum3 { get; set; }
+    }
+
+    public partial class ExternalType
+    {
+        public virtual ExternalEnum2 ExternalEnum2 { get; set; }
+    }
+}
+
+namespace ServiceStack.Caching
+{
+
+    public partial interface ICacheClient
+    {
+    }
+
+    public partial interface ISession
+    {
+    }
+
+    public partial interface ISessionFactory
+    {
+    }
+}
+
+namespace ServiceStack.Data
+{
+
+    public partial interface IDbConnectionFactory
+    {
+    }
+}
+
+namespace ServiceStack.Messaging
+{
+
+    public partial interface IMessageFactory
+    {
+    }
+
+    public partial interface IMessageProducer
+    {
+    }
+}
+
+namespace ServiceStack.Model
+{
+
+    public partial interface IHasNamed<IRedisList>
+    {
+    }
+}
+
+namespace ServiceStack.Redis
+{
+
+    public partial interface IRedisClient
+    {
+        long Db { get; set; }
+        long DbSize { get; set; }
+        Dictionary<string, string> Info { get; set; }
+        DateTime LastSave { get; set; }
+        string Host { get; set; }
+        int Port { get; set; }
+        int ConnectTimeout { get; set; }
+        int RetryTimeout { get; set; }
+        int RetryCount { get; set; }
+        int SendTimeout { get; set; }
+        string Password { get; set; }
+        bool HadExceptions { get; set; }
+        IHasNamed<IRedisList> Lists { get; set; }
+        IHasNamed<IRedisSet> Sets { get; set; }
+        IHasNamed<IRedisSortedSet> SortedSets { get; set; }
+        IHasNamed<IRedisHash> Hashes { get; set; }
+    }
+
+    public partial interface IRedisClientsManager
+    {
+    }
+
+    public partial interface IRedisHash
+    {
+    }
+
+    public partial interface IRedisList
+    {
+    }
+
+    public partial interface IRedisSet
+    {
+    }
+
+    public partial interface IRedisSortedSet
+    {
+    }
+}
 
 namespace Test.ServiceInterface
 {
@@ -137,6 +302,16 @@ namespace Test.ServiceInterface
         public virtual ResponseStatus ResponseStatus { get; set; }
     }
 
+    public partial class PingService
+        : Service
+    {
+
+        [Route("/reset-connections")]
+        public partial class ResetConnections
+        {
+        }
+    }
+
     public partial class Project
     {
         public virtual string Account { get; set; }
@@ -147,6 +322,12 @@ namespace Test.ServiceInterface
     public partial class RootPathRoutes
     {
         public virtual string Path { get; set; }
+    }
+
+    [Route("/textfile-test")]
+    public partial class TextFileTest
+    {
+        public virtual bool AsAttachment { get; set; }
     }
 
     public partial class UnAuthInfo
@@ -188,6 +369,24 @@ namespace Test.ServiceModel
         public virtual string Name { get; set; }
     }
 
+    public partial class ArrayResult
+    {
+        public virtual string Result { get; set; }
+    }
+
+    public partial class CustomHttpError
+        : IReturn<CustomHttpError>
+    {
+        public virtual int StatusCode { get; set; }
+        public virtual string StatusDescription { get; set; }
+    }
+
+    public partial class CustomHttpErrorResponse
+    {
+        public virtual string Custom { get; set; }
+        public virtual ResponseStatus ResponseStatus { get; set; }
+    }
+
     public partial class EmptyClass
     {
     }
@@ -206,11 +405,50 @@ namespace Test.ServiceModel
         Value2,
     }
 
-    [Route("/hello/{Name}")]
-    public partial class Hello
-        : IReturn<Hello>
+    [Route("/example", "GET")]
+    [DataContract]
+    public partial class GetExample
+        : IReturn<GetExampleResponse>
     {
+    }
+
+    [DataContract]
+    public partial class GetExampleResponse
+    {
+        [DataMember(Order=1)]
+        public virtual ResponseStatus ResponseStatus { get; set; }
+
+        [DataMember(Order=2)]
+        [ApiMember]
+        public virtual MenuExample MenuExample1 { get; set; }
+    }
+
+    [Route("/randomids")]
+    public partial class GetRandomIds
+        : IReturn<GetRandomIds>
+    {
+        public virtual int? Take { get; set; }
+    }
+
+    public partial class GetRandomIdsResponse
+    {
+        public GetRandomIdsResponse()
+        {
+            Results = new List<string>{};
+        }
+
+        public virtual List<string> Results { get; set; }
+    }
+
+    [Route("/hello/{Name}")]
+    [Route("/hello")]
+    public partial class Hello
+        : IReturn<HelloResponse>
+    {
+        [Required]
         public virtual string Name { get; set; }
+
+        public virtual string Title { get; set; }
     }
 
     public partial class HelloAllTypes
@@ -249,6 +487,17 @@ namespace Test.ServiceModel
         public virtual string Result { get; set; }
     }
 
+    public partial class HelloArray
+        : IReturn<ArrayResult[]>
+    {
+        public HelloArray()
+        {
+            Names = new List<string>{};
+        }
+
+        public virtual List<string> Names { get; set; }
+    }
+
     public partial class HelloBase<T>
     {
         public HelloBase()
@@ -261,11 +510,33 @@ namespace Test.ServiceModel
         public virtual List<int> Counts { get; set; }
     }
 
+    public partial class HelloInnerTypes
+        : IReturn<HelloInnerTypesResponse>
+    {
+    }
+
+    public partial class HelloInnerTypesResponse
+    {
+        public virtual TypesGroup.InnerType InnerType { get; set; }
+        public virtual TypesGroup.InnerEnum InnerEnum { get; set; }
+    }
+
     public partial class HelloInterface
     {
         public virtual IPoco Poco { get; set; }
         public virtual IEmptyInterface EmptyInterface { get; set; }
         public virtual EmptyClass EmptyClass { get; set; }
+    }
+
+    public partial class HelloList
+        : IReturn<List<ListResult>>
+    {
+        public HelloList()
+        {
+            Names = new List<string>{};
+        }
+
+        public virtual List<string> Names { get; set; }
     }
 
     public partial class HelloResponse
@@ -364,7 +635,7 @@ namespace Test.ServiceModel
         : IReturn<HelloResponse>
     {
         public virtual string Name { get; set; }
-        public virtual NestedClass NestedClassProp { get; set; }
+        public virtual HelloWithNestedClass.NestedClass NestedClassProp { get; set; }
 
         public partial class NestedClass
         {
@@ -425,6 +696,76 @@ namespace Test.ServiceModel
         string Name { get; set; }
     }
 
+    public partial class ListResult
+    {
+        public virtual string Result { get; set; }
+    }
+
+    [DataContract]
+    public partial class MenuExample
+    {
+        [DataMember(Order=1)]
+        [ApiMember]
+        public virtual MenuItemExample MenuItemExample1 { get; set; }
+    }
+
+    public partial class MenuItemExample
+    {
+        [DataMember(Order=1)]
+        [ApiMember]
+        public virtual string Name1 { get; set; }
+
+        public virtual MenuItemExampleItem MenuItemExampleItem { get; set; }
+    }
+
+    public partial class MenuItemExampleItem
+    {
+        [DataMember(Order=1)]
+        [ApiMember]
+        public virtual string Name1 { get; set; }
+    }
+
+    [Route("/metadatatest")]
+    public partial class MetadataTest
+        : IReturn<MetadataTestResponse>
+    {
+        public virtual int Id { get; set; }
+    }
+
+    [Route("/metadatatest-array")]
+    public partial class MetadataTestArray
+        : IReturn<MetadataTestChild[]>
+    {
+        public virtual int Id { get; set; }
+    }
+
+    public partial class MetadataTestChild
+    {
+        public MetadataTestChild()
+        {
+            Results = new List<MetadataTestNestedChild>{};
+        }
+
+        public virtual string Name { get; set; }
+        public virtual List<MetadataTestNestedChild> Results { get; set; }
+    }
+
+    public partial class MetadataTestNestedChild
+    {
+        public virtual string Name { get; set; }
+    }
+
+    public partial class MetadataTestResponse
+    {
+        public MetadataTestResponse()
+        {
+            Results = new List<MetadataTestChild>{};
+        }
+
+        public virtual int Id { get; set; }
+        public virtual List<MetadataTestChild> Results { get; set; }
+    }
+
     [Route("/requires-role")]
     public partial class RequiresRole
         : IReturn<RequiresRole>
@@ -442,6 +783,23 @@ namespace Test.ServiceModel
         public virtual int Id { get; set; }
         public virtual string Name { get; set; }
         public virtual Hello Hello { get; set; }
+    }
+
+    public partial class TypesGroup
+    {
+
+        public partial class InnerType
+        {
+            public virtual long Id { get; set; }
+            public virtual string Name { get; set; }
+        }
+
+        public enum InnerEnum
+        {
+            Foo,
+            Bar,
+            Baz,
+        }
     }
 }
 

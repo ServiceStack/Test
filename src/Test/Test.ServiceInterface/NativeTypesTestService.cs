@@ -132,5 +132,10 @@ namespace Test.ServiceInterface
         {
             return request;
         }
+
+        public object Any(HelloInnerTypes request)
+        {
+            return new HelloInnerTypesResponse();
+        }
     }
 }

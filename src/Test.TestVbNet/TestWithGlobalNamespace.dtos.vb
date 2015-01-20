@@ -1,9 +1,9 @@
 ' Options:
-'Date: 2015-01-20 17:10:16
+'Date: 2015-01-20 17:10:10
 'Version: 1
 'BaseUrl: http://localhost:56500
 '
-'''GlobalNamespace: 
+'GlobalNamespace: dtos
 '''MakePartial: True
 '''MakeVirtual: True
 '''MakeDataContractsExtensible: False
@@ -22,16 +22,11 @@ Imports System.Collections.Generic
 Imports System.Runtime.Serialization
 Imports ServiceStack
 Imports ServiceStack.DataAnnotations
-Imports External.ServiceModel
-Imports Test.ServiceModel
-Imports Test.ServiceModel.Types
-Imports Test.ServiceInterface
-Imports ServiceStack.Data
-Imports ServiceStack.Messaging
+Imports dtos
 
 Namespace Global
 
-    Namespace External.ServiceModel
+    Namespace dtos
 
         Public Enum ExternalEnum
             Foo
@@ -87,24 +82,15 @@ Namespace Global
         Public Partial Class ExternalType
             Public Overridable Property ExternalEnum2 As ExternalEnum2
         End Class
-    End Namespace
-
-    Namespace ServiceStack.Data
 
         Public Interface IDbConnectionFactory
         End Interface
-    End Namespace
-
-    Namespace ServiceStack.Messaging
 
         Public Interface IMessageFactory
         End Interface
 
         Public Interface IMessageProducer
         End Interface
-    End Namespace
-
-    Namespace Test.ServiceInterface
 
         Public Partial Class Account
             Public Overridable Property Name As String
@@ -229,9 +215,6 @@ Namespace Global
             Implements IReturn(Of GetSessionResponse)
             Public Overridable Property CustomName As String
         End Class
-    End Namespace
-
-    Namespace Test.ServiceModel
 
         '''<Summary>
         '''AllowedAttributes Description
@@ -620,9 +603,6 @@ Namespace Global
                 Baz
             End Enum
         End Class
-    End Namespace
-
-    Namespace Test.ServiceModel.Types
 
         Public Partial Class AllCollectionTypes
             Public Sub New()

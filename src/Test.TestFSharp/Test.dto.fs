@@ -1,8 +1,9 @@
 (* Options:
-Date: 2014-11-23 00:18:30
+Date: 2015-01-20 17:10:31
 Version: 1
 BaseUrl: http://localhost:56500
 
+GlobalNamespace: dtos
 MakeDataContractsExtensible: False
 AddReturnMarker: True
 AddDescriptionAsComments: True
@@ -13,7 +14,7 @@ AddResponseStatus: False
 InitializeCollections: True
 *)
 
-namespace Test.ServiceModel
+namespace dtos
 
 open System
 open System.Collections
@@ -22,9 +23,66 @@ open System.Runtime.Serialization
 open ServiceStack
 open ServiceStack.DataAnnotations
 
+    type ExternalEnum =
+        | Foo = 0
+        | Bar = 1
+        | Baz = 2
+
+    type ExternalEnum2 =
+        | Uno = 0
+        | Due = 1
+        | Tre = 2
+
+    [<AllowNullLiteral>]
+    type ExternalType() = 
+        member val ExternalEnum2:ExternalEnum2 = new ExternalEnum2() with get,set
+
+    type ExternalEnum3 =
+        | Un = 0
+        | Deux = 1
+        | Trois = 2
+
+    [<AllowNullLiteral>]
+    type MetadataTestNestedChild() = 
+        member val Name:String = null with get,set
+
+    [<AllowNullLiteral>]
+    type MetadataTestChild() = 
+        member val Name:String = null with get,set
+        member val Results:List<MetadataTestNestedChild> = new List<MetadataTestNestedChild>() with get,set
+
+    [<AllowNullLiteral>]
+    type MenuItemExampleItem() = 
+        [<DataMember(Order=1)>]
+        [<ApiMember>]
+        member val Name1:String = null with get,set
+
+    [<AllowNullLiteral>]
+    type MenuItemExample() = 
+        [<DataMember(Order=1)>]
+        [<ApiMember>]
+        member val Name1:String = null with get,set
+
+        member val MenuItemExampleItem:MenuItemExampleItem = null with get,set
+
+    [<DataContract>]
+    [<AllowNullLiteral>]
+    type MenuExample() = 
+        [<DataMember(Order=1)>]
+        [<ApiMember>]
+        member val MenuItemExample1:MenuItemExample = null with get,set
+
     [<AllowNullLiteral>]
     type NestedClass() = 
         member val Value:String = null with get,set
+
+    [<AllowNullLiteral>]
+    type ListResult() = 
+        member val Result:String = null with get,set
+
+    [<AllowNullLiteral>]
+    type ArrayResult() = 
+        member val Result:String = null with get,set
 
     type EnumType =
         | Value1 = 0
@@ -121,6 +179,20 @@ open ServiceStack.DataAnnotations
         class end
 
     [<AllowNullLiteral>]
+    type InnerType() = 
+        member val Id:Int64 = new Int64() with get,set
+        member val Name:String = null with get,set
+
+    type InnerEnum =
+        | Foo = 0
+        | Bar = 1
+        | Baz = 2
+
+    [<AllowNullLiteral>]
+    type PingService() = 
+        inherit Service()
+
+    [<AllowNullLiteral>]
     type CustomUserSession() = 
         inherit AuthUserSession()
         [<DataMember>]
@@ -134,6 +206,39 @@ open ServiceStack.DataAnnotations
         member val CustomInfo:String = null with get,set
 
     [<AllowNullLiteral>]
+    type TypesGroup() = 
+        class end
+
+    [<AllowNullLiteral>]
+    type IDbConnectionFactory = 
+        interface end
+
+    [<AllowNullLiteral>]
+    type IMessageFactory = 
+        interface end
+
+    [<AllowNullLiteral>]
+    type IMessageProducer = 
+        interface end
+
+    [<AllowNullLiteral>]
+    type CustomHttpErrorResponse() = 
+        member val Custom:String = null with get,set
+        member val ResponseStatus:ResponseStatus = null with get,set
+
+    [<AllowNullLiteral>]
+    type ExternalOperationResponse() = 
+        member val Result:String = null with get,set
+
+    [<AllowNullLiteral>]
+    type ExternalOperation2Response() = 
+        member val ExternalType:ExternalType = null with get,set
+
+    [<AllowNullLiteral>]
+    type ExternalReturnTypeResponse() = 
+        member val ExternalEnum3:ExternalEnum3 = new ExternalEnum3() with get,set
+
+    [<AllowNullLiteral>]
     type Account() = 
         member val Name:String = null with get,set
 
@@ -141,6 +246,25 @@ open ServiceStack.DataAnnotations
     type Project() = 
         member val Account:String = null with get,set
         member val Name:String = null with get,set
+
+    [<AllowNullLiteral>]
+    type MetadataTestResponse() = 
+        member val Id:Int32 = new Int32() with get,set
+        member val Results:List<MetadataTestChild> = new List<MetadataTestChild>() with get,set
+
+    [<DataContract>]
+    [<AllowNullLiteral>]
+    type GetExampleResponse() = 
+        [<DataMember(Order=1)>]
+        member val ResponseStatus:ResponseStatus = null with get,set
+
+        [<DataMember(Order=2)>]
+        [<ApiMember>]
+        member val MenuExample1:MenuExample = null with get,set
+
+    [<AllowNullLiteral>]
+    type GetRandomIdsResponse() = 
+        member val Results:List<String> = new List<String>() with get,set
 
     [<AllowNullLiteral>]
     type HelloResponse() = 
@@ -193,6 +317,11 @@ open ServiceStack.DataAnnotations
         member val Result:HelloType = null with get,set
 
     [<AllowNullLiteral>]
+    type HelloInnerTypesResponse() = 
+        member val InnerType:InnerType = null with get,set
+        member val InnerEnum:InnerEnum = new InnerEnum() with get,set
+
+    [<AllowNullLiteral>]
     type PingResponse() = 
         member val Responses:Dictionary<String, ResponseStatus> = new Dictionary<String, ResponseStatus>() with get,set
         member val ResponseStatus:ResponseStatus = null with get,set
@@ -207,6 +336,33 @@ open ServiceStack.DataAnnotations
         member val Result:CustomUserSession = null with get,set
         member val UnAuthInfo:UnAuthInfo = null with get,set
         member val ResponseStatus:ResponseStatus = null with get,set
+
+    [<AllowNullLiteral>]
+    type CustomHttpError() = 
+        interface IReturn<CustomHttpError>
+        member val StatusCode:Int32 = new Int32() with get,set
+        member val StatusDescription:String = null with get,set
+
+    [<AllowNullLiteral>]
+    type ExternalOperation() = 
+        interface IReturn<ExternalOperationResponse>
+        member val Id:Int32 = new Int32() with get,set
+        member val Name:String = null with get,set
+        member val ExternalEnum:ExternalEnum = new ExternalEnum() with get,set
+
+    [<AllowNullLiteral>]
+    type ExternalOperation2() = 
+        interface IReturn<ExternalOperation2Response>
+        member val Id:Int32 = new Int32() with get,set
+
+    [<AllowNullLiteral>]
+    type ExternalOperation3() = 
+        interface IReturn<ExternalOperation3>
+        member val Id:Int32 = new Int32() with get,set
+
+    [<AllowNullLiteral>]
+    type ExternalOperation4() = 
+        member val Id:Int32 = new Int32() with get,set
 
     [<Route("/{Path*}")>]
     [<AllowNullLiteral>]
@@ -266,11 +422,44 @@ open ServiceStack.DataAnnotations
         member val Foreground:String = null with get,set
         member val Background:String = null with get,set
 
+    [<Route("/metadatatest")>]
+    [<AllowNullLiteral>]
+    type MetadataTest() = 
+        interface IReturn<MetadataTestResponse>
+        member val Id:Int32 = new Int32() with get,set
+
+    [<Route("/metadatatest-array")>]
+    [<AllowNullLiteral>]
+    type MetadataTestArray() = 
+        interface IReturn<MetadataTestChild[]>
+        member val Id:Int32 = new Int32() with get,set
+
+    [<Route("/example", "GET")>]
+    [<DataContract>]
+    [<AllowNullLiteral>]
+    type GetExample() = 
+        interface IReturn<GetExampleResponse>
+
+    [<Route("/randomids")>]
+    [<AllowNullLiteral>]
+    type GetRandomIds() = 
+        interface IReturn<GetRandomIds>
+        member val Take:Nullable<Int32> = new Nullable<Int32>() with get,set
+
+    [<Route("/textfile-test")>]
+    [<AllowNullLiteral>]
+    type TextFileTest() = 
+        member val AsAttachment:Boolean = new Boolean() with get,set
+
     [<Route("/hello/{Name}")>]
+    [<Route("/hello")>]
     [<AllowNullLiteral>]
     type Hello() = 
-        interface IReturn<Hello>
+        interface IReturn<HelloResponse>
+        [<Required>]
         member val Name:String = null with get,set
+
+        member val Title:String = null with get,set
 
     ///<summary>
     ///Description on HelloAll type
@@ -287,6 +476,16 @@ open ServiceStack.DataAnnotations
         interface IReturn<HelloResponse>
         member val Name:String = null with get,set
         member val NestedClassProp:NestedClass = null with get,set
+
+    [<AllowNullLiteral>]
+    type HelloList() = 
+        interface IReturn<List<ListResult>>
+        member val Names:List<String> = new List<String>() with get,set
+
+    [<AllowNullLiteral>]
+    type HelloArray() = 
+        interface IReturn<ArrayResult[]>
+        member val Names:List<String> = new List<String>() with get,set
 
     [<AllowNullLiteral>]
     type HelloWithEnum() = 
@@ -400,6 +599,10 @@ open ServiceStack.DataAnnotations
         member val Poco:IPoco = null with get,set
         member val EmptyInterface:IEmptyInterface = null with get,set
         member val EmptyClass:EmptyClass = null with get,set
+
+    [<AllowNullLiteral>]
+    type HelloInnerTypes() = 
+        interface IReturn<HelloInnerTypesResponse>
 
     [<Route("/ping")>]
     [<AllowNullLiteral>]

@@ -5,7 +5,7 @@ open System
 open ServiceStack
 open ServiceStack.Text
 open System.Collections.Generic
-open Test.ServiceModel
+open dtos
 
 type IPoco =
     abstract Name:String with get,set
