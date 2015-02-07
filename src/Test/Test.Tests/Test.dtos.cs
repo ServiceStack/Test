@@ -1,5 +1,5 @@
 /* Options:
-Date: 2015-01-20 16:44:31
+Date: 2015-01-25 05:36:45
 Version: 1
 BaseUrl: http://localhost:56500
 
@@ -14,6 +14,8 @@ BaseUrl: http://localhost:56500
 //AddResponseStatus: False
 //AddImplicitVersion: 
 //InitializeCollections: True
+//IncludeTypes: 
+//ExcludeTypes: 
 //AddDefaultXmlNamespace: http://schemas.servicestack.net/types
 */
 
@@ -27,11 +29,6 @@ using External.ServiceModel;
 using Test.ServiceModel;
 using Test.ServiceModel.Types;
 using Test.ServiceInterface;
-using ServiceStack.Caching;
-using ServiceStack.Data;
-using ServiceStack.Redis;
-using ServiceStack.Messaging;
-using ServiceStack.Model;
 
 
 namespace External.ServiceModel
@@ -101,94 +98,6 @@ namespace External.ServiceModel
     public partial class ExternalType
     {
         public virtual ExternalEnum2 ExternalEnum2 { get; set; }
-    }
-}
-
-namespace ServiceStack.Caching
-{
-
-    public partial interface ICacheClient
-    {
-    }
-
-    public partial interface ISession
-    {
-    }
-
-    public partial interface ISessionFactory
-    {
-    }
-}
-
-namespace ServiceStack.Data
-{
-
-    public partial interface IDbConnectionFactory
-    {
-    }
-}
-
-namespace ServiceStack.Messaging
-{
-
-    public partial interface IMessageFactory
-    {
-    }
-
-    public partial interface IMessageProducer
-    {
-    }
-}
-
-namespace ServiceStack.Model
-{
-
-    public partial interface IHasNamed<IRedisList>
-    {
-    }
-}
-
-namespace ServiceStack.Redis
-{
-
-    public partial interface IRedisClient
-    {
-        long Db { get; set; }
-        long DbSize { get; set; }
-        Dictionary<string, string> Info { get; set; }
-        DateTime LastSave { get; set; }
-        string Host { get; set; }
-        int Port { get; set; }
-        int ConnectTimeout { get; set; }
-        int RetryTimeout { get; set; }
-        int RetryCount { get; set; }
-        int SendTimeout { get; set; }
-        string Password { get; set; }
-        bool HadExceptions { get; set; }
-        IHasNamed<IRedisList> Lists { get; set; }
-        IHasNamed<IRedisSet> Sets { get; set; }
-        IHasNamed<IRedisSortedSet> SortedSets { get; set; }
-        IHasNamed<IRedisHash> Hashes { get; set; }
-    }
-
-    public partial interface IRedisClientsManager
-    {
-    }
-
-    public partial interface IRedisHash
-    {
-    }
-
-    public partial interface IRedisList
-    {
-    }
-
-    public partial interface IRedisSet
-    {
-    }
-
-    public partial interface IRedisSortedSet
-    {
     }
 }
 
@@ -303,7 +212,6 @@ namespace Test.ServiceInterface
     }
 
     public partial class PingService
-        : Service
     {
 
         [Route("/reset-connections")]
@@ -363,9 +271,9 @@ namespace Test.ServiceModel
         [ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)]
         public virtual double Range { get; set; }
 
+        [References(typeof(Test.ServiceModel.Hello))]
         [StringLength(20)]
         [Meta("Foo", "Bar")]
-        [References(typeof(Test.ServiceModel.Hello))]
         public virtual string Name { get; set; }
     }
 
@@ -440,8 +348,8 @@ namespace Test.ServiceModel
         public virtual List<string> Results { get; set; }
     }
 
-    [Route("/hello/{Name}")]
     [Route("/hello")]
+    [Route("/hello/{Name}")]
     public partial class Hello
         : IReturn<HelloResponse>
     {
@@ -816,6 +724,8 @@ namespace Test.ServiceModel.Types
             StringList = new List<string>{};
             PocoArray = new Poco[]{};
             PocoList = new List<Poco>{};
+            PocoLookup = new Dictionary<string, List<Poco>>{};
+            PocoLookupMap = new Dictionary<string, List<Dictionary<String,Poco>>>{};
         }
 
         public virtual int[] IntArray { get; set; }
@@ -824,6 +734,8 @@ namespace Test.ServiceModel.Types
         public virtual List<string> StringList { get; set; }
         public virtual Poco[] PocoArray { get; set; }
         public virtual List<Poco> PocoList { get; set; }
+        public virtual Dictionary<string, List<Poco>> PocoLookup { get; set; }
+        public virtual Dictionary<string, List<Dictionary<String,Poco>>> PocoLookupMap { get; set; }
     }
 
     public partial class AllTypes

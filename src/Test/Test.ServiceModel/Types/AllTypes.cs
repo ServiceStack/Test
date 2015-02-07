@@ -20,6 +20,9 @@ namespace Test.ServiceModel.Types
         public string String { get; set; }
         public DateTime DateTime { get; set; }
         public TimeSpan TimeSpan { get; set; }
+        public DateTimeOffset DateTimeOffset { get; set; }
+        public Guid Guid { get; set; }
+        public Char Char { get; set; }
         public DateTime? NullableDateTime { get; set; }
         public TimeSpan? NullableTimeSpan { get; set; }
         public List<string> StringList { get; set; }
@@ -39,6 +42,9 @@ namespace Test.ServiceModel.Types
 
         public Poco[] PocoArray { get; set; }
         public List<Poco> PocoList { get; set; }
+
+        public Dictionary<string, List<Poco>> PocoLookup { get; set; }
+        public Dictionary<string, List<Dictionary<string, Poco>>> PocoLookupMap { get; set; }
     }
 
     public class Poco
@@ -46,12 +52,12 @@ namespace Test.ServiceModel.Types
         public string Name { get; set; }
     }
 
-    public class HelloBase
+    public abstract class HelloBase
     {
         public int Id { get; set; }
     }
 
-    public class HelloResponseBase
+    public abstract class HelloResponseBase
     {
         public int RefId { get; set; }
     }
@@ -61,7 +67,7 @@ namespace Test.ServiceModel.Types
         public string Result { get; set; }
     }
 
-    public class HelloWithReturnResponse
+    public abstract class HelloWithReturnResponse
     {
         public string Result { get; set; }
     }

@@ -1,5 +1,5 @@
 (* Options:
-Date: 2015-01-20 17:10:31
+Date: 2015-01-25 04:31:43
 Version: 1
 BaseUrl: http://localhost:56500
 
@@ -136,6 +136,8 @@ open ServiceStack.DataAnnotations
         member val StringList:List<String> = new List<String>() with get,set
         member val PocoArray:Poco[] = [||] with get,set
         member val PocoList:List<Poco> = new List<Poco>() with get,set
+        member val PocoLookup:Dictionary<String, List<Poco>> = new Dictionary<String, List<Poco>>() with get,set
+        member val PocoLookupMap:Dictionary<String, List<Dictionary<String,Poco>>> = new Dictionary<String, List<Dictionary<String,Poco>>>() with get,set
 
     [<AllowNullLiteral>]
     type HelloBase() = 
@@ -190,7 +192,7 @@ open ServiceStack.DataAnnotations
 
     [<AllowNullLiteral>]
     type PingService() = 
-        inherit Service()
+        class end
 
     [<AllowNullLiteral>]
     type CustomUserSession() = 
@@ -208,18 +210,6 @@ open ServiceStack.DataAnnotations
     [<AllowNullLiteral>]
     type TypesGroup() = 
         class end
-
-    [<AllowNullLiteral>]
-    type IDbConnectionFactory = 
-        interface end
-
-    [<AllowNullLiteral>]
-    type IMessageFactory = 
-        interface end
-
-    [<AllowNullLiteral>]
-    type IMessageProducer = 
-        interface end
 
     [<AllowNullLiteral>]
     type CustomHttpErrorResponse() = 
@@ -451,8 +441,8 @@ open ServiceStack.DataAnnotations
     type TextFileTest() = 
         member val AsAttachment:Boolean = new Boolean() with get,set
 
-    [<Route("/hello/{Name}")>]
     [<Route("/hello")>]
+    [<Route("/hello/{Name}")>]
     [<AllowNullLiteral>]
     type Hello() = 
         interface IReturn<HelloResponse>
@@ -516,9 +506,9 @@ open ServiceStack.DataAnnotations
         [<ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)>]
         member val Range:Double = new Double() with get,set
 
+        [<References(typeof<Hello>)>]
         [<StringLength(20)>]
         [<Meta("Foo", "Bar")>]
-        [<References(typeof<Hello>)>]
         member val Name:String = null with get,set
 
     [<AllowNullLiteral>]

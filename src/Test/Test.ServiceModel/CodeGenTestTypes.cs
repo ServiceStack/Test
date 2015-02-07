@@ -307,4 +307,5 @@ namespace Test.ServiceModel
 
         public TypesGroup.InnerEnum InnerEnum { get; set; }
     }
+
 }

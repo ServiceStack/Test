@@ -1,5 +1,5 @@
 ' Options:
-'Date: 2015-01-20 17:10:16
+'Date: 2015-01-25 04:30:33
 'Version: 1
 'BaseUrl: http://localhost:56500
 '
@@ -26,8 +26,6 @@ Imports External.ServiceModel
 Imports Test.ServiceModel
 Imports Test.ServiceModel.Types
 Imports Test.ServiceInterface
-Imports ServiceStack.Data
-Imports ServiceStack.Messaging
 
 Namespace Global
 
@@ -87,21 +85,6 @@ Namespace Global
         Public Partial Class ExternalType
             Public Overridable Property ExternalEnum2 As ExternalEnum2
         End Class
-    End Namespace
-
-    Namespace ServiceStack.Data
-
-        Public Interface IDbConnectionFactory
-        End Interface
-    End Namespace
-
-    Namespace ServiceStack.Messaging
-
-        Public Interface IMessageFactory
-        End Interface
-
-        Public Interface IMessageProducer
-        End Interface
     End Namespace
 
     Namespace Test.ServiceInterface
@@ -198,7 +181,6 @@ Namespace Global
         End Class
 
         Public Partial Class PingService
-            Inherits Service
 
             <Route("/reset-connections")>
             Public Partial Class ResetConnections
@@ -249,9 +231,9 @@ Namespace Global
             <ApiMember(Description:="Range Description", ParameterType:="path", DataType:="double", IsRequired:=true)>
             Public Overridable Property Range As Double
 
+            <References(GetType(Hello))>
             <StringLength(20)>
             <Meta("Foo", "Bar")>
-            <References(GetType(Hello))>
             Public Overridable Property Name As String
         End Class
 
@@ -315,8 +297,8 @@ Namespace Global
             Public Overridable Property Results As List(Of String)
         End Class
 
-        <Route("/hello/{Name}")>
         <Route("/hello")>
+        <Route("/hello/{Name}")>
         Public Partial Class Hello
             Implements IReturn(Of HelloResponse)
             <Required>
@@ -632,6 +614,8 @@ Namespace Global
                 StringList = New List(Of String)
                 PocoArray = New Poco(){}
                 PocoList = New List(Of Poco)
+                PocoLookup = New Dictionary(Of String, List(Of Poco))
+                PocoLookupMap = New Dictionary(Of String, List(Of Dictionary(Of String,Poco)))
             End Sub
 
             Public Overridable Property IntArray As Integer()
@@ -640,6 +624,8 @@ Namespace Global
             Public Overridable Property StringList As List(Of String)
             Public Overridable Property PocoArray As Poco()
             Public Overridable Property PocoList As List(Of Poco)
+            Public Overridable Property PocoLookup As Dictionary(Of String, List(Of Poco))
+            Public Overridable Property PocoLookupMap As Dictionary(Of String, List(Of Dictionary(Of String,Poco)))
         End Class
 
         Public Partial Class AllTypes

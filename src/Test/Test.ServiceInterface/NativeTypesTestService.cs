@@ -137,5 +137,11 @@ namespace Test.ServiceInterface
         {
             return new HelloInnerTypesResponse();
         }
+
+        //Uncomment to generate SS.Client built-in types
+        //public object Any(GenerateBuiltInTypes request)
+        //{
+        //    return request;
+        //}
     }
 }

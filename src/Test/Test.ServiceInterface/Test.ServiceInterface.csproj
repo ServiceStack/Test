@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomHttpErrorService.cs" />
+    <Compile Include="ErrorServices.cs" />
     <Compile Include="ExternalServices.cs" />
     <Compile Include="GitHubServices.cs" />
     <Compile Include="ImageService.cs" />
