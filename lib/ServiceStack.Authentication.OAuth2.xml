@@ -4,6 +4,11 @@
         <name>ServiceStack.Authentication.OAuth2</name>
     </assembly>
     <members>
+        <member name="T:ServiceStack.Authentication.OAuth2.InstagramOAuth2Provider">
+            <summary>
+            More info at: http://instagram.com/developer/authentication/
+            </summary>
+        </member>
         <member name="T:ServiceStack.Authentication.OAuth2.LinkedInOAuth2Provider">
             <summary>
             Create new App at: https://www.linkedin.com/secure/developer

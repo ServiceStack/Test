@@ -225,11 +225,10 @@
             Redis command that does not get queued
             </summary>
         </member>
-        <member name="M:ServiceStack.Redis.RedisSentinel.Setup">
+        <member name="M:ServiceStack.Redis.RedisSentinel.Start">
             <summary>
-            Initialize channel and register client manager
+            Initialize Sentinel Subscription and Configure Redis ClientsManager
             </summary>
-            <param name="container"></param>
         </member>
         <member name="M:ServiceStack.Redis.RedisSentinel.ShouldRetry">
             <summary>
@@ -238,7 +237,7 @@
             <returns></returns>
             <remarks>This will be true if the failures is less than either RedisSentinel.MaxFailures or the # of sentinels, whatever is greater</remarks>
         </member>
-        <member name="M:ServiceStack.Redis.RedisSentinel.Worker_SentinelError(System.Object,System.EventArgs)">
+        <member name="M:ServiceStack.Redis.RedisSentinel.OnSentinelError(System.Exception)">
             <summary>
             Raised if there is an error from a sentinel worker
             </summary>
