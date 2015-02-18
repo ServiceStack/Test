@@ -15,6 +15,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Test.TestVbNet", "Test.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "External.ServiceModel", "External.ServiceModel\External.ServiceModel.csproj", "{E813C416-E358-4CC2-A188-6BA11A33091F}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VS.FSharp.SelfHost", "VS.FSharp.SelfHost\VS.FSharp.SelfHost.fsproj", "{3C8FC247-0231-443C-8B69-039F73C324A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{E813C416-E358-4CC2-A188-6BA11A33091F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E813C416-E358-4CC2-A188-6BA11A33091F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E813C416-E358-4CC2-A188-6BA11A33091F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C8FC247-0231-443C-8B69-039F73C324A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C8FC247-0231-443C-8B69-039F73C324A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C8FC247-0231-443C-8B69-039F73C324A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C8FC247-0231-443C-8B69-039F73C324A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
