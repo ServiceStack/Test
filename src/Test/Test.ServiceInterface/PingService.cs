@@ -21,6 +21,7 @@ namespace Test.ServiceInterface
         private static string[] urls = new[] 
         {
             "http://techstacks.io",
+            "http://autoqueryviewer.servicestack.net/services",
             "https://servicestack.net/pricing",
             "http://react-chat.servicestack.net",
             "http://chat.servicestack.net",
