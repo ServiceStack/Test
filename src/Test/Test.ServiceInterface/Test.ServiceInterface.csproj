@@ -89,6 +89,7 @@
     <Compile Include="PingService.cs" />
     <Compile Include="RequiredRoleService.cs" />
     <Compile Include="SessionService.cs" />
+    <Compile Include="TestServices.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\External.ServiceModel\External.ServiceModel.csproj">
