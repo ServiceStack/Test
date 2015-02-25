@@ -1,5 +1,5 @@
 /* Options:
-Date: 2015-01-25 05:36:45
+Date: 2015-02-23 03:52:09
 Version: 1
 BaseUrl: http://localhost:56500
 
@@ -75,7 +75,7 @@ namespace External.ServiceModel
     }
 
     public partial class ExternalOperation3
-        : IReturn<ExternalOperation3>
+        : IReturn<ExternalReturnTypeResponse>
     {
         public virtual int Id { get; set; }
     }
@@ -121,7 +121,6 @@ namespace Test.ServiceInterface
 
     [Route("/image-draw/{Name}")]
     public partial class DrawImage
-        : IReturn<DrawImage>
     {
         public virtual string Name { get; set; }
         public virtual string Format { get; set; }
@@ -196,7 +195,7 @@ namespace Test.ServiceInterface
 
     [Route("/ping")]
     public partial class Ping
-        : IReturn<Ping>
+        : IReturn<PingResponse>
     {
     }
 
@@ -232,6 +231,16 @@ namespace Test.ServiceInterface
         public virtual string Path { get; set; }
     }
 
+    [Route("/null-response")]
+    public partial class TestNullResponse
+    {
+    }
+
+    [Route("/void-response")]
+    public partial class TestVoidResponse
+    {
+    }
+
     [Route("/textfile-test")]
     public partial class TextFileTest
     {
@@ -258,23 +267,14 @@ namespace Test.ServiceModel
     ///AllowedAttributes Description
     ///</summary>
     [Route("/allowed-attributes", "GET")]
-    [ApiResponse(400, "Your request was not understood")]
     [Api("AllowedAttributes Description")]
+    [ApiResponse(400, "Your request was not understood")]
     [DataContract]
     public partial class AllowedAttributes
     {
-        [Default(5)]
-        [Required]
-        public virtual int Id { get; set; }
-
         [DataMember(Name="Aliased")]
-        [ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)]
+        [ApiMember(ParameterType="path", Description="Range Description", DataType="double", IsRequired=true)]
         public virtual double Range { get; set; }
-
-        [References(typeof(Test.ServiceModel.Hello))]
-        [StringLength(20)]
-        [Meta("Foo", "Bar")]
-        public virtual string Name { get; set; }
     }
 
     public partial class ArrayResult
@@ -283,7 +283,7 @@ namespace Test.ServiceModel
     }
 
     public partial class CustomHttpError
-        : IReturn<CustomHttpError>
+        : IReturn<CustomHttpErrorResponse>
     {
         public virtual int StatusCode { get; set; }
         public virtual string StatusDescription { get; set; }
@@ -333,7 +333,7 @@ namespace Test.ServiceModel
 
     [Route("/randomids")]
     public partial class GetRandomIds
-        : IReturn<GetRandomIds>
+        : IReturn<GetRandomIdsResponse>
     {
         public virtual int? Take { get; set; }
     }
@@ -348,8 +348,8 @@ namespace Test.ServiceModel
         public virtual List<string> Results { get; set; }
     }
 
-    [Route("/hello")]
     [Route("/hello/{Name}")]
+    [Route("/hello")]
     public partial class Hello
         : IReturn<HelloResponse>
     {
@@ -360,7 +360,7 @@ namespace Test.ServiceModel
     }
 
     public partial class HelloAllTypes
-        : IReturn<HelloAllTypes>
+        : IReturn<HelloAllTypesResponse>
     {
         public virtual string Name { get; set; }
         public virtual AllTypes AllTypes { get; set; }
@@ -470,7 +470,7 @@ namespace Test.ServiceModel
 
     [DataContract]
     public partial class HelloWithDataContract
-        : IReturn<HelloWithDataContract>
+        : IReturn<HelloWithDataContractResponse>
     {
         [DataMember(Name="name", Order=1, IsRequired=true, EmitDefaultValue=false)]
         public virtual string Name { get; set; }
@@ -490,7 +490,7 @@ namespace Test.ServiceModel
     ///Description on HelloWithDescription type
     ///</summary>
     public partial class HelloWithDescription
-        : IReturn<HelloWithDescription>
+        : IReturn<HelloWithDescriptionResponse>
     {
         public virtual string Name { get; set; }
     }
@@ -523,7 +523,7 @@ namespace Test.ServiceModel
     }
 
     public partial class HelloWithInheritance
-        : HelloBase, IReturn<HelloWithInheritance>
+        : HelloBase, IReturn<HelloWithInheritanceResponse>
     {
         public virtual string Name { get; set; }
     }
@@ -569,7 +569,7 @@ namespace Test.ServiceModel
 
     [Route("/helloroute")]
     public partial class HelloWithRoute
-        : IReturn<HelloWithRoute>
+        : IReturn<HelloWithRouteResponse>
     {
         public virtual string Name { get; set; }
     }
@@ -580,7 +580,7 @@ namespace Test.ServiceModel
     }
 
     public partial class HelloWithType
-        : IReturn<HelloWithType>
+        : IReturn<HelloWithTypeResponse>
     {
         public virtual string Name { get; set; }
     }
@@ -676,7 +676,7 @@ namespace Test.ServiceModel
 
     [Route("/requires-role")]
     public partial class RequiresRole
-        : IReturn<RequiresRole>
+        : IReturn<RequiresRoleResponse>
     {
     }
 
@@ -691,6 +691,50 @@ namespace Test.ServiceModel
         public virtual int Id { get; set; }
         public virtual string Name { get; set; }
         public virtual Hello Hello { get; set; }
+    }
+
+    [Route("/throw404")]
+    [Route("/throw404/{Message}")]
+    public partial class Throw404
+    {
+        public virtual string Message { get; set; }
+    }
+
+    [Route("/throwhttperror/{Status}")]
+    public partial class ThrowHttpError
+    {
+        public virtual int? Status { get; set; }
+        public virtual string Message { get; set; }
+    }
+
+    [Route("/throw/{Type}")]
+    public partial class ThrowType
+        : IReturn<ThrowTypeResponse>
+    {
+        public virtual string Type { get; set; }
+        public virtual string Message { get; set; }
+    }
+
+    public partial class ThrowTypeResponse
+    {
+        public virtual ResponseStatus ResponseStatus { get; set; }
+    }
+
+    [Route("/throwvalidation")]
+    public partial class ThrowValidation
+        : IReturn<ThrowValidationResponse>
+    {
+        public virtual int Age { get; set; }
+        public virtual string Required { get; set; }
+        public virtual string Email { get; set; }
+    }
+
+    public partial class ThrowValidationResponse
+    {
+        public virtual int Age { get; set; }
+        public virtual string Required { get; set; }
+        public virtual string Email { get; set; }
+        public virtual ResponseStatus ResponseStatus { get; set; }
     }
 
     public partial class TypesGroup
@@ -763,6 +807,9 @@ namespace Test.ServiceModel.Types
         public virtual string String { get; set; }
         public virtual DateTime DateTime { get; set; }
         public virtual TimeSpan TimeSpan { get; set; }
+        public virtual DateTimeOffset DateTimeOffset { get; set; }
+        public virtual Guid Guid { get; set; }
+        public virtual Char Char { get; set; }
         public virtual DateTime? NullableDateTime { get; set; }
         public virtual TimeSpan? NullableTimeSpan { get; set; }
         public virtual List<string> StringList { get; set; }

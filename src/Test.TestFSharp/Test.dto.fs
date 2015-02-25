@@ -1,5 +1,5 @@
 (* Options:
-Date: 2015-01-25 04:31:43
+Date: 2015-02-22 20:50:04
 Version: 1
 BaseUrl: http://localhost:56500
 
@@ -11,6 +11,8 @@ AddDataContractAttributes: False
 AddIndexesToDataMembers: False
 AddResponseStatus: False
 //AddImplicitVersion: 
+//IncludeTypes: 
+//ExcludeTypes: 
 InitializeCollections: True
 *)
 
@@ -116,6 +118,9 @@ open ServiceStack.DataAnnotations
         member val String:String = null with get,set
         member val DateTime:DateTime = new DateTime() with get,set
         member val TimeSpan:TimeSpan = new TimeSpan() with get,set
+        member val DateTimeOffset:DateTimeOffset = new DateTimeOffset() with get,set
+        member val Guid:Guid = new Guid() with get,set
+        member val Char:Char = new Char() with get,set
         member val NullableDateTime:Nullable<DateTime> = new Nullable<DateTime>() with get,set
         member val NullableTimeSpan:Nullable<TimeSpan> = new Nullable<TimeSpan>() with get,set
         member val StringList:List<String> = new List<String>() with get,set
@@ -214,6 +219,17 @@ open ServiceStack.DataAnnotations
     [<AllowNullLiteral>]
     type CustomHttpErrorResponse() = 
         member val Custom:String = null with get,set
+        member val ResponseStatus:ResponseStatus = null with get,set
+
+    [<AllowNullLiteral>]
+    type ThrowTypeResponse() = 
+        member val ResponseStatus:ResponseStatus = null with get,set
+
+    [<AllowNullLiteral>]
+    type ThrowValidationResponse() = 
+        member val Age:Int32 = new Int32() with get,set
+        member val Required:String = null with get,set
+        member val Email:String = null with get,set
         member val ResponseStatus:ResponseStatus = null with get,set
 
     [<AllowNullLiteral>]
@@ -329,9 +345,36 @@ open ServiceStack.DataAnnotations
 
     [<AllowNullLiteral>]
     type CustomHttpError() = 
-        interface IReturn<CustomHttpError>
+        interface IReturn<CustomHttpErrorResponse>
         member val StatusCode:Int32 = new Int32() with get,set
         member val StatusDescription:String = null with get,set
+
+    [<Route("/throwhttperror/{Status}")>]
+    [<AllowNullLiteral>]
+    type ThrowHttpError() = 
+        member val Status:Nullable<Int32> = new Nullable<Int32>() with get,set
+        member val Message:String = null with get,set
+
+    [<Route("/throw404")>]
+    [<Route("/throw404/{Message}")>]
+    [<AllowNullLiteral>]
+    type Throw404() = 
+        member val Message:String = null with get,set
+
+    [<Route("/throw/{Type}")>]
+    [<AllowNullLiteral>]
+    type ThrowType() = 
+        interface IReturn<ThrowTypeResponse>
+        member val Type:String = null with get,set
+        member val Message:String = null with get,set
+
+    [<Route("/throwvalidation")>]
+    [<AllowNullLiteral>]
+    type ThrowValidation() = 
+        interface IReturn<ThrowValidationResponse>
+        member val Age:Int32 = new Int32() with get,set
+        member val Required:String = null with get,set
+        member val Email:String = null with get,set
 
     [<AllowNullLiteral>]
     type ExternalOperation() = 
@@ -347,7 +390,7 @@ open ServiceStack.DataAnnotations
 
     [<AllowNullLiteral>]
     type ExternalOperation3() = 
-        interface IReturn<ExternalOperation3>
+        interface IReturn<ExternalReturnTypeResponse>
         member val Id:Int32 = new Int32() with get,set
 
     [<AllowNullLiteral>]
@@ -403,7 +446,6 @@ open ServiceStack.DataAnnotations
     [<Route("/image-draw/{Name}")>]
     [<AllowNullLiteral>]
     type DrawImage() = 
-        interface IReturn<DrawImage>
         member val Name:String = null with get,set
         member val Format:String = null with get,set
         member val Width:Nullable<Int32> = new Nullable<Int32>() with get,set
@@ -433,7 +475,7 @@ open ServiceStack.DataAnnotations
     [<Route("/randomids")>]
     [<AllowNullLiteral>]
     type GetRandomIds() = 
-        interface IReturn<GetRandomIds>
+        interface IReturn<GetRandomIdsResponse>
         member val Take:Nullable<Int32> = new Nullable<Int32>() with get,set
 
     [<Route("/textfile-test")>]
@@ -441,8 +483,8 @@ open ServiceStack.DataAnnotations
     type TextFileTest() = 
         member val AsAttachment:Boolean = new Boolean() with get,set
 
-    [<Route("/hello")>]
     [<Route("/hello/{Name}")>]
+    [<Route("/hello")>]
     [<AllowNullLiteral>]
     type Hello() = 
         interface IReturn<HelloResponse>
@@ -493,27 +535,18 @@ open ServiceStack.DataAnnotations
     ///AllowedAttributes Description
     ///</summary>
     [<Route("/allowed-attributes", "GET")>]
-    [<ApiResponse(400, "Your request was not understood")>]
     [<Api("AllowedAttributes Description")>]
+    [<ApiResponse(400, "Your request was not understood")>]
     [<DataContract>]
     [<AllowNullLiteral>]
     type AllowedAttributes() = 
-        [<Default(5)>]
-        [<Required>]
-        member val Id:Int32 = new Int32() with get,set
-
         [<DataMember(Name="Aliased")>]
         [<ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)>]
         member val Range:Double = new Double() with get,set
 
-        [<References(typeof<Hello>)>]
-        [<StringLength(20)>]
-        [<Meta("Foo", "Bar")>]
-        member val Name:String = null with get,set
-
     [<AllowNullLiteral>]
     type HelloAllTypes() = 
-        interface IReturn<HelloAllTypes>
+        interface IReturn<HelloAllTypesResponse>
         member val Name:String = null with get,set
         member val AllTypes:AllTypes = null with get,set
         member val AllCollectionTypes:AllCollectionTypes = null with get,set
@@ -529,7 +562,7 @@ open ServiceStack.DataAnnotations
     [<DataContract>]
     [<AllowNullLiteral>]
     type HelloWithDataContract() = 
-        interface IReturn<HelloWithDataContract>
+        interface IReturn<HelloWithDataContractResponse>
         [<DataMember(Name="name", Order=1, IsRequired=true, EmitDefaultValue=false)>]
         member val Name:String = null with get,set
 
@@ -541,13 +574,13 @@ open ServiceStack.DataAnnotations
     ///</summary>
     [<AllowNullLiteral>]
     type HelloWithDescription() = 
-        interface IReturn<HelloWithDescription>
+        interface IReturn<HelloWithDescriptionResponse>
         member val Name:String = null with get,set
 
     [<AllowNullLiteral>]
     type HelloWithInheritance() = 
         inherit HelloBase()
-        interface IReturn<HelloWithInheritance>
+        interface IReturn<HelloWithInheritanceResponse>
         member val Name:String = null with get,set
 
     [<AllowNullLiteral>]
@@ -576,12 +609,12 @@ open ServiceStack.DataAnnotations
     [<Route("/helloroute")>]
     [<AllowNullLiteral>]
     type HelloWithRoute() = 
-        interface IReturn<HelloWithRoute>
+        interface IReturn<HelloWithRouteResponse>
         member val Name:String = null with get,set
 
     [<AllowNullLiteral>]
     type HelloWithType() = 
-        interface IReturn<HelloWithType>
+        interface IReturn<HelloWithTypeResponse>
         member val Name:String = null with get,set
 
     [<AllowNullLiteral>]
@@ -597,7 +630,7 @@ open ServiceStack.DataAnnotations
     [<Route("/ping")>]
     [<AllowNullLiteral>]
     type Ping() = 
-        interface IReturn<Ping>
+        interface IReturn<PingResponse>
 
     [<Route("/reset-connections")>]
     [<AllowNullLiteral>]
@@ -607,7 +640,7 @@ open ServiceStack.DataAnnotations
     [<Route("/requires-role")>]
     [<AllowNullLiteral>]
     type RequiresRole() = 
-        interface IReturn<RequiresRole>
+        interface IReturn<RequiresRoleResponse>
 
     [<Route("/session")>]
     [<AllowNullLiteral>]
@@ -619,4 +652,14 @@ open ServiceStack.DataAnnotations
     type UpdateSession() = 
         interface IReturn<GetSessionResponse>
         member val CustomName:String = null with get,set
+
+    [<Route("/void-response")>]
+    [<AllowNullLiteral>]
+    type TestVoidResponse() = 
+        class end
+
+    [<Route("/null-response")>]
+    [<AllowNullLiteral>]
+    type TestNullResponse() = 
+        class end
 

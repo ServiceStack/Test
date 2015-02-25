@@ -1,5 +1,5 @@
 ' Options:
-'Date: 2015-01-25 04:30:33
+'Date: 2015-02-22 20:58:31
 'Version: 1
 'BaseUrl: http://localhost:56500
 '
@@ -14,6 +14,8 @@
 '''AddResponseStatus: False
 '''AddImplicitVersion: 
 '''InitializeCollections: True
+'''IncludeTypes: 
+'''ExcludeTypes: 
 '''AddDefaultXmlNamespace: http://schemas.servicestack.net/types
 
 Imports System
@@ -66,7 +68,7 @@ Namespace Global
         End Class
 
         Public Partial Class ExternalOperation3
-            Implements IReturn(Of ExternalOperation3)
+            Implements IReturn(Of ExternalReturnTypeResponse)
             Public Overridable Property Id As Integer
         End Class
 
@@ -104,7 +106,6 @@ Namespace Global
 
         <Route("/image-draw/{Name}")>
         Public Partial Class DrawImage
-            Implements IReturn(Of DrawImage)
             Public Overridable Property Name As String
             Public Overridable Property Format As String
             Public Overridable Property Width As Nullable(Of Integer)
@@ -168,7 +169,7 @@ Namespace Global
 
         <Route("/ping")>
         Public Partial Class Ping
-            Implements IReturn(Of Ping)
+            Implements IReturn(Of PingResponse)
         End Class
 
         Public Partial Class PingResponse
@@ -197,6 +198,14 @@ Namespace Global
             Public Overridable Property Path As String
         End Class
 
+        <Route("/null-response")>
+        Public Partial Class TestNullResponse
+        End Class
+
+        <Route("/void-response")>
+        Public Partial Class TestVoidResponse
+        End Class
+
         <Route("/textfile-test")>
         Public Partial Class TextFileTest
             Public Overridable Property AsAttachment As Boolean
@@ -219,22 +228,13 @@ Namespace Global
         '''AllowedAttributes Description
         '''</Summary>
         <Route("/allowed-attributes", "GET")>
-        <ApiResponse(400, "Your request was not understood")>
         <Api("AllowedAttributes Description")>
+        <ApiResponse(400, "Your request was not understood")>
         <DataContract>
         Public Partial Class AllowedAttributes
-            <[Default](5)>
-            <Required>
-            Public Overridable Property Id As Integer
-
             <DataMember(Name:="Aliased")>
             <ApiMember(Description:="Range Description", ParameterType:="path", DataType:="double", IsRequired:=true)>
             Public Overridable Property Range As Double
-
-            <References(GetType(Hello))>
-            <StringLength(20)>
-            <Meta("Foo", "Bar")>
-            Public Overridable Property Name As String
         End Class
 
         Public Partial Class ArrayResult
@@ -242,7 +242,7 @@ Namespace Global
         End Class
 
         Public Partial Class CustomHttpError
-            Implements IReturn(Of CustomHttpError)
+            Implements IReturn(Of CustomHttpErrorResponse)
             Public Overridable Property StatusCode As Integer
             Public Overridable Property StatusDescription As String
         End Class
@@ -285,7 +285,7 @@ Namespace Global
 
         <Route("/randomids")>
         Public Partial Class GetRandomIds
-            Implements IReturn(Of GetRandomIds)
+            Implements IReturn(Of GetRandomIdsResponse)
             Public Overridable Property Take As Nullable(Of Integer)
         End Class
 
@@ -297,8 +297,8 @@ Namespace Global
             Public Overridable Property Results As List(Of String)
         End Class
 
-        <Route("/hello")>
         <Route("/hello/{Name}")>
+        <Route("/hello")>
         Public Partial Class Hello
             Implements IReturn(Of HelloResponse)
             <Required>
@@ -308,7 +308,7 @@ Namespace Global
         End Class
 
         Public Partial Class HelloAllTypes
-            Implements IReturn(Of HelloAllTypes)
+            Implements IReturn(Of HelloAllTypesResponse)
             Public Overridable Property Name As String
             Public Overridable Property AllTypes As AllTypes
             Public Overridable Property AllCollectionTypes As AllCollectionTypes
@@ -401,7 +401,7 @@ Namespace Global
 
         <DataContract>
         Public Partial Class HelloWithDataContract
-            Implements IReturn(Of HelloWithDataContract)
+            Implements IReturn(Of HelloWithDataContractResponse)
             <DataMember(Name:="name", Order:=1, IsRequired:=true, EmitDefaultValue:=false)>
             Public Overridable Property Name As String
 
@@ -419,7 +419,7 @@ Namespace Global
         '''Description on HelloWithDescription type
         '''</Summary>
         Public Partial Class HelloWithDescription
-            Implements IReturn(Of HelloWithDescription)
+            Implements IReturn(Of HelloWithDescriptionResponse)
             Public Overridable Property Name As String
         End Class
 
@@ -448,7 +448,7 @@ Namespace Global
 
         Public Partial Class HelloWithInheritance
             Inherits HelloBase
-            Implements IReturn(Of HelloWithInheritance)
+            Implements IReturn(Of HelloWithInheritanceResponse)
             Public Overridable Property Name As String
         End Class
 
@@ -486,7 +486,7 @@ Namespace Global
 
         <Route("/helloroute")>
         Public Partial Class HelloWithRoute
-            Implements IReturn(Of HelloWithRoute)
+            Implements IReturn(Of HelloWithRouteResponse)
             Public Overridable Property Name As String
         End Class
 
@@ -495,7 +495,7 @@ Namespace Global
         End Class
 
         Public Partial Class HelloWithType
-            Implements IReturn(Of HelloWithType)
+            Implements IReturn(Of HelloWithTypeResponse)
             Public Overridable Property Name As String
         End Class
 
@@ -575,7 +575,7 @@ Namespace Global
 
         <Route("/requires-role")>
         Public Partial Class RequiresRole
-            Implements IReturn(Of RequiresRole)
+            Implements IReturn(Of RequiresRoleResponse)
         End Class
 
         Public Partial Class RequiresRoleResponse
@@ -587,6 +587,44 @@ Namespace Global
             Public Overridable Property Id As Integer
             Public Overridable Property Name As String
             Public Overridable Property Hello As Hello
+        End Class
+
+        <Route("/throw404")>
+        <Route("/throw404/{Message}")>
+        Public Partial Class Throw404
+            Public Overridable Property Message As String
+        End Class
+
+        <Route("/throwhttperror/{Status}")>
+        Public Partial Class ThrowHttpError
+            Public Overridable Property Status As Nullable(Of Integer)
+            Public Overridable Property Message As String
+        End Class
+
+        <Route("/throw/{Type}")>
+        Public Partial Class ThrowType
+            Implements IReturn(Of ThrowTypeResponse)
+            Public Overridable Property Type As String
+            Public Overridable Property Message As String
+        End Class
+
+        Public Partial Class ThrowTypeResponse
+            Public Overridable Property ResponseStatus As ResponseStatus
+        End Class
+
+        <Route("/throwvalidation")>
+        Public Partial Class ThrowValidation
+            Implements IReturn(Of ThrowValidationResponse)
+            Public Overridable Property Age As Integer
+            Public Overridable Property Required As String
+            Public Overridable Property Email As String
+        End Class
+
+        Public Partial Class ThrowValidationResponse
+            Public Overridable Property Age As Integer
+            Public Overridable Property Required As String
+            Public Overridable Property Email As String
+            Public Overridable Property ResponseStatus As ResponseStatus
         End Class
 
         Public Partial Class TypesGroup
@@ -651,6 +689,9 @@ Namespace Global
             Public Overridable Property [String] As String
             Public Overridable Property DateTime As Date
             Public Overridable Property TimeSpan As TimeSpan
+            Public Overridable Property DateTimeOffset As DateTimeOffset
+            Public Overridable Property Guid As Guid
+            Public Overridable Property [Char] As Char
             Public Overridable Property NullableDateTime As Nullable(Of Date)
             Public Overridable Property NullableTimeSpan As Nullable(Of TimeSpan)
             Public Overridable Property StringList As List(Of String)

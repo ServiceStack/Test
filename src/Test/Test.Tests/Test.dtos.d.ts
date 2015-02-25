@@ -1,5 +1,5 @@
 /* Options:
-Date: 2015-01-25 05:09:26
+Date: 2015-02-23 03:51:57
 Version: 1
 BaseUrl: http://localhost:56500
 
@@ -10,8 +10,9 @@ GlobalNamespace: dtos
 //AddImplicitVersion: 
 //IncludeTypes: 
 //ExcludeTypes: 
-//DefaultNamespaces: 
+//DefaultImports: 
 */
+
 
 declare module dtos
 {
@@ -119,6 +120,9 @@ declare module dtos
         string?: string;
         dateTime?: string;
         timeSpan?: string;
+        dateTimeOffset?: DateTimeOffset;
+        guid?: Guid;
+        char?: Char;
         nullableDateTime?: string;
         nullableTimeSpan?: string;
         stringList?: string[];
@@ -421,22 +425,22 @@ declare module dtos
         lastModified?: string;
 
         // @DataMember(Order=35)
-        providerOAuthAccess?: IAuthTokens[];
-
-        // @DataMember(Order=36)
         roles?: string[];
 
-        // @DataMember(Order=37)
+        // @DataMember(Order=36)
         permissions?: string[];
 
-        // @DataMember(Order=38)
+        // @DataMember(Order=37)
         isAuthenticated?: boolean;
 
-        // @DataMember(Order=39)
+        // @DataMember(Order=38)
         sequence?: string;
 
-        // @DataMember(Order=40)
+        // @DataMember(Order=39)
         tag?: number;
+
+        // @DataMember(Order=40)
+        providerOAuthAccess?: IAuthTokens[];
     }
 
     interface MenuItemExampleItem
@@ -449,6 +453,19 @@ declare module dtos
     interface CustomHttpErrorResponse
     {
         custom?: string;
+        responseStatus?: ResponseStatus;
+    }
+
+    interface ThrowTypeResponse
+    {
+        responseStatus?: ResponseStatus;
+    }
+
+    interface ThrowValidationResponse
+    {
+        age?: number;
+        required?: string;
+        email?: string;
         responseStatus?: ResponseStatus;
     }
 
@@ -650,10 +667,39 @@ declare module dtos
         apis?: RestService[];
     }
 
-    interface CustomHttpError extends IReturn<CustomHttpError>
+    interface CustomHttpError extends IReturn<CustomHttpErrorResponse>
     {
         statusCode?: number;
         statusDescription?: string;
+    }
+
+    // @Route("/throwhttperror/{Status}")
+    interface ThrowHttpError
+    {
+        status?: number;
+        message?: string;
+    }
+
+    // @Route("/throw404")
+    // @Route("/throw404/{Message}")
+    interface Throw404
+    {
+        message?: string;
+    }
+
+    // @Route("/throw/{Type}")
+    interface ThrowType extends IReturn<ThrowTypeResponse>
+    {
+        type?: string;
+        message?: string;
+    }
+
+    // @Route("/throwvalidation")
+    interface ThrowValidation extends IReturn<ThrowValidationResponse>
+    {
+        age?: number;
+        required?: string;
+        email?: string;
     }
 
     interface ExternalOperation extends IReturn<ExternalOperationResponse>
@@ -668,7 +714,7 @@ declare module dtos
         id?: number;
     }
 
-    interface ExternalOperation3 extends IReturn<ExternalOperation3>
+    interface ExternalOperation3 extends IReturn<ExternalReturnTypeResponse>
     {
         id?: number;
     }
@@ -732,7 +778,7 @@ declare module dtos
     }
 
     // @Route("/image-draw/{Name}")
-    interface DrawImage extends IReturn<DrawImage>
+    interface DrawImage
     {
         name?: string;
         format?: string;
@@ -762,7 +808,7 @@ declare module dtos
     }
 
     // @Route("/randomids")
-    interface GetRandomIds extends IReturn<GetRandomIds>
+    interface GetRandomIds extends IReturn<GetRandomIdsResponse>
     {
         take?: number;
     }
@@ -773,8 +819,8 @@ declare module dtos
         asAttachment?: boolean;
     }
 
-    // @Route("/hello")
     // @Route("/hello/{Name}")
+    // @Route("/hello")
     interface Hello extends IReturn<HelloResponse>
     {
         // @Required()
@@ -827,26 +873,17 @@ declare module dtos
     * AllowedAttributes Description
     */
     // @Route("/allowed-attributes", "GET")
-    // @ApiResponse(400, "Your request was not understood")
     // @Api("AllowedAttributes Description")
+    // @ApiResponse(400, "Your request was not understood")
     // @DataContract
     interface AllowedAttributes
     {
-        // @Default(5)
-        // @Required()
-        id: number;
-
         // @DataMember(Name="Aliased")
         // @ApiMember(ParameterType="path", Description="Range Description", DataType="double", IsRequired=true)
         range?: number;
-
-        // @References(typeof(Hello))
-        // @StringLength(20)
-        // @Meta("Foo", "Bar")
-        name?: string;
     }
 
-    interface HelloAllTypes extends IReturn<HelloAllTypes>
+    interface HelloAllTypes extends IReturn<HelloAllTypesResponse>
     {
         name?: string;
         allTypes?: AllTypes;
@@ -864,7 +901,7 @@ declare module dtos
     }
 
     // @DataContract
-    interface HelloWithDataContract extends IReturn<HelloWithDataContract>
+    interface HelloWithDataContract extends IReturn<HelloWithDataContractResponse>
     {
         // @DataMember(Name="name", Order=1, IsRequired=true, EmitDefaultValue=false)
         name?: string;
@@ -876,12 +913,12 @@ declare module dtos
     /**
     * Description on HelloWithDescription type
     */
-    interface HelloWithDescription extends IReturn<HelloWithDescription>
+    interface HelloWithDescription extends IReturn<HelloWithDescriptionResponse>
     {
         name?: string;
     }
 
-    interface HelloWithInheritance extends HelloBase, IReturn<HelloWithInheritance>
+    interface HelloWithInheritance extends HelloBase, IReturn<HelloWithInheritanceResponse>
     {
         name?: string;
     }
@@ -910,12 +947,12 @@ declare module dtos
     }
 
     // @Route("/helloroute")
-    interface HelloWithRoute extends IReturn<HelloWithRoute>
+    interface HelloWithRoute extends IReturn<HelloWithRouteResponse>
     {
         name?: string;
     }
 
-    interface HelloWithType extends IReturn<HelloWithType>
+    interface HelloWithType extends IReturn<HelloWithTypeResponse>
     {
         name?: string;
     }
@@ -932,7 +969,7 @@ declare module dtos
     }
 
     // @Route("/ping")
-    interface Ping extends IReturn<Ping>
+    interface Ping extends IReturn<PingResponse>
     {
     }
 
@@ -942,7 +979,7 @@ declare module dtos
     }
 
     // @Route("/requires-role")
-    interface RequiresRole extends IReturn<RequiresRole>
+    interface RequiresRole extends IReturn<RequiresRoleResponse>
     {
     }
 
@@ -957,6 +994,16 @@ declare module dtos
         customName?: string;
     }
 
+    // @Route("/void-response")
+    interface TestVoidResponse
+    {
+    }
+
+    // @Route("/null-response")
+    interface TestNullResponse
+    {
+    }
+
     // @Route("/postman")
     interface Postman
     {
@@ -969,7 +1016,7 @@ declare module dtos
 
     // @Route("/requestlogs")
     // @DataContract
-    interface RequestLogs extends IReturn<RequestLogs>
+    interface RequestLogs extends IReturn<RequestLogsResponse>
     {
         // @DataMember(Order=1)
         beforeSecs?: number;
@@ -1103,7 +1150,7 @@ declare module dtos
 
     // @Route("/resources")
     // @DataContract
-    interface Resources extends IReturn<Resources>
+    interface Resources extends IReturn<ResourcesResponse>
     {
         // @DataMember(Name="apiKey")
         apiKey?: string;
