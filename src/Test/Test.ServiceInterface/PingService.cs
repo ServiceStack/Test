@@ -22,6 +22,7 @@ namespace Test.ServiceInterface
         {
             "http://techstacks.io",
             "http://autoqueryviewer.servicestack.net/services",
+            "http://github.servicestack.net/repos",
             "https://servicestack.net/pricing",
             "http://react-chat.servicestack.net",
             "http://chat.servicestack.net",
