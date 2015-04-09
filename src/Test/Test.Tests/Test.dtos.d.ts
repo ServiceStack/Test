@@ -1,5 +1,5 @@
 /* Options:
-Date: 2015-02-23 03:51:57
+Date: 2015-04-09 13:36:53
 Version: 1
 BaseUrl: http://localhost:56500
 
@@ -250,16 +250,6 @@ declare module dtos
         responseDto?: Object;
         errorResponse?: Object;
         requestDuration?: string;
-    }
-
-    // @DataContract
-    interface RestService
-    {
-        // @DataMember(Name="path")
-        path?: string;
-
-        // @DataMember(Name="description")
-        description?: string;
     }
 
     // @DataContract
@@ -651,22 +641,6 @@ declare module dtos
         responseStatus?: ResponseStatus;
     }
 
-    // @DataContract
-    interface ResourcesResponse
-    {
-        // @DataMember(Name="swaggerVersion")
-        swaggerVersion?: string;
-
-        // @DataMember(Name="apiVersion")
-        apiVersion?: string;
-
-        // @DataMember(Name="basePath")
-        basePath?: string;
-
-        // @DataMember(Name="apis")
-        apis?: RestService[];
-    }
-
     interface CustomHttpError extends IReturn<CustomHttpErrorResponse>
     {
         statusCode?: number;
@@ -879,7 +853,7 @@ declare module dtos
     interface AllowedAttributes
     {
         // @DataMember(Name="Aliased")
-        // @ApiMember(ParameterType="path", Description="Range Description", DataType="double", IsRequired=true)
+        // @ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)
         range?: number;
     }
 
@@ -1002,16 +976,6 @@ declare module dtos
     // @Route("/null-response")
     interface TestNullResponse
     {
-    }
-
-    // @Route("/postman")
-    interface Postman
-    {
-        label?: string[];
-        exportSession?: boolean;
-        ssid?: string;
-        sspid?: string;
-        ssopt?: string;
     }
 
     // @Route("/requestlogs")
@@ -1146,25 +1110,6 @@ declare module dtos
         userName?: string;
         permissions?: string[];
         roles?: string[];
-    }
-
-    // @Route("/resources")
-    // @DataContract
-    interface Resources extends IReturn<ResourcesResponse>
-    {
-        // @DataMember(Name="apiKey")
-        apiKey?: string;
-    }
-
-    // @Route("/resource/{Name*}")
-    // @DataContract
-    interface ResourceRequest
-    {
-        // @DataMember(Name="apiKey")
-        apiKey?: string;
-
-        // @DataMember(Name="name")
-        name?: string;
     }
 
 }

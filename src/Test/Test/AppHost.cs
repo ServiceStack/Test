@@ -8,6 +8,7 @@ using ServiceStack.Caching;
 using ServiceStack.Configuration;
 using ServiceStack.Data;
 using ServiceStack.Host;
+using ServiceStack.NativeTypes.Java;
 using ServiceStack.OrmLite;
 using ServiceStack.Razor;
 using ServiceStack.Redis;
@@ -41,25 +42,29 @@ namespace Test
         {
             JsConfig.EmitCamelCaseNames = true;
 
-            SetConfig(new HostConfig { DebugMode = true });
+            SetConfig(new HostConfig {
+                DebugMode = true,
+                Return204NoContentForEmptyResponse = true,
+            });
 
             container.Register<IRedisClientsManager>(c =>
                 new RedisManagerPool("localhost:6379"));
             container.Register(c => c.Resolve<IRedisClientsManager>().GetCacheClient());
 
-            //container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(
-            //    AppSettings.GetString("AppDb"), PostgreSqlDialect.Provider));
+            container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(
+                AppSettings.GetString("AppDb"), PostgreSqlDialect.Provider));
 
-            //container.Register<IAuthRepository>(c =>
-            //    new OrmLiteAuthRepository(c.Resolve<IDbConnectionFactory>()) {
-            //        UseDistinctRoleTables = AppSettings.Get("UseDistinctRoleTables", true),
-            //    });
+            container.Register<IAuthRepository>(c =>
+                new OrmLiteAuthRepository(c.Resolve<IDbConnectionFactory>())
+                {
+                    UseDistinctRoleTables = AppSettings.Get("UseDistinctRoleTables", true),
+                });
 
-            //var authRepo = (OrmLiteAuthRepository)container.Resolve<IAuthRepository>();
-            //authRepo.DropAndReCreateTables();
+            var authRepo = (OrmLiteAuthRepository)container.Resolve<IAuthRepository>();
+            authRepo.DropAndReCreateTables();
 
-            //CreateUser(authRepo, 1, "test", "test", new List<string> { "TheRole" }, new List<string> { "ThePermission" });
-            //CreateUser(authRepo, 2, "test2", "test2");
+            CreateUser(authRepo, 1, "test", "test", new List<string> { "TheRole" }, new List<string> { "ThePermission" });
+            CreateUser(authRepo, 2, "test2", "test2");
 
             Plugins.Add(new PostmanFeature());
             
@@ -84,6 +89,8 @@ namespace Test
             Plugins.Add(new ValidationFeature());
 
             container.RegisterValidators(typeof(ThrowValidationValidator).Assembly);
+
+            JavaGenerator.AddGsonImport = true;
         }
 
 

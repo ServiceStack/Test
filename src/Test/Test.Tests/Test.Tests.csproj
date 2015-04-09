@@ -85,6 +85,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="JsonTests.cs" />
     <Compile Include="StackApis.dtos.cs" />
     <Compile Include="Test.dtos.cs" />
     <Compile Include="UnitTest1.cs" />

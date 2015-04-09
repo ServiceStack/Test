@@ -1,5 +1,5 @@
 /* Options:
-Date: 2015-02-23 03:52:09
+Date: 2015-04-09 13:36:31
 Version: 1
 BaseUrl: http://localhost:56500
 
@@ -273,7 +273,7 @@ namespace Test.ServiceModel
     public partial class AllowedAttributes
     {
         [DataMember(Name="Aliased")]
-        [ApiMember(ParameterType="path", Description="Range Description", DataType="double", IsRequired=true)]
+        [ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)]
         public virtual double Range { get; set; }
     }
 
