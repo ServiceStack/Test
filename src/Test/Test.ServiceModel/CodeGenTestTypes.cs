@@ -139,6 +139,7 @@ namespace Test.ServiceModel
         public string Result { get; set; }
     }
 
+    [Route("/all-types")]
     public class HelloAllTypes
     {
         public string Name { get; set; }
@@ -153,7 +154,7 @@ namespace Test.ServiceModel
         public AllCollectionTypes AllCollectionTypes { get; set; }
     }
 
-    public class HelloString
+    public class HelloString : IReturn<string>
     {
         public string Name { get; set; }
     }
@@ -307,5 +308,4 @@ namespace Test.ServiceModel
 
         public TypesGroup.InnerEnum InnerEnum { get; set; }
     }
-
 }
