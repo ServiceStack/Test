@@ -20,6 +20,8 @@ namespace Test.ServiceModel
         public virtual int? Take { get; set; }
         public virtual string OrderBy { get; set; }
         public virtual string OrderByDesc { get; set; }
+        public virtual string Include { get; set; }
+        public virtual Dictionary<string, string> Meta { get; set; }
     }
 
     [DataContract]
