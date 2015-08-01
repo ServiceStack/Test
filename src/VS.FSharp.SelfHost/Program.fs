@@ -1,36 +1,28 @@
-﻿open ServiceStack
-open ServiceStack.Logging
-open ServiceStack.Common
+﻿open System
+open ServiceStack
 
-open System
-
-type HelloResponse() = 
-    member val Result = "" with get, set
- 
-[<Route("/hello")>]
-[<Route("/hello/{Name}")>]
-type Hello() =
-    interface IReturn<HelloResponse>
-    member val Name = "" with get, set
-
+type Hello = { mutable Name: string; }
+type HelloResponse = { mutable Result: string; }
 type HelloService() =
-    inherit ServiceStack.Service()
-    member this.Get(req: Hello) = 
-        let res = new HelloResponse()
-        res.Result <- "Hello " + req.Name
-        res
+    interface IService
+    member this.Any (req:Hello) = { Result = "Hello, " + req.Name }
 
-type AppHost() =
-    inherit AppSelfHostBase("Hello F# Services", typeof<HelloService>.Assembly)
-    override this.Configure container = ignore()
+//Define the Web Services AppHost
+type AppHost =
+    inherit AppSelfHostBase
+    new() = { inherit AppSelfHostBase("Hi F#!", typeof<HelloService>.Assembly) }
+    override this.Configure container =
+        base.Routes
+            .Add<Hello>("/hello")
+            .Add<Hello>("/hello/{Name}") |> ignore
 
+//Run it!
 [<EntryPoint>]
-let main args = 
-    LogManager.LogFactory <- new ConsoleLogFactory()
+let main args =
     let host = if args.Length = 0 then "http://*:1337/" else args.[0]
     printfn "listening on %s ..." host
     let appHost = new AppHost()
     appHost.Init() |> ignore
-    appHost.Start host |>ignore
+    appHost.Start host |> ignore
     Console.ReadLine() |> ignore
     0
