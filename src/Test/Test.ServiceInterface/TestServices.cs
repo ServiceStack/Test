@@ -1,4 +1,5 @@
-﻿using ServiceStack;
+﻿using System.Threading;
+using ServiceStack;
 
 namespace Test.ServiceInterface
 {
@@ -7,6 +8,12 @@ namespace Test.ServiceInterface
 
     [Route("/null-response")]
     public class TestNullResponse { }
+
+    [Route("/wait/{ForMs}")]
+    public class Wait : IReturn<Wait>
+    {
+        public int ForMs { get; set; }
+    }
 
     public class TestServices : Service
     {
@@ -17,6 +24,13 @@ namespace Test.ServiceInterface
         public object Any(TestNullResponse response)
         {
             return null;
+        }
+
+        public object Any(Wait request)
+        {
+            Thread.Sleep(request.ForMs);
+
+            return request;
         }
     }
 }
