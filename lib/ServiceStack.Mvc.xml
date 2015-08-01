@@ -48,6 +48,19 @@
             <param name="result">The result of validation.</param>
             <returns>Validation Context</returns>
         </member>
+        <member name="T:FluentValidation.Mvc.RuleSetForClientSideMessagesAttribute">
+            <summary>
+            Specifies which ruleset should be used when deciding which validators should be used to generate client-side messages.
+            </summary>
+        </member>
+        <member name="M:FluentValidation.Mvc.ValidationResultExtension.AddToModelState(ServiceStack.FluentValidation.Results.ValidationResult,System.Web.Mvc.ModelStateDictionary,System.String)">
+            <summary>
+            Stores the errors in a ValidationResult object to the specified modelstate dictionary.
+            </summary>
+            <param name="result">The validation result to store</param>
+            <param name="modelState">The ModelStateDictionary to store the errors in.</param>
+            <param name="prefix">An optional prefix. If ommitted, the property names will be the keys. If specified, the prefix will be concatenatd to the property name with a period. Eg "user.Name"</param>
+        </member>
         <member name="T:ServiceStack.Mvc.MiniProfiler.ProfilingActionFilter">
             <summary>
             This filter can be applied globally to hook up automatic action profiling
@@ -119,23 +132,10 @@
         </member>
         <member name="M:ServiceStack.Mvc.FunqControllerFactory.#ctor(Funq.Container,System.Reflection.Assembly[])">
             <summary>
-            Initializes a new instance of the <see cref="T:ServiceStack.Mvc.FunqControllerFactory"/> class.
+            Initializes a new instance of the <see cref="T:ServiceStack.Mvc.FunqControllerFactory" /> class.
             </summary>
             <param name="container">The container.</param>
             <param name="assemblies">The assemblies to reflect for IController discovery.</param>
-        </member>
-        <member name="T:FluentValidation.Mvc.RuleSetForClientSideMessagesAttribute">
-            <summary>
-            Specifies which ruleset should be used when deciding which validators should be used to generate client-side messages.
-            </summary>
-        </member>
-        <member name="M:FluentValidation.Mvc.ValidationResultExtension.AddToModelState(ServiceStack.FluentValidation.Results.ValidationResult,System.Web.Mvc.ModelStateDictionary,System.String)">
-            <summary>
-            Stores the errors in a ValidationResult object to the specified modelstate dictionary.
-            </summary>
-            <param name="result">The validation result to store</param>
-            <param name="modelState">The ModelStateDictionary to store the errors in.</param>
-            <param name="prefix">An optional prefix. If ommitted, the property names will be the keys. If specified, the prefix will be concatenatd to the property name with a period. Eg "user.Name"</param>
         </member>
     </members>
 </doc>
