@@ -1,6 +1,6 @@
 (* Options:
-Date: 2015-04-09 13:37:06
-Version: 1
+Date: 2015-09-11 16:35:59
+Version: 4.00
 BaseUrl: http://localhost:56500
 
 GlobalNamespace: dtos
@@ -9,6 +9,7 @@ AddReturnMarker: True
 AddDescriptionAsComments: True
 AddDataContractAttributes: False
 AddIndexesToDataMembers: False
+//AddGeneratedCodeAttributes: False
 AddResponseStatus: False
 //AddImplicitVersion: 
 //IncludeTypes: 
@@ -213,6 +214,28 @@ open ServiceStack.DataAnnotations
         member val CustomInfo:String = null with get,set
 
     [<AllowNullLiteral>]
+    type OnlyDefinedInGenericType() = 
+        member val Id:Int32 = new Int32() with get,set
+        member val Name:String = null with get,set
+
+    [<AllowNullLiteral>]
+    type OnlyDefinedInGenericTypeFrom() = 
+        member val Id:Int32 = new Int32() with get,set
+        member val Name:String = null with get,set
+
+    [<AllowNullLiteral>]
+    type OnlyDefinedInGenericTypeInto() = 
+        member val Id:Int32 = new Int32() with get,set
+        member val Name:String = null with get,set
+
+    [<AllowNullLiteral>]
+    type Rockstar() = 
+        member val Id:Int32 = new Int32() with get,set
+        member val FirstName:String = null with get,set
+        member val LastName:String = null with get,set
+        member val Age:Nullable<Int32> = new Nullable<Int32>() with get,set
+
+    [<AllowNullLiteral>]
     type TypesGroup() = 
         class end
 
@@ -328,6 +351,10 @@ open ServiceStack.DataAnnotations
         member val InnerEnum:InnerEnum = new InnerEnum() with get,set
 
     [<AllowNullLiteral>]
+    type HelloVerbResponse() = 
+        member val Result:String = null with get,set
+
+    [<AllowNullLiteral>]
     type PingResponse() = 
         member val Responses:Dictionary<String, ResponseStatus> = new Dictionary<String, ResponseStatus>() with get,set
         member val ResponseStatus:ResponseStatus = null with get,set
@@ -342,6 +369,12 @@ open ServiceStack.DataAnnotations
         member val Result:CustomUserSession = null with get,set
         member val UnAuthInfo:UnAuthInfo = null with get,set
         member val ResponseStatus:ResponseStatus = null with get,set
+
+    [<Route("/wait/{ForMs}")>]
+    [<AllowNullLiteral>]
+    type Wait() = 
+        interface IReturn<Wait>
+        member val ForMs:Int32 = new Int32() with get,set
 
     [<AllowNullLiteral>]
     type CustomHttpError() = 
@@ -483,8 +516,8 @@ open ServiceStack.DataAnnotations
     type TextFileTest() = 
         member val AsAttachment:Boolean = new Boolean() with get,set
 
-    [<Route("/hello/{Name}")>]
     [<Route("/hello")>]
+    [<Route("/hello/{Name}")>]
     [<AllowNullLiteral>]
     type Hello() = 
         interface IReturn<HelloResponse>
@@ -544,6 +577,7 @@ open ServiceStack.DataAnnotations
         [<ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)>]
         member val Range:Double = new Double() with get,set
 
+    [<Route("/all-types")>]
     [<AllowNullLiteral>]
     type HelloAllTypes() = 
         interface IReturn<HelloAllTypesResponse>
@@ -553,6 +587,7 @@ open ServiceStack.DataAnnotations
 
     [<AllowNullLiteral>]
     type HelloString() = 
+        interface IReturn<String>
         member val Name:String = null with get,set
 
     [<AllowNullLiteral>]
@@ -627,6 +662,35 @@ open ServiceStack.DataAnnotations
     type HelloInnerTypes() = 
         interface IReturn<HelloInnerTypesResponse>
 
+    [<AllowNullLiteral>]
+    type HelloBuiltin() = 
+        member val DayOfWeek:DayOfWeek = new DayOfWeek() with get,set
+
+    [<AllowNullLiteral>]
+    type HelloGet() = 
+        interface IReturn<HelloVerbResponse>
+        member val Id:Int32 = new Int32() with get,set
+
+    [<AllowNullLiteral>]
+    type HelloPost() = 
+        inherit HelloBase()
+        interface IReturn<HelloVerbResponse>
+
+    [<AllowNullLiteral>]
+    type HelloPut() = 
+        interface IReturn<HelloVerbResponse>
+        member val Id:Int32 = new Int32() with get,set
+
+    [<AllowNullLiteral>]
+    type HelloDelete() = 
+        interface IReturn<HelloVerbResponse>
+        member val Id:Int32 = new Int32() with get,set
+
+    [<AllowNullLiteral>]
+    type HelloPatch() = 
+        interface IReturn<HelloVerbResponse>
+        member val Id:Int32 = new Int32() with get,set
+
     [<Route("/ping")>]
     [<AllowNullLiteral>]
     type Ping() = 
@@ -662,4 +726,22 @@ open ServiceStack.DataAnnotations
     [<AllowNullLiteral>]
     type TestNullResponse() = 
         class end
+
+    [<AllowNullLiteral>]
+    type QueryPocoBase() = 
+        inherit QueryBase<OnlyDefinedInGenericType>()
+        interface IReturn<QueryResponse<OnlyDefinedInGenericType>>
+        member val Id:Int32 = new Int32() with get,set
+
+    [<AllowNullLiteral>]
+    type QueryPocoIntoBase() = 
+        inherit QueryBase<OnlyDefinedInGenericTypeFrom, OnlyDefinedInGenericTypeInto>()
+        interface IReturn<QueryResponse<OnlyDefinedInGenericTypeInto>>
+        member val Id:Int32 = new Int32() with get,set
+
+    [<Route("/rockstars")>]
+    [<AllowNullLiteral>]
+    type QueryRockstars() = 
+        inherit QueryBase<Rockstar>()
+        interface IReturn<QueryResponse<Rockstar>>
 
