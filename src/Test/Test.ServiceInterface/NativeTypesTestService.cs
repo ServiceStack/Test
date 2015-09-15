@@ -173,5 +173,9 @@ namespace Test.ServiceInterface
         {
             return new HelloVerbResponse { Result = HttpMethods.Patch };
         }
+
+        public void Any(HelloReturnVoid request)
+        {
+        }
     }
 }

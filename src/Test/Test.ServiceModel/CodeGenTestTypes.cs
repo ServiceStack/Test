@@ -338,4 +338,9 @@ namespace Test.ServiceModel
     {
         public int Id { get; set; }
     }
+
+    public class HelloReturnVoid : IReturnVoid
+    {
+        public int Id { get; set; }
+    }
 }
