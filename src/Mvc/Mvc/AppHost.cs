@@ -43,6 +43,7 @@ namespace Mvc
             {
                 DebugMode = true,
                 HandlerFactoryPath = "api",
+                AddRedirectParamsToQueryString = true,
             });
 
             //Set MVC to use the same Funq IOC as ServiceStack

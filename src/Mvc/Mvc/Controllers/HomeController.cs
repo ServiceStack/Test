@@ -29,7 +29,7 @@ namespace Mvc.Controllers
             return View(GetViewModel());
         }
 
-        public ActionResult Login(string userName, string password, string redirect=null)
+        public ActionResult Login(string userName, string password, string redirect = null)
         {
             if (ModelState.IsValid)
             {
@@ -37,7 +37,8 @@ namespace Mvc.Controllers
                 {
                     using (var authService = ResolveService<AuthenticateService>())
                     {
-                        var response = authService.Authenticate(new Authenticate {
+                        var response = authService.Authenticate(new Authenticate
+                        {
                             provider = CredentialsAuthProvider.Name,
                             UserName = userName,
                             Password = password,
@@ -61,8 +62,12 @@ namespace Mvc.Controllers
 
         public ActionResult Logout()
         {
-            Execute(new Authenticate { provider = "logout" });
-            FormsAuthentication.SignOut(); 
+            using (var authService = ResolveService<AuthenticateService>())
+            {
+                authService.Authenticate(new Authenticate { provider = "logout" });
+            }
+
+            FormsAuthentication.SignOut();
 
             return Redirect("/");
         }
