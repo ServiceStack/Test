@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Funq;
 using ServiceStack;
@@ -87,10 +88,16 @@ namespace Test
 
             Plugins.Add(new SwaggerFeature());
             Plugins.Add(new ValidationFeature());
+            Plugins.Add(new AutoQueryFeature
+            {
+                MaxLimit = 100,                
+            });
 
             container.RegisterValidators(typeof(ThrowValidationValidator).Assembly);
 
             JavaGenerator.AddGsonImport = true;
+            var nativeTypes = this.GetPlugin<NativeTypesFeature>();
+            nativeTypes.MetadataTypesConfig.ExportTypes.Add(typeof(DayOfWeek));
         }
 
 

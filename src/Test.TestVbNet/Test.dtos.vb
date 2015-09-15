@@ -1,6 +1,6 @@
 ' Options:
-'Date: 2015-04-09 13:37:20
-'Version: 1
+'Date: 2015-09-11 16:38:41
+'Version: 4.00
 'BaseUrl: http://localhost:56500
 '
 '''GlobalNamespace: 
@@ -11,6 +11,7 @@
 '''AddDescriptionAsComments: True
 '''AddDataContractAttributes: False
 '''AddIndexesToDataMembers: False
+'''AddGeneratedCodeAttributes: False
 '''AddResponseStatus: False
 '''AddImplicitVersion: 
 '''InitializeCollections: True
@@ -220,6 +221,12 @@ Namespace Global
             Implements IReturn(Of GetSessionResponse)
             Public Overridable Property CustomName As String
         End Class
+
+        <Route("/wait/{ForMs}")>
+        Public Partial Class Wait
+            Implements IReturn(Of Wait)
+            Public Overridable Property ForMs As Integer
+        End Class
     End Namespace
 
     Namespace Test.ServiceModel
@@ -297,8 +304,8 @@ Namespace Global
             Public Overridable Property Results As List(Of String)
         End Class
 
-        <Route("/hello/{Name}")>
         <Route("/hello")>
+        <Route("/hello/{Name}")>
         Public Partial Class Hello
             Implements IReturn(Of HelloResponse)
             <Required>
@@ -307,6 +314,7 @@ Namespace Global
             Public Overridable Property Title As String
         End Class
 
+        <Route("/all-types")>
         Public Partial Class HelloAllTypes
             Implements IReturn(Of HelloAllTypesResponse)
             Public Overridable Property Name As String
@@ -358,6 +366,22 @@ Namespace Global
             Public Overridable Property Counts As List(Of Integer)
         End Class
 
+        Public Partial Class HelloBuiltin
+            Public Overridable Property DayOfWeek As DayOfWeek
+        End Class
+
+        Public Partial Class HelloDelete
+            Implements IReturn(Of HelloVerbResponse)
+            Implements IDelete
+            Public Overridable Property Id As Integer
+        End Class
+
+        Public Partial Class HelloGet
+            Implements IReturn(Of HelloVerbResponse)
+            Implements IGet
+            Public Overridable Property Id As Integer
+        End Class
+
         Public Partial Class HelloInnerTypes
             Implements IReturn(Of HelloInnerTypesResponse)
         End Class
@@ -382,12 +406,35 @@ Namespace Global
             Public Overridable Property Names As List(Of String)
         End Class
 
+        Public Partial Class HelloPatch
+            Implements IReturn(Of HelloVerbResponse)
+            Implements IPatch
+            Public Overridable Property Id As Integer
+        End Class
+
+        Public Partial Class HelloPost
+            Inherits HelloBase
+            Implements IReturn(Of HelloVerbResponse)
+            Implements IPost
+        End Class
+
+        Public Partial Class HelloPut
+            Implements IReturn(Of HelloVerbResponse)
+            Implements IPut
+            Public Overridable Property Id As Integer
+        End Class
+
         Public Partial Class HelloResponse
             Public Overridable Property Result As String
         End Class
 
         Public Partial Class HelloString
+            Implements IReturn(Of String)
             Public Overridable Property Name As String
+        End Class
+
+        Public Partial Class HelloVerbResponse
+            Public Overridable Property Result As String
         End Class
 
         Public Partial Class HelloVoid
@@ -573,6 +620,39 @@ Namespace Global
             Public Overridable Property Results As List(Of MetadataTestChild)
         End Class
 
+        Public Partial Class OnlyDefinedInGenericType
+            Public Overridable Property Id As Integer
+            Public Overridable Property Name As String
+        End Class
+
+        Public Partial Class OnlyDefinedInGenericTypeFrom
+            Public Overridable Property Id As Integer
+            Public Overridable Property Name As String
+        End Class
+
+        Public Partial Class OnlyDefinedInGenericTypeInto
+            Public Overridable Property Id As Integer
+            Public Overridable Property Name As String
+        End Class
+
+        Public Partial Class QueryPocoBase
+            Inherits QueryBase(Of OnlyDefinedInGenericType)
+            Implements IReturn(Of QueryResponse(Of OnlyDefinedInGenericType))
+            Public Overridable Property Id As Integer
+        End Class
+
+        Public Partial Class QueryPocoIntoBase
+            Inherits QueryBase(Of OnlyDefinedInGenericTypeFrom, OnlyDefinedInGenericTypeInto)
+            Implements IReturn(Of QueryResponse(Of OnlyDefinedInGenericTypeInto))
+            Public Overridable Property Id As Integer
+        End Class
+
+        <Route("/rockstars")>
+        Public Partial Class QueryRockstars
+            Inherits QueryBase(Of Rockstar)
+            Implements IReturn(Of QueryResponse(Of Rockstar))
+        End Class
+
         <Route("/requires-role")>
         Public Partial Class RequiresRole
             Implements IReturn(Of RequiresRoleResponse)
@@ -587,6 +667,13 @@ Namespace Global
             Public Overridable Property Id As Integer
             Public Overridable Property Name As String
             Public Overridable Property Hello As Hello
+        End Class
+
+        Public Partial Class Rockstar
+            Public Overridable Property Id As Integer
+            Public Overridable Property FirstName As String
+            Public Overridable Property LastName As String
+            Public Overridable Property Age As Nullable(Of Integer)
         End Class
 
         <Route("/throw404")>

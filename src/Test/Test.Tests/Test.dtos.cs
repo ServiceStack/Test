@@ -1,6 +1,6 @@
 /* Options:
-Date: 2015-04-09 13:36:31
-Version: 1
+Date: 2015-09-11 16:39:14
+Version: 4.00
 BaseUrl: http://localhost:56500
 
 //GlobalNamespace: 
@@ -11,6 +11,7 @@ BaseUrl: http://localhost:56500
 //AddDescriptionAsComments: True
 //AddDataContractAttributes: False
 //AddIndexesToDataMembers: False
+//AddGeneratedCodeAttributes: False
 //AddResponseStatus: False
 //AddImplicitVersion: 
 //InitializeCollections: True
@@ -258,6 +259,13 @@ namespace Test.ServiceInterface
     {
         public virtual string CustomName { get; set; }
     }
+
+    [Route("/wait/{ForMs}")]
+    public partial class Wait
+        : IReturn<Wait>
+    {
+        public virtual int ForMs { get; set; }
+    }
 }
 
 namespace Test.ServiceModel
@@ -348,8 +356,8 @@ namespace Test.ServiceModel
         public virtual List<string> Results { get; set; }
     }
 
-    [Route("/hello/{Name}")]
     [Route("/hello")]
+    [Route("/hello/{Name}")]
     public partial class Hello
         : IReturn<HelloResponse>
     {
@@ -359,6 +367,7 @@ namespace Test.ServiceModel
         public virtual string Title { get; set; }
     }
 
+    [Route("/all-types")]
     public partial class HelloAllTypes
         : IReturn<HelloAllTypesResponse>
     {
@@ -418,6 +427,23 @@ namespace Test.ServiceModel
         public virtual List<int> Counts { get; set; }
     }
 
+    public partial class HelloBuiltin
+    {
+        public virtual DayOfWeek DayOfWeek { get; set; }
+    }
+
+    public partial class HelloDelete
+        : IReturn<HelloVerbResponse>, IDelete
+    {
+        public virtual int Id { get; set; }
+    }
+
+    public partial class HelloGet
+        : IReturn<HelloVerbResponse>, IGet
+    {
+        public virtual int Id { get; set; }
+    }
+
     public partial class HelloInnerTypes
         : IReturn<HelloInnerTypesResponse>
     {
@@ -447,14 +473,37 @@ namespace Test.ServiceModel
         public virtual List<string> Names { get; set; }
     }
 
+    public partial class HelloPatch
+        : IReturn<HelloVerbResponse>, IPatch
+    {
+        public virtual int Id { get; set; }
+    }
+
+    public partial class HelloPost
+        : HelloBase, IReturn<HelloVerbResponse>, IPost
+    {
+    }
+
+    public partial class HelloPut
+        : IReturn<HelloVerbResponse>, IPut
+    {
+        public virtual int Id { get; set; }
+    }
+
     public partial class HelloResponse
     {
         public virtual string Result { get; set; }
     }
 
     public partial class HelloString
+        : IReturn<string>
     {
         public virtual string Name { get; set; }
+    }
+
+    public partial class HelloVerbResponse
+    {
+        public virtual string Result { get; set; }
     }
 
     public partial class HelloVoid
@@ -674,6 +723,42 @@ namespace Test.ServiceModel
         public virtual List<MetadataTestChild> Results { get; set; }
     }
 
+    public partial class OnlyDefinedInGenericType
+    {
+        public virtual int Id { get; set; }
+        public virtual string Name { get; set; }
+    }
+
+    public partial class OnlyDefinedInGenericTypeFrom
+    {
+        public virtual int Id { get; set; }
+        public virtual string Name { get; set; }
+    }
+
+    public partial class OnlyDefinedInGenericTypeInto
+    {
+        public virtual int Id { get; set; }
+        public virtual string Name { get; set; }
+    }
+
+    public partial class QueryPocoBase
+        : QueryBase<OnlyDefinedInGenericType>, IReturn<QueryResponse<OnlyDefinedInGenericType>>
+    {
+        public virtual int Id { get; set; }
+    }
+
+    public partial class QueryPocoIntoBase
+        : QueryBase<OnlyDefinedInGenericTypeFrom, OnlyDefinedInGenericTypeInto>, IReturn<QueryResponse<OnlyDefinedInGenericTypeInto>>
+    {
+        public virtual int Id { get; set; }
+    }
+
+    [Route("/rockstars")]
+    public partial class QueryRockstars
+        : QueryBase<Rockstar>, IReturn<QueryResponse<Rockstar>>
+    {
+    }
+
     [Route("/requires-role")]
     public partial class RequiresRole
         : IReturn<RequiresRoleResponse>
@@ -691,6 +776,14 @@ namespace Test.ServiceModel
         public virtual int Id { get; set; }
         public virtual string Name { get; set; }
         public virtual Hello Hello { get; set; }
+    }
+
+    public partial class Rockstar
+    {
+        public virtual int Id { get; set; }
+        public virtual string FirstName { get; set; }
+        public virtual string LastName { get; set; }
+        public virtual int? Age { get; set; }
     }
 
     [Route("/throw404")]

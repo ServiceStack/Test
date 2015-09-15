@@ -308,4 +308,34 @@ namespace Test.ServiceModel
 
         public TypesGroup.InnerEnum InnerEnum { get; set; }
     }
+
+    public class HelloBuiltin
+    {
+        public DayOfWeek DayOfWeek { get; set; }
+    }
+
+    public class HelloVerbResponse
+    {
+        public string Result { get; set; }
+    }
+
+    public class HelloGet : IReturn<HelloVerbResponse>, IGet
+    {
+        public int Id { get; set; }
+    }
+    public class HelloPost : HelloBase, IReturn<HelloVerbResponse>, IPost
+    {
+    }
+    public class HelloPut : IReturn<HelloVerbResponse>, IPut
+    {
+        public int Id { get; set; }
+    }
+    public class HelloDelete : IReturn<HelloVerbResponse>, IDelete
+    {
+        public int Id { get; set; }
+    }
+    public class HelloPatch : IReturn<HelloVerbResponse>, IPatch
+    {
+        public int Id { get; set; }
+    }
 }

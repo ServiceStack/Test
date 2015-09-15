@@ -1,6 +1,6 @@
 /* Options:
-Date: 2015-04-09 13:36:53
-Version: 1
+Date: 2015-09-11 16:39:23
+Version: 4.00
 BaseUrl: http://localhost:56500
 
 GlobalNamespace: dtos
@@ -39,6 +39,9 @@ declare module dtos
 
         // @DataMember(Order=4)
         errors?: ResponseError[];
+
+        // @DataMember(Order=5)
+        meta?: { [index:string]: string; };
     }
 
     enum ExternalEnum
@@ -211,6 +214,17 @@ declare module dtos
         baz,
     }
 
+    enum DayOfWeek
+    {
+        sunday,
+        monday,
+        tuesday,
+        wednesday,
+        thursday,
+        friday,
+        saturday,
+    }
+
     interface PingService
     {
     }
@@ -252,6 +266,40 @@ declare module dtos
         requestDuration?: string;
     }
 
+    interface QueryBase_1<T> extends QueryBase
+    {
+    }
+
+    interface OnlyDefinedInGenericType
+    {
+        id?: number;
+        name?: string;
+    }
+
+    interface QueryBase_2<From, Into> extends QueryBase
+    {
+    }
+
+    interface OnlyDefinedInGenericTypeFrom
+    {
+        id?: number;
+        name?: string;
+    }
+
+    interface OnlyDefinedInGenericTypeInto
+    {
+        id?: number;
+        name?: string;
+    }
+
+    interface Rockstar
+    {
+        id?: number;
+        firstName?: string;
+        lastName?: string;
+        age?: number;
+    }
+
     // @DataContract
     interface ResponseError
     {
@@ -263,6 +311,9 @@ declare module dtos
 
         // @DataMember(Order=3, EmitDefaultValue=false)
         message?: string;
+
+        // @DataMember(Order=4, EmitDefaultValue=false)
+        meta?: { [index:string]: string; };
     }
 
     enum ExternalEnum2
@@ -433,6 +484,27 @@ declare module dtos
         providerOAuthAccess?: IAuthTokens[];
     }
 
+    interface QueryBase
+    {
+        // @DataMember(Order=1)
+        skip?: number;
+
+        // @DataMember(Order=2)
+        take?: number;
+
+        // @DataMember(Order=3)
+        orderBy?: string;
+
+        // @DataMember(Order=4)
+        orderByDesc?: string;
+
+        // @DataMember(Order=5)
+        include?: string;
+
+        // @DataMember(Order=6)
+        meta?: { [index:string]: string; };
+    }
+
     interface MenuItemExampleItem
     {
         // @DataMember(Order=1)
@@ -570,6 +642,11 @@ declare module dtos
         innerEnum?: InnerEnum;
     }
 
+    interface HelloVerbResponse
+    {
+        result?: string;
+    }
+
     interface PingResponse
     {
         responses?: { [index:string]: ResponseStatus; };
@@ -587,6 +664,12 @@ declare module dtos
         result?: CustomUserSession;
         unAuthInfo?: UnAuthInfo;
         responseStatus?: ResponseStatus;
+    }
+
+    // @Route("/wait/{ForMs}")
+    interface Wait
+    {
+        forMs?: number;
     }
 
     // @DataContract
@@ -627,17 +710,48 @@ declare module dtos
         meta?: { [index:string]: string; };
     }
 
+    // @DataContract
     interface AssignRolesResponse
     {
+        // @DataMember(Order=1)
         allRoles?: string[];
+
+        // @DataMember(Order=2)
         allPermissions?: string[];
+
+        // @DataMember(Order=3)
         responseStatus?: ResponseStatus;
     }
 
+    // @DataContract
     interface UnAssignRolesResponse
     {
+        // @DataMember(Order=1)
         allRoles?: string[];
+
+        // @DataMember(Order=2)
         allPermissions?: string[];
+
+        // @DataMember(Order=3)
+        responseStatus?: ResponseStatus;
+    }
+
+    // @DataContract
+    interface QueryResponse<T>
+    {
+        // @DataMember(Order=1)
+        offset?: number;
+
+        // @DataMember(Order=2)
+        total?: number;
+
+        // @DataMember(Order=3)
+        results?: T[];
+
+        // @DataMember(Order=4)
+        meta?: { [index:string]: string; };
+
+        // @DataMember(Order=5)
         responseStatus?: ResponseStatus;
     }
 
@@ -793,8 +907,8 @@ declare module dtos
         asAttachment?: boolean;
     }
 
-    // @Route("/hello/{Name}")
     // @Route("/hello")
+    // @Route("/hello/{Name}")
     interface Hello extends IReturn<HelloResponse>
     {
         // @Required()
@@ -857,6 +971,7 @@ declare module dtos
         range?: number;
     }
 
+    // @Route("/all-types")
     interface HelloAllTypes extends IReturn<HelloAllTypesResponse>
     {
         name?: string;
@@ -864,7 +979,7 @@ declare module dtos
         allCollectionTypes?: AllCollectionTypes;
     }
 
-    interface HelloString
+    interface HelloString extends IReturn<string>
     {
         name?: string;
     }
@@ -940,6 +1055,35 @@ declare module dtos
 
     interface HelloInnerTypes extends IReturn<HelloInnerTypesResponse>
     {
+    }
+
+    interface HelloBuiltin
+    {
+        dayOfWeek?: DayOfWeek;
+    }
+
+    interface HelloGet extends IReturn<HelloVerbResponse>
+    {
+        id?: number;
+    }
+
+    interface HelloPost extends HelloBase, IReturn<HelloVerbResponse>
+    {
+    }
+
+    interface HelloPut extends IReturn<HelloVerbResponse>
+    {
+        id?: number;
+    }
+
+    interface HelloDelete extends IReturn<HelloVerbResponse>
+    {
+        id?: number;
+    }
+
+    interface HelloPatch extends IReturn<HelloVerbResponse>
+    {
+        id?: number;
     }
 
     // @Route("/ping")
@@ -1097,19 +1241,46 @@ declare module dtos
     }
 
     // @Route("/assignroles")
+    // @DataContract
     interface AssignRoles extends IReturn<AssignRolesResponse>
     {
+        // @DataMember(Order=1)
         userName?: string;
+
+        // @DataMember(Order=2)
         permissions?: string[];
+
+        // @DataMember(Order=3)
         roles?: string[];
     }
 
     // @Route("/unassignroles")
+    // @DataContract
     interface UnAssignRoles extends IReturn<UnAssignRolesResponse>
     {
+        // @DataMember(Order=1)
         userName?: string;
+
+        // @DataMember(Order=2)
         permissions?: string[];
+
+        // @DataMember(Order=3)
         roles?: string[];
+    }
+
+    interface QueryPocoBase extends QueryBase_1<OnlyDefinedInGenericType>, IReturn<QueryResponse<OnlyDefinedInGenericType>>
+    {
+        id?: number;
+    }
+
+    interface QueryPocoIntoBase extends QueryBase_2<OnlyDefinedInGenericTypeFrom, OnlyDefinedInGenericTypeInto>, IReturn<QueryResponse<OnlyDefinedInGenericTypeInto>>
+    {
+        id?: number;
+    }
+
+    // @Route("/rockstars")
+    interface QueryRockstars extends QueryBase_1<Rockstar>, IReturn<QueryResponse<Rockstar>>
+    {
     }
 
 }
