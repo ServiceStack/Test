@@ -75,7 +75,7 @@ namespace Test
                 allowedHeaders: "Content-Type, Allow, Authorization"));
 
             Plugins.Add(new RequestLogsFeature {
-                RequestLogger = new RedisRequestLogger(container.Resolve<IRedisClientsManager>()),
+                //RequestLogger = new RedisRequestLogger(container.Resolve<IRedisClientsManager>()),
             });
             Plugins.Add(new RazorFormat());
 
