@@ -66,6 +66,11 @@ namespace Test.ServiceInterface
             };
         }
 
+        public object Any(AllTypes request)
+        {
+            return request;
+        }
+
         public object Any(HelloString request)
         {
             return request.Name;
@@ -105,10 +110,10 @@ namespace Test.ServiceInterface
             return request;
         }
 
-        public object Any(HelloWithListInheritance request)
-        {
-            return request;
-        }
+        //public object Any(HelloWithListInheritance request)
+        //{
+        //    return request;
+        //}
 
         public object Any(HelloWithReturn request)
         {

@@ -1,836 +1,1220 @@
 /* Options:
-Date: 2014-12-08 18:55:17
-Version: 1
+Date: 2015-10-08 04:11:13
+Version: 4.00
 BaseUrl: http://localhost:56500
 
 GlobalNamespace: dtos
+ExportAsTypes: True
 //MakePropertiesOptional: True
 //AddServiceStackTypes: True
 //AddResponseStatus: False
 //AddImplicitVersion: 
+//IncludeTypes: 
+//ExcludeTypes: 
+//DefaultImports: 
 */
 
-declare module dtos
+
+module dtos
 {
 
-    interface IReturnVoid
+    export interface IReturnVoid
     {
     }
 
-    interface IReturn<T>
+    export interface IReturn<T>
     {
     }
 
     // @DataContract
-    interface ResponseStatus
+    export class ResponseStatus
     {
         // @DataMember(Order=1)
-        ErrorCode?:string;
+        errorCode: string;
 
         // @DataMember(Order=2)
-        Message?:string;
+        message: string;
 
         // @DataMember(Order=3)
-        StackTrace?:string;
+        stackTrace: string;
 
         // @DataMember(Order=4)
-        Errors?:ResponseError[];
+        errors: ResponseError[];
+
+        // @DataMember(Order=5)
+        meta: { [index:string]: string; };
     }
 
-    interface MetadataTestChild
+    export const enum ExternalEnum
     {
-        Name?:string;
-        Results?:MetadataTestNestedChild[];
+        foo,
+        bar,
+        baz,
     }
 
-    interface NestedClass
+    export class ExternalType
     {
-        Value?:string;
+        externalEnum2: ExternalEnum2;
     }
 
-    enum EnumType
+    export const enum ExternalEnum3
     {
-        Value1,
-        Value2,
+        un,
+        deux,
+        trois,
+    }
+
+    export class MetadataTestChild
+    {
+        name: string;
+        results: MetadataTestNestedChild[];
+    }
+
+    // @DataContract
+    export class MenuExample
+    {
+        // @DataMember(Order=1)
+        // @ApiMember()
+        menuItemExample1: MenuItemExample;
+    }
+
+    export class NestedClass
+    {
+        value: string;
+    }
+
+    export class ListResult
+    {
+        result: string;
+    }
+
+    export class ArrayResult
+    {
+        result: string;
+    }
+
+    export const enum EnumType
+    {
+        value1,
+        value2,
     }
 
     // @Flags()
-    enum EnumFlags
+    export const enum EnumFlags
     {
-        Value1 = 1,
-        Value2 = 2,
-        Value3 = 4,
+        value1 = 1,
+        value2 = 2,
+        value3 = 4,
     }
 
-    interface AllTypes
+    export class AllCollectionTypes
     {
-        Id?:number;
-        NullableId?:number;
-        Byte?:number;
-        Short?:number;
-        Int?:number;
-        Long?:number;
-        UShort?:number;
-        UInt?:number;
-        ULong?:number;
-        Float?:number;
-        Double?:number;
-        Decimal?:number;
-        String?:string;
-        DateTime?:string;
-        TimeSpan?:string;
-        NullableDateTime?:string;
-        NullableTimeSpan?:string;
-        StringList?:string[];
-        StringArray?:string[];
-        StringMap?:{ [index:string]: string; };
-        IntStringMap?:{ [index:number]: string; };
-        SubType?:SubType;
+        intArray: number[];
+        intList: number[];
+        stringArray: string[];
+        stringList: string[];
+        pocoArray: Poco[];
+        pocoList: Poco[];
+        pocoLookup: { [index:string]: Poco[]; };
+        pocoLookupMap: { [index:string]: { [index:string]: Poco; }[]; };
     }
 
-    interface AllCollectionTypes
+    export class SubType
     {
-        IntArray?:number[];
-        IntList?:number[];
-        StringArray?:string[];
-        StringList?:string[];
-        PocoArray?:Poco[];
-        PocoList?:Poco[];
+        id: number;
+        name: string;
     }
 
-    interface HelloBase
+    export class HelloBase
     {
-        Id?:number;
+        id: number;
     }
 
-    interface HelloResponseBase
+    export class HelloResponseBase
     {
-        RefId?:number;
+        refId: number;
     }
 
-    interface Poco
+    export class Poco
     {
-        Name?:string;
+        name: string;
     }
 
-    interface HelloBase_1<T>
+    export class HelloBase_1<T>
     {
-        Items?:T[];
-        Counts?:number[];
+        items: T[];
+        counts: number[];
     }
 
-    interface Item
+    export class Item
     {
-        Value?:string;
+        value: string;
     }
 
-    interface InheritedItem
+    export class HelloWithReturnResponse
     {
-        Name?:string;
+        result: string;
     }
 
-    interface HelloWithReturnResponse
+    export class HelloType
     {
-        Result?:string;
+        result: string;
     }
 
-    interface HelloType
+    export interface IPoco
     {
-        Result?:string;
+        name?: string;
     }
 
-    interface IPoco
-    {
-        Name?:string;
-    }
-
-    interface IEmptyInterface
+    export interface IEmptyInterface
     {
     }
 
-    interface EmptyClass
+    export class EmptyClass
     {
     }
 
-    interface CustomUserSession extends AuthUserSession
+    export class InnerType
+    {
+        id: number;
+        name: string;
+    }
+
+    export const enum InnerEnum
+    {
+        foo,
+        bar,
+        baz,
+    }
+
+    export const enum DayOfWeek
+    {
+        sunday,
+        monday,
+        tuesday,
+        wednesday,
+        thursday,
+        friday,
+        saturday,
+    }
+
+    export class PingService
+    {
+    }
+
+    export class CustomUserSession extends AuthUserSession
     {
         // @DataMember
-        CustomName?:string;
+        customName: string;
 
         // @DataMember
-        CustomInfo?:string;
+        customInfo: string;
     }
 
-    interface UnAuthInfo
+    export class UnAuthInfo
     {
-        CustomInfo?:string;
+        customInfo: string;
     }
 
-    interface RequestLogEntry
+    export class RequestLogEntry
     {
-        Id?:number;
-        DateTime?:string;
-        HttpMethod?:string;
-        AbsoluteUri?:string;
-        PathInfo?:string;
-        RequestBody?:string;
-        RequestDto?:Object;
-        UserAuthId?:string;
-        SessionId?:string;
-        IpAddress?:string;
-        ForwardedFor?:string;
-        Referer?:string;
-        Headers?:{ [index:string]: string; };
-        FormData?:{ [index:string]: string; };
-        Items?:{ [index:string]: string; };
-        Session?:Object;
-        ResponseDto?:Object;
-        ErrorResponse?:Object;
-        RequestDuration?:string;
+        id: number;
+        dateTime: string;
+        httpMethod: string;
+        absoluteUri: string;
+        pathInfo: string;
+        requestBody: string;
+        requestDto: Object;
+        userAuthId: string;
+        sessionId: string;
+        ipAddress: string;
+        forwardedFor: string;
+        referer: string;
+        headers: { [index:string]: string; };
+        formData: { [index:string]: string; };
+        items: { [index:string]: string; };
+        session: Object;
+        responseDto: Object;
+        errorResponse: Object;
+        requestDuration: string;
+    }
+
+    export class QueryBase_1<T> extends QueryBase
+    {
+    }
+
+    export class OnlyDefinedInGenericType
+    {
+        id: number;
+        name: string;
+    }
+
+    export class QueryBase_2<From, Into> extends QueryBase
+    {
+    }
+
+    export class OnlyDefinedInGenericTypeFrom
+    {
+        id: number;
+        name: string;
+    }
+
+    export class OnlyDefinedInGenericTypeInto
+    {
+        id: number;
+        name: string;
+    }
+
+    export class Rockstar
+    {
+        id: number;
+        firstName: string;
+        lastName: string;
+        age: number;
     }
 
     // @DataContract
-    interface ResponseError
+    export class ResponseError
     {
         // @DataMember(Order=1, EmitDefaultValue=false)
-        ErrorCode?:string;
+        errorCode: string;
 
         // @DataMember(Order=2, EmitDefaultValue=false)
-        FieldName?:string;
+        fieldName: string;
 
         // @DataMember(Order=3, EmitDefaultValue=false)
-        Message?:string;
+        message: string;
+
+        // @DataMember(Order=4, EmitDefaultValue=false)
+        meta: { [index:string]: string; };
     }
 
-    interface MetadataTestNestedChild
+    export const enum ExternalEnum2
     {
-        Name?:string;
+        uno,
+        due,
+        tre,
     }
 
-    interface SubType
+    export class MetadataTestNestedChild
     {
-        Id?:number;
-        Name?:string;
+        name: string;
     }
 
-    interface IAuthTokens
+    export class MenuItemExample
     {
-        Provider?:string;
-        UserId?:string;
-        AccessToken?:string;
-        AccessTokenSecret?:string;
-        RefreshToken?:string;
-        RefreshTokenExpiry?:string;
-        RequestToken?:string;
-        RequestTokenSecret?:string;
-        Items?:{ [index:string]: string; };
+        // @DataMember(Order=1)
+        // @ApiMember()
+        name1: string;
+
+        menuItemExampleItem: MenuItemExampleItem;
+    }
+
+    export class TypesGroup
+    {
+    }
+
+    export interface IAuthTokens
+    {
+        provider?: string;
+        userId?: string;
+        accessToken?: string;
+        accessTokenSecret?: string;
+        refreshToken?: string;
+        refreshTokenExpiry?: string;
+        requestToken?: string;
+        requestTokenSecret?: string;
+        items?: { [index:string]: string; };
     }
 
     // @DataContract
-    interface AuthUserSession
+    export class AuthUserSession
     {
         // @DataMember(Order=1)
-        ReferrerUrl?:string;
+        referrerUrl: string;
 
         // @DataMember(Order=2)
-        Id?:string;
+        id: string;
 
         // @DataMember(Order=3)
-        UserAuthId?:string;
+        userAuthId: string;
 
         // @DataMember(Order=4)
-        UserAuthName?:string;
+        userAuthName: string;
 
         // @DataMember(Order=5)
-        UserName?:string;
+        userName: string;
 
         // @DataMember(Order=6)
-        TwitterUserId?:string;
+        twitterUserId: string;
 
         // @DataMember(Order=7)
-        TwitterScreenName?:string;
+        twitterScreenName: string;
 
         // @DataMember(Order=8)
-        FacebookUserId?:string;
+        facebookUserId: string;
 
         // @DataMember(Order=9)
-        FacebookUserName?:string;
+        facebookUserName: string;
 
         // @DataMember(Order=10)
-        FirstName?:string;
+        firstName: string;
 
         // @DataMember(Order=11)
-        LastName?:string;
+        lastName: string;
 
         // @DataMember(Order=12)
-        DisplayName?:string;
+        displayName: string;
 
         // @DataMember(Order=13)
-        Company?:string;
+        company: string;
 
         // @DataMember(Order=14)
-        Email?:string;
+        email: string;
 
         // @DataMember(Order=15)
-        PrimaryEmail?:string;
+        primaryEmail: string;
 
         // @DataMember(Order=16)
-        PhoneNumber?:string;
+        phoneNumber: string;
 
         // @DataMember(Order=17)
-        BirthDate?:string;
+        birthDate: string;
 
         // @DataMember(Order=18)
-        BirthDateRaw?:string;
+        birthDateRaw: string;
 
         // @DataMember(Order=19)
-        Address?:string;
+        address: string;
 
         // @DataMember(Order=20)
-        Address2?:string;
+        address2: string;
 
         // @DataMember(Order=21)
-        City?:string;
+        city: string;
 
         // @DataMember(Order=22)
-        State?:string;
+        state: string;
 
         // @DataMember(Order=23)
-        Country?:string;
+        country: string;
 
         // @DataMember(Order=24)
-        Culture?:string;
+        culture: string;
 
         // @DataMember(Order=25)
-        FullName?:string;
+        fullName: string;
 
         // @DataMember(Order=26)
-        Gender?:string;
+        gender: string;
 
         // @DataMember(Order=27)
-        Language?:string;
+        language: string;
 
         // @DataMember(Order=28)
-        MailAddress?:string;
+        mailAddress: string;
 
         // @DataMember(Order=29)
-        Nickname?:string;
+        nickname: string;
 
         // @DataMember(Order=30)
-        PostalCode?:string;
+        postalCode: string;
 
         // @DataMember(Order=31)
-        TimeZone?:string;
+        timeZone: string;
 
         // @DataMember(Order=32)
-        RequestTokenSecret?:string;
+        requestTokenSecret: string;
 
         // @DataMember(Order=33)
-        CreatedAt?:string;
+        createdAt: string;
 
         // @DataMember(Order=34)
-        LastModified?:string;
+        lastModified: string;
 
         // @DataMember(Order=35)
-        ProviderOAuthAccess?:IAuthTokens[];
+        roles: string[];
 
         // @DataMember(Order=36)
-        Roles?:string[];
+        permissions: string[];
 
         // @DataMember(Order=37)
-        Permissions?:string[];
+        isAuthenticated: boolean;
 
         // @DataMember(Order=38)
-        IsAuthenticated?:boolean;
+        sequence: string;
 
         // @DataMember(Order=39)
-        Sequence?:string;
+        tag: number;
 
         // @DataMember(Order=40)
-        Tag?:number;
+        providerOAuthAccess: IAuthTokens[];
     }
 
-    interface CustomHttpErrorResponse
+    export class QueryBase
     {
-        Custom?:string;
-        ResponseStatus?:ResponseStatus;
+        // @DataMember(Order=1)
+        skip: number;
+
+        // @DataMember(Order=2)
+        take: number;
+
+        // @DataMember(Order=3)
+        orderBy: string;
+
+        // @DataMember(Order=4)
+        orderByDesc: string;
+
+        // @DataMember(Order=5)
+        include: string;
+
+        // @DataMember(Order=6)
+        meta: { [index:string]: string; };
     }
 
-    interface Account
+    export class MenuItemExampleItem
     {
-        Name?:string;
+        // @DataMember(Order=1)
+        // @ApiMember()
+        name1: string;
     }
 
-    interface Project
+    export class CustomHttpErrorResponse
     {
-        Account?:string;
-        Name?:string;
+        custom: string;
+        responseStatus: ResponseStatus;
     }
 
-    interface MetadataTestResponse
+    export class ThrowTypeResponse
     {
-        Id?:number;
-        Results?:MetadataTestChild[];
+        responseStatus: ResponseStatus;
     }
 
-    interface GetRandomIdsResponse
+    export class ThrowValidationResponse
     {
-        Results?:string[];
+        age: number;
+        required: string;
+        email: string;
+        responseStatus: ResponseStatus;
     }
 
-    interface HelloResponse
+    export class ExternalOperationResponse
     {
-        Result?:string;
+        result: string;
+    }
+
+    export class ExternalOperation2Response
+    {
+        externalType: ExternalType;
+    }
+
+    export class ExternalReturnTypeResponse
+    {
+        externalEnum3: ExternalEnum3;
+    }
+
+    export class Account
+    {
+        name: string;
+    }
+
+    export class Project
+    {
+        account: string;
+        name: string;
+    }
+
+    export class MetadataTestResponse
+    {
+        id: number;
+        results: MetadataTestChild[];
+    }
+
+    // @DataContract
+    export class GetExampleResponse
+    {
+        // @DataMember(Order=1)
+        responseStatus: ResponseStatus;
+
+        // @DataMember(Order=2)
+        // @ApiMember()
+        menuExample1: MenuExample;
+    }
+
+    export class GetRandomIdsResponse
+    {
+        results: string[];
+    }
+
+    export class HelloResponse
+    {
+        result: string;
     }
 
     /**
     * Description on HelloAllResponse type
     */
     // @DataContract
-    interface HelloAnnotatedResponse
+    export class HelloAnnotatedResponse
     {
         // @DataMember
-        Result?:string;
+        result: string;
     }
 
-    interface HelloAllTypesResponse
+    export class HelloAllTypesResponse
     {
-        Result?:string;
-        AllTypes?:AllTypes;
-        AllCollectionTypes?:AllCollectionTypes;
+        result: string;
+        allTypes: AllTypes;
+        allCollectionTypes: AllCollectionTypes;
     }
 
     // @DataContract
-    interface HelloWithDataContractResponse
+    export class HelloWithDataContractResponse
     {
         // @DataMember(Name="result", Order=1, IsRequired=true, EmitDefaultValue=false)
-        Result?:string;
+        result: string;
     }
 
     /**
     * Description on HelloWithDescriptionResponse type
     */
-    interface HelloWithDescriptionResponse
+    export class HelloWithDescriptionResponse
     {
-        Result?:string;
+        result: string;
     }
 
-    interface HelloWithInheritanceResponse extends HelloResponseBase
+    export class HelloWithInheritanceResponse extends HelloResponseBase
     {
-        Result?:string;
+        result: string;
     }
 
-    interface HelloWithAlternateReturnResponse extends HelloWithReturnResponse
+    export class HelloWithAlternateReturnResponse extends HelloWithReturnResponse
     {
-        AltResult?:string;
+        altResult: string;
     }
 
-    interface HelloWithRouteResponse
+    export class HelloWithRouteResponse
     {
-        Result?:string;
+        result: string;
     }
 
-    interface HelloWithTypeResponse
+    export class HelloWithTypeResponse
     {
-        Result?:HelloType;
+        result: HelloType;
     }
 
-    interface PingResponse
+    export class HelloInnerTypesResponse
     {
-        Responses?:{ [index:string]: ResponseStatus; };
-        ResponseStatus?:ResponseStatus;
+        innerType: InnerType;
+        innerEnum: InnerEnum;
     }
 
-    interface RequiresRoleResponse
+    export class HelloVerbResponse
     {
-        Result?:string;
-        ResponseStatus?:ResponseStatus;
+        result: string;
     }
 
-    interface GetSessionResponse
+    export class PingResponse
     {
-        Result?:CustomUserSession;
-        UnAuthInfo?:UnAuthInfo;
-        ResponseStatus?:ResponseStatus;
+        responses: { [index:string]: ResponseStatus; };
+        responseStatus: ResponseStatus;
+    }
+
+    export class RequiresRoleResponse
+    {
+        result: string;
+        responseStatus: ResponseStatus;
+    }
+
+    export class SendVerbResponse
+    {
+        id: number;
+        pathInfo: string;
+        requestMethod: string;
+    }
+
+    export class GetSessionResponse
+    {
+        result: CustomUserSession;
+        unAuthInfo: UnAuthInfo;
+        responseStatus: ResponseStatus;
+    }
+
+    // @Route("/wait/{ForMs}")
+    export class Wait
+    {
+        forMs: number;
     }
 
     // @DataContract
-    interface RequestLogsResponse
+    export class RequestLogsResponse
     {
         // @DataMember(Order=1)
-        Results?:RequestLogEntry[];
+        results: RequestLogEntry[];
 
         // @DataMember(Order=2)
-        Usage?:{ [index:string]: string; };
+        usage: { [index:string]: string; };
 
         // @DataMember(Order=3)
-        ResponseStatus?:ResponseStatus;
+        responseStatus: ResponseStatus;
     }
 
     // @DataContract
-    interface AuthenticateResponse
+    export class AuthenticateResponse
     {
         // @DataMember(Order=1)
-        UserId?:string;
+        userId: string;
 
         // @DataMember(Order=2)
-        SessionId?:string;
+        sessionId: string;
 
         // @DataMember(Order=3)
-        UserName?:string;
+        userName: string;
 
         // @DataMember(Order=4)
-        DisplayName?:string;
+        displayName: string;
 
         // @DataMember(Order=5)
-        ReferrerUrl?:string;
+        referrerUrl: string;
 
         // @DataMember(Order=6)
-        ResponseStatus?:ResponseStatus;
+        responseStatus: ResponseStatus;
 
         // @DataMember(Order=7)
-        Meta?:{ [index:string]: string; };
+        meta: { [index:string]: string; };
     }
 
-    interface AssignRolesResponse
+    // @DataContract
+    export class AssignRolesResponse
     {
-        AllRoles?:string[];
-        AllPermissions?:string[];
-        ResponseStatus?:ResponseStatus;
+        // @DataMember(Order=1)
+        allRoles: string[];
+
+        // @DataMember(Order=2)
+        allPermissions: string[];
+
+        // @DataMember(Order=3)
+        responseStatus: ResponseStatus;
     }
 
-    interface UnAssignRolesResponse
+    // @DataContract
+    export class UnAssignRolesResponse
     {
-        AllRoles?:string[];
-        AllPermissions?:string[];
-        ResponseStatus?:ResponseStatus;
+        // @DataMember(Order=1)
+        allRoles: string[];
+
+        // @DataMember(Order=2)
+        allPermissions: string[];
+
+        // @DataMember(Order=3)
+        responseStatus: ResponseStatus;
     }
 
-    interface CustomHttpError extends IReturn<CustomHttpError>
+    // @DataContract
+    export class QueryResponse<T>
     {
-        StatusCode?:number;
-        StatusDescription?:string;
+        // @DataMember(Order=1)
+        offset: number;
+
+        // @DataMember(Order=2)
+        total: number;
+
+        // @DataMember(Order=3)
+        results: T[];
+
+        // @DataMember(Order=4)
+        meta: { [index:string]: string; };
+
+        // @DataMember(Order=5)
+        responseStatus: ResponseStatus;
+    }
+
+    export class CustomHttpError implements IReturn<CustomHttpErrorResponse>
+    {
+        statusCode: number;
+        statusDescription: string;
+    }
+
+    // @Route("/throwhttperror/{Status}")
+    export class ThrowHttpError
+    {
+        status: number;
+        message: string;
+    }
+
+    // @Route("/throw404")
+    // @Route("/throw404/{Message}")
+    export class Throw404
+    {
+        message: string;
+    }
+
+    // @Route("/throw/{Type}")
+    export class ThrowType implements IReturn<ThrowTypeResponse>
+    {
+        type: string;
+        message: string;
+    }
+
+    // @Route("/throwvalidation")
+    export class ThrowValidation implements IReturn<ThrowValidationResponse>
+    {
+        age: number;
+        required: string;
+        email: string;
+    }
+
+    export class ExternalOperation implements IReturn<ExternalOperationResponse>
+    {
+        id: number;
+        name: string;
+        externalEnum: ExternalEnum;
+    }
+
+    export class ExternalOperation2 implements IReturn<ExternalOperation2Response>
+    {
+        id: number;
+    }
+
+    export class ExternalOperation3 implements IReturn<ExternalReturnTypeResponse>
+    {
+        id: number;
+    }
+
+    export class ExternalOperation4
+    {
+        id: number;
     }
 
     // @Route("/{Path*}")
-    interface RootPathRoutes
+    export class RootPathRoutes
     {
-        Path?:string;
+        path: string;
     }
 
-    interface GetAccount extends IReturn<Account>
+    export class GetAccount implements IReturn<Account>
     {
-        Account?:string;
+        account: string;
     }
 
-    interface GetProject extends IReturn<Project>
+    export class GetProject implements IReturn<Project>
     {
-        Account?:string;
-        Project?:string;
+        account: string;
+        project: string;
     }
 
     // @Route("/image-stream")
-    interface ImageAsStream
+    export class ImageAsStream
     {
-        Format?:string;
+        format: string;
     }
 
     // @Route("/image-bytes")
-    interface ImageAsBytes
+    export class ImageAsBytes
     {
-        Format?:string;
+        format: string;
     }
 
     // @Route("/image-custom")
-    interface ImageAsCustomResult
+    export class ImageAsCustomResult
     {
-        Format?:string;
+        format: string;
     }
 
     // @Route("/image-response")
-    interface ImageWriteToResponse
+    export class ImageWriteToResponse
     {
-        Format?:string;
+        format: string;
     }
 
     // @Route("/image-file")
-    interface ImageAsFile
+    export class ImageAsFile
     {
-        Format?:string;
+        format: string;
     }
 
     // @Route("/image-redirect")
-    interface ImageAsRedirect
+    export class ImageAsRedirect
     {
-        Format?:string;
+        format: string;
     }
 
     // @Route("/image-draw/{Name}")
-    interface DrawImage extends IReturn<DrawImage>
+    export class DrawImage
     {
-        Name?:string;
-        Format?:string;
-        Width?:number;
-        Height?:number;
-        FontSize?:number;
-        Foreground?:string;
-        Background?:string;
+        name: string;
+        format: string;
+        width: number;
+        height: number;
+        fontSize: number;
+        foreground: string;
+        background: string;
     }
 
-    interface MetadataTest extends IReturn<MetadataTestResponse>
+    // @Route("/metadatatest")
+    export class MetadataTest implements IReturn<MetadataTestResponse>
     {
-        Id?:number;
+        id: number;
+    }
+
+    // @Route("/metadatatest-array")
+    export class MetadataTestArray implements IReturn<MetadataTestChild[]>
+    {
+        id: number;
+    }
+
+    // @Route("/example", "GET")
+    // @DataContract
+    export class GetExample implements IReturn<GetExampleResponse>
+    {
     }
 
     // @Route("/randomids")
-    interface GetRandomIds extends IReturn<GetRandomIds>
+    export class GetRandomIds implements IReturn<GetRandomIdsResponse>
     {
-        Take?:number;
+        take: number;
     }
 
-    // @Route("/hello/{Name}")
+    // @Route("/textfile-test")
+    export class TextFileTest
+    {
+        asAttachment: boolean;
+    }
+
     // @Route("/hello")
-    interface Hello extends IReturn<HelloResponse>
+    // @Route("/hello/{Name}")
+    export class Hello implements IReturn<HelloResponse>
     {
         // @Required()
-        Name:string;
+        name: string;
 
-        Title?:string;
+        title: string;
     }
 
     /**
     * Description on HelloAll type
     */
     // @DataContract
-    interface HelloAnnotated extends IReturn<HelloAnnotatedResponse>
+    export class HelloAnnotated implements IReturn<HelloAnnotatedResponse>
     {
         // @DataMember
-        Name?:string;
+        name: string;
     }
 
-    interface HelloWithNestedClass extends IReturn<HelloResponse>
+    export class HelloWithNestedClass implements IReturn<HelloResponse>
     {
-        Name?:string;
-        NestedClassProp?:NestedClass;
+        name: string;
+        nestedClassProp: NestedClass;
     }
 
-    interface HelloWithEnum
+    export class HelloList implements IReturn<ListResult[]>
     {
-        EnumProp?:EnumType;
-        NullableEnumProp?:EnumType;
-        EnumFlags?:EnumFlags;
+        names: string[];
     }
 
-    interface RestrictedAttributes
+    export class HelloArray implements IReturn<ArrayResult[]>
     {
-        Id?:number;
-        Name?:string;
-        Hello?:Hello;
+        names: string[];
+    }
+
+    export class HelloWithEnum
+    {
+        enumProp: EnumType;
+        nullableEnumProp: EnumType;
+        enumFlags: EnumFlags;
+    }
+
+    export class RestrictedAttributes
+    {
+        id: number;
+        name: string;
+        hello: Hello;
     }
 
     /**
     * AllowedAttributes Description
     */
     // @Route("/allowed-attributes", "GET")
-    // @ApiResponse(400, "Your request was not understood")
     // @Api("AllowedAttributes Description")
+    // @ApiResponse(400, "Your request was not understood")
     // @DataContract
-    interface AllowedAttributes
+    export class AllowedAttributes
     {
-        // @Required()
-        // @Default(5)
-        Id:number;
-
         // @DataMember(Name="Aliased")
-        // @ApiMember(ParameterType="path", Description="Range Description", DataType="double", IsRequired=true)
-        Range?:number;
-
-        // @References(typeof(Hello))
-        // @StringLength(20)
-        // @Meta("Foo", "Bar")
-        Name?:string;
+        // @ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)
+        range: number;
     }
 
-    interface HelloAllTypes extends IReturn<HelloAllTypes>
+    // @Route("/all-types")
+    export class HelloAllTypes implements IReturn<HelloAllTypesResponse>
     {
-        Name?:string;
-        AllTypes?:AllTypes;
-        AllCollectionTypes?:AllCollectionTypes;
+        name: string;
+        allTypes: AllTypes;
+        allCollectionTypes: AllCollectionTypes;
     }
 
-    interface HelloString
+    export class AllTypes
     {
-        Name?:string;
+        id: number;
+        nullableId: number;
+        byte: number;
+        short: number;
+        int: number;
+        long: number;
+        uShort: number;
+        uInt: number;
+        uLong: number;
+        float: number;
+        double: number;
+        decimal: number;
+        string: string;
+        dateTime: string;
+        timeSpan: string;
+        dateTimeOffset: string;
+        guid: string;
+        char: string;
+        nullableDateTime: string;
+        nullableTimeSpan: string;
+        stringList: string[];
+        stringArray: string[];
+        stringMap: { [index:string]: string; };
+        intStringMap: { [index:number]: string; };
+        subType: SubType;
     }
 
-    interface HelloVoid
+    export class HelloString implements IReturn<string>
     {
-        Name?:string;
+        name: string;
+    }
+
+    export class HelloVoid
+    {
+        name: string;
     }
 
     // @DataContract
-    interface HelloWithDataContract extends IReturn<HelloWithDataContract>
+    export class HelloWithDataContract implements IReturn<HelloWithDataContractResponse>
     {
         // @DataMember(Name="name", Order=1, IsRequired=true, EmitDefaultValue=false)
-        Name?:string;
+        name: string;
 
         // @DataMember(Name="id", Order=2, EmitDefaultValue=false)
-        Id?:number;
+        id: number;
     }
 
     /**
     * Description on HelloWithDescription type
     */
-    interface HelloWithDescription extends IReturn<HelloWithDescription>
+    export class HelloWithDescription implements IReturn<HelloWithDescriptionResponse>
     {
-        Name?:string;
+        name: string;
     }
 
-    interface HelloWithInheritance extends HelloBase, IReturn<HelloWithInheritance>
+    export class HelloWithInheritance extends HelloBase implements IReturn<HelloWithInheritanceResponse>
     {
-        Name?:string;
+        name: string;
     }
 
-    interface HelloWithGenericInheritance extends HelloBase_1<Poco>
+    export class HelloWithGenericInheritance extends HelloBase_1<Poco>
     {
-        Result?:string;
+        result: string;
     }
 
-    interface HelloWithGenericInheritance2 extends HelloBase_1<Hello>
+    export class HelloWithGenericInheritance2 extends HelloBase_1<Hello>
     {
-        Result?:string;
+        result: string;
     }
 
-    interface HelloWithNestedInheritance extends HelloBase_1<Item>
-    {
-    }
-
-    interface HelloWithListInheritance extends Array<InheritedItem>
+    export class HelloWithNestedInheritance extends HelloBase_1<Item>
     {
     }
 
-    interface HelloWithReturn extends IReturn<HelloWithAlternateReturnResponse>
+    export class HelloWithReturn implements IReturn<HelloWithAlternateReturnResponse>
     {
-        Name?:string;
+        name: string;
     }
 
     // @Route("/helloroute")
-    interface HelloWithRoute extends IReturn<HelloWithRoute>
+    export class HelloWithRoute implements IReturn<HelloWithRouteResponse>
     {
-        Name?:string;
+        name: string;
     }
 
-    interface HelloWithType extends IReturn<HelloWithType>
+    export class HelloWithType implements IReturn<HelloWithTypeResponse>
     {
-        Name?:string;
+        name: string;
     }
 
-    interface HelloInterface
+    export class HelloInterface
     {
-        Poco?:IPoco;
-        EmptyInterface?:IEmptyInterface;
-        EmptyClass?:EmptyClass;
+        poco: IPoco;
+        emptyInterface: IEmptyInterface;
+        emptyClass: EmptyClass;
+    }
+
+    export class HelloInnerTypes implements IReturn<HelloInnerTypesResponse>
+    {
+    }
+
+    export class HelloBuiltin
+    {
+        dayOfWeek: DayOfWeek;
+    }
+
+    export class HelloGet implements IReturn<HelloVerbResponse>
+    {
+        id: number;
+    }
+
+    export class HelloPost extends HelloBase implements IReturn<HelloVerbResponse>
+    {
+    }
+
+    export class HelloPut implements IReturn<HelloVerbResponse>
+    {
+        id: number;
+    }
+
+    export class HelloDelete implements IReturn<HelloVerbResponse>
+    {
+        id: number;
+    }
+
+    export class HelloPatch implements IReturn<HelloVerbResponse>
+    {
+        id: number;
+    }
+
+    export class HelloReturnVoid implements IReturnVoid
+    {
+        id: number;
     }
 
     // @Route("/ping")
-    interface Ping extends IReturn<Ping>
+    export class Ping implements IReturn<PingResponse>
     {
     }
 
     // @Route("/reset-connections")
-    interface ResetConnections
+    export class ResetConnections
     {
     }
 
     // @Route("/requires-role")
-    interface RequiresRole extends IReturn<RequiresRole>
+    export class RequiresRole implements IReturn<RequiresRoleResponse>
     {
     }
 
+    export class SendDefault implements IReturn<SendVerbResponse>
+    {
+        id: number;
+    }
+
+    // @Route("/sendrestget/{Id}", "GET")
+    export class SendRestGet implements IReturn<SendVerbResponse>
+    {
+        id: number;
+    }
+
+    export class SendGet implements IReturn<SendVerbResponse>
+    {
+        id: number;
+    }
+
+    export class SendPost implements IReturn<SendVerbResponse>
+    {
+        id: number;
+    }
+
+    export class SendPut implements IReturn<SendVerbResponse>
+    {
+        id: number;
+    }
+
     // @Route("/session")
-    interface GetSession extends IReturn<GetSessionResponse>
+    export class GetSession implements IReturn<GetSessionResponse>
     {
     }
 
     // @Route("/session/edit/{CustomName}")
-    interface UpdateSession extends IReturn<GetSessionResponse>
+    export class UpdateSession implements IReturn<GetSessionResponse>
     {
-        CustomName?:string;
+        customName: string;
     }
 
-    // @Route("/postman")
-    interface Postman
+    // @Route("/void-response")
+    export class TestVoidResponse
     {
-        Label?:string[];
-        ExportSession?:boolean;
-        ssid?:string;
-        sspid?:string;
-        ssopt?:string;
+    }
+
+    // @Route("/null-response")
+    export class TestNullResponse
+    {
     }
 
     // @Route("/requestlogs")
     // @DataContract
-    interface RequestLogs extends IReturn<RequestLogs>
+    export class RequestLogs implements IReturn<RequestLogsResponse>
     {
         // @DataMember(Order=1)
-        BeforeSecs?:number;
+        beforeSecs: number;
 
         // @DataMember(Order=2)
-        AfterSecs?:number;
+        afterSecs: number;
 
         // @DataMember(Order=3)
-        IpAddress?:string;
+        ipAddress: string;
 
         // @DataMember(Order=4)
-        ForwardedFor?:string;
+        forwardedFor: string;
 
         // @DataMember(Order=5)
-        UserAuthId?:string;
+        userAuthId: string;
 
         // @DataMember(Order=6)
-        SessionId?:string;
+        sessionId: string;
 
         // @DataMember(Order=7)
-        Referer?:string;
+        referer: string;
 
         // @DataMember(Order=8)
-        PathInfo?:string;
+        pathInfo: string;
 
         // @DataMember(Order=9)
-        Ids?:number[];
+        ids: number[];
 
         // @DataMember(Order=10)
-        BeforeId?:number;
+        beforeId: number;
 
         // @DataMember(Order=11)
-        AfterId?:number;
+        afterId: number;
 
         // @DataMember(Order=12)
-        HasResponse?:boolean;
+        hasResponse: boolean;
 
         // @DataMember(Order=13)
-        WithErrors?:boolean;
+        withErrors: boolean;
 
         // @DataMember(Order=14)
-        Skip?:number;
+        skip: number;
 
         // @DataMember(Order=15)
-        Take?:number;
+        take: number;
 
         // @DataMember(Order=16)
-        EnableSessionTracking?:boolean;
+        enableSessionTracking: boolean;
 
         // @DataMember(Order=17)
-        EnableResponseTracking?:boolean;
+        enableResponseTracking: boolean;
 
         // @DataMember(Order=18)
-        EnableErrorTracking?:boolean;
+        enableErrorTracking: boolean;
 
         // @DataMember(Order=19)
-        DurationLongerThan?:string;
+        durationLongerThan: string;
 
         // @DataMember(Order=20)
-        DurationLessThan?:string;
+        durationLessThan: string;
     }
 
     // @Route("/auth")
@@ -838,65 +1222,95 @@ declare module dtos
     // @Route("/authenticate")
     // @Route("/authenticate/{provider}")
     // @DataContract
-    interface Authenticate extends IReturn<AuthenticateResponse>
+    export class Authenticate implements IReturn<AuthenticateResponse>
     {
         // @DataMember(Order=1)
-        provider?:string;
+        provider: string;
 
         // @DataMember(Order=2)
-        State?:string;
+        state: string;
 
         // @DataMember(Order=3)
-        oauth_token?:string;
+        oauth_token: string;
 
         // @DataMember(Order=4)
-        oauth_verifier?:string;
+        oauth_verifier: string;
 
         // @DataMember(Order=5)
-        UserName?:string;
+        userName: string;
 
         // @DataMember(Order=6)
-        Password?:string;
+        password: string;
 
         // @DataMember(Order=7)
-        RememberMe?:boolean;
+        rememberMe: boolean;
 
         // @DataMember(Order=8)
-        Continue?:string;
+        continue: string;
 
         // @DataMember(Order=9)
-        nonce?:string;
+        nonce: string;
 
         // @DataMember(Order=10)
-        uri?:string;
+        uri: string;
 
         // @DataMember(Order=11)
-        response?:string;
+        response: string;
 
         // @DataMember(Order=12)
-        qop?:string;
+        qop: string;
 
         // @DataMember(Order=13)
-        nc?:string;
+        nc: string;
 
         // @DataMember(Order=14)
-        cnonce?:string;
+        cnonce: string;
+
+        // @DataMember(Order=15)
+        meta: { [index:string]: string; };
     }
 
     // @Route("/assignroles")
-    interface AssignRoles extends IReturn<AssignRolesResponse>
+    // @DataContract
+    export class AssignRoles implements IReturn<AssignRolesResponse>
     {
-        UserName?:string;
-        Permissions?:string[];
-        Roles?:string[];
+        // @DataMember(Order=1)
+        userName: string;
+
+        // @DataMember(Order=2)
+        permissions: string[];
+
+        // @DataMember(Order=3)
+        roles: string[];
     }
 
     // @Route("/unassignroles")
-    interface UnAssignRoles extends IReturn<UnAssignRolesResponse>
+    // @DataContract
+    export class UnAssignRoles implements IReturn<UnAssignRolesResponse>
     {
-        UserName?:string;
-        Permissions?:string[];
-        Roles?:string[];
+        // @DataMember(Order=1)
+        userName: string;
+
+        // @DataMember(Order=2)
+        permissions: string[];
+
+        // @DataMember(Order=3)
+        roles: string[];
+    }
+
+    export class QueryPocoBase extends QueryBase_1<OnlyDefinedInGenericType> implements IReturn<QueryResponse<OnlyDefinedInGenericType>>
+    {
+        id: number;
+    }
+
+    export class QueryPocoIntoBase extends QueryBase_2<OnlyDefinedInGenericTypeFrom, OnlyDefinedInGenericTypeInto> implements IReturn<QueryResponse<OnlyDefinedInGenericTypeInto>>
+    {
+        id: number;
+    }
+
+    // @Route("/rockstars")
+    export class QueryRockstars extends QueryBase_1<Rockstar> implements IReturn<QueryResponse<Rockstar>>
+    {
     }
 
 }
