@@ -1,12 +1,43 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using ServiceStack;
 using ServiceStack.Data;
 using ServiceStack.FluentValidation;
+using ServiceStack.Model;
 using Test.ServiceModel;
 
 namespace Test.ServiceInterface
 {
+    public class Custom400Exception : Exception, IResponseStatusConvertible, IHasStatusCode
+    {
+        public Custom400Exception(string message) : base(message) { }
+
+        public ResponseStatus ToResponseStatus()
+        {
+            return new ResponseStatus
+            {
+                ErrorCode = GetType().Name,
+                Message = this.Message,
+                Errors = new List<ResponseError>
+                {
+                    new ResponseError
+                    {
+                        ErrorCode = "FieldErrorCode",
+                        Message = "FieldMessage",
+                        FieldName = "FieldName",
+                    }
+                }
+            };
+        }
+
+        public int StatusCode
+        {
+            get { return (int)HttpStatusCode.BadRequest; }
+        }
+    }
+
     public class ErrorsService : Service
     {
         public object Any(ThrowHttpError request)
@@ -17,6 +48,11 @@ namespace Test.ServiceInterface
         public object Any(Throw404 request)
         {
             throw HttpError.NotFound(request.Message ?? "Custom Status Description");
+        }
+
+        public object Any(ThrowCustom400 request)
+        {
+            throw new Custom400Exception(request.Message ?? "Custom Status Description");
         }
 
         public object Any(ThrowType request)

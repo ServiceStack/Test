@@ -16,6 +16,13 @@ namespace Test.ServiceModel
         public string Message { get; set; }
     }
 
+    [Route("/throwcustom400")]
+    [Route("/throwcustom400/{Message}")]
+    public class ThrowCustom400
+    {
+        public string Message { get; set; }
+    }
+
     [Route("/throw/{Type}")]
     public class ThrowType : IReturn<ThrowTypeResponse>
     {

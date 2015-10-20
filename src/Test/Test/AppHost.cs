@@ -41,6 +41,8 @@ namespace Test
         /// <param name="container"></param>
         public override void Configure(Container container)
         {
+            this.GlobalHtmlErrorHttpHandler = new RazorHandler("/error");
+
             JsConfig.EmitCamelCaseNames = true;
 
             SetConfig(new HostConfig {
