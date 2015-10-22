@@ -23,6 +23,14 @@ namespace Test.ServiceModel
         public string Message { get; set; }
     }
 
+    [Route("/throwbusinesserror")]
+    public class ThrowBusinessError {}
+
+    public class ThrowBusinessErrorResponse
+    {
+        public ResponseStatus ResponseStatus { get; set; }
+    }
+
     [Route("/throw/{Type}")]
     public class ThrowType : IReturn<ThrowTypeResponse>
     {

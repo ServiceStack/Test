@@ -93,6 +93,27 @@ namespace Test.ServiceInterface
         {
             return request.ConvertTo<ThrowValidationResponse>();
         }
+
+        public object Any(ThrowBusinessError request)
+        {
+            throw BusinessError();
+        }
+
+        protected HttpError BusinessError(string summaryMessage = "Some generic validation summary.")
+        {
+            return new HttpError(HttpStatusCode.BadRequest, "MyValidationType", summaryMessage)
+            {
+                Response = new ErrorResponse
+                {
+                    ResponseStatus = new ResponseStatus
+                    {
+                        ErrorCode = "MyValidationType",
+                        Message = summaryMessage,
+                        Errors = new List<ResponseError>()
+                    },
+                }
+            };
+        }
     }
 
     public class ThrowValidationValidator : AbstractValidator<ThrowValidation>
