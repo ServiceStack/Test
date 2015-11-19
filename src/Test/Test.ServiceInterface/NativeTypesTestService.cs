@@ -76,6 +76,11 @@ namespace Test.ServiceInterface
             return request.Name;
         }
 
+        public object Any(HelloDateTime request)
+        {
+            return request;
+        }
+
         public void Any(HelloVoid request)
         {
         }
@@ -181,6 +186,11 @@ namespace Test.ServiceInterface
 
         public void Any(HelloReturnVoid request)
         {
+        }
+
+        public object Any(EnumRequest request)
+        {
+            return new EnumResponse { Operator = request.Operator };
         }
     }
 }
