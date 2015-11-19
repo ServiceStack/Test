@@ -159,7 +159,7 @@ namespace Test.ServiceModel
         public string Name { get; set; }
     }
 
-    public class HelloDateTime : IReturn<DateTime>
+    public class HelloDateTime : IReturn<HelloDateTime>
     {
         public DateTime DateTime { get; set; }
     }
