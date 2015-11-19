@@ -1,5 +1,5 @@
 /* Options:
-Date: 2015-09-11 16:39:14
+Date: 2015-11-19 01:34:27
 Version: 4.00
 BaseUrl: http://localhost:56500
 
@@ -232,6 +232,44 @@ namespace Test.ServiceInterface
         public virtual string Path { get; set; }
     }
 
+    public partial class SendDefault
+        : IReturn<SendVerbResponse>
+    {
+        public virtual int Id { get; set; }
+    }
+
+    public partial class SendGet
+        : IReturn<SendVerbResponse>, IGet
+    {
+        public virtual int Id { get; set; }
+    }
+
+    public partial class SendPost
+        : IReturn<SendVerbResponse>, IPost
+    {
+        public virtual int Id { get; set; }
+    }
+
+    public partial class SendPut
+        : IReturn<SendVerbResponse>, IPut
+    {
+        public virtual int Id { get; set; }
+    }
+
+    [Route("/sendrestget/{Id}", "GET")]
+    public partial class SendRestGet
+        : IReturn<SendVerbResponse>, IGet
+    {
+        public virtual int Id { get; set; }
+    }
+
+    public partial class SendVerbResponse
+    {
+        public virtual int Id { get; set; }
+        public virtual string PathInfo { get; set; }
+        public virtual string RequestMethod { get; set; }
+    }
+
     [Route("/null-response")]
     public partial class TestNullResponse
     {
@@ -313,6 +351,17 @@ namespace Test.ServiceModel
         Value1 = 1,
         Value2 = 2,
         Value3 = 4,
+    }
+
+    public partial class EnumRequest
+        : IReturn<EnumResponse>, IPut
+    {
+        public virtual ScopeType Operator { get; set; }
+    }
+
+    public partial class EnumResponse
+    {
+        public virtual ScopeType Operator { get; set; }
     }
 
     public enum EnumType
@@ -432,6 +481,12 @@ namespace Test.ServiceModel
         public virtual DayOfWeek DayOfWeek { get; set; }
     }
 
+    public partial class HelloDateTime
+        : IReturn<HelloDateTime>
+    {
+        public virtual DateTime DateTime { get; set; }
+    }
+
     public partial class HelloDelete
         : IReturn<HelloVerbResponse>, IDelete
     {
@@ -493,6 +548,12 @@ namespace Test.ServiceModel
     public partial class HelloResponse
     {
         public virtual string Result { get; set; }
+    }
+
+    public partial class HelloReturnVoid
+        : IReturnVoid
+    {
+        public virtual int Id { get; set; }
     }
 
     public partial class HelloString
@@ -583,11 +644,6 @@ namespace Test.ServiceModel
         public virtual string Result { get; set; }
     }
 
-    public partial class HelloWithListInheritance
-        : List<InheritedItem>
-    {
-    }
-
     public partial class HelloWithNestedClass
         : IReturn<HelloResponse>
     {
@@ -641,11 +697,6 @@ namespace Test.ServiceModel
 
     public partial interface IEmptyInterface
     {
-    }
-
-    public partial class InheritedItem
-    {
-        public virtual string Name { get; set; }
     }
 
     public partial interface IPoco
@@ -786,9 +837,34 @@ namespace Test.ServiceModel
         public virtual int? Age { get; set; }
     }
 
+    [DataContract]
+    public enum ScopeType
+    {
+        Global = 1,
+        Sale = 2,
+    }
+
     [Route("/throw404")]
     [Route("/throw404/{Message}")]
     public partial class Throw404
+    {
+        public virtual string Message { get; set; }
+    }
+
+    [Route("/throwbusinesserror")]
+    public partial class ThrowBusinessError
+        : IReturn<ThrowBusinessErrorResponse>
+    {
+    }
+
+    public partial class ThrowBusinessErrorResponse
+    {
+        public virtual ResponseStatus ResponseStatus { get; set; }
+    }
+
+    [Route("/throwcustom400")]
+    [Route("/throwcustom400/{Message}")]
+    public partial class ThrowCustom400
     {
         public virtual string Message { get; set; }
     }

@@ -64,7 +64,18 @@ namespace Test.Tests
             Assert.That(TimeSpan.FromSeconds(1).ToJson().Trim('"'), Is.EqualTo("PT1S"));
             Assert.That(TimeSpan.FromMilliseconds(1).ToJson().Trim('"'), Is.EqualTo("PT0.001S"));
 
-            Assert.That(new TimeSpan(1,1,1,1,1).ToJson().Trim('"'), Is.EqualTo("P1DT1H1M1.001S"));
+            Assert.That(new TimeSpan(1, 1, 1, 1, 1).ToJson().Trim('"'), Is.EqualTo("P1DT1H1M1.001S"));
+        }
+
+        [Test]
+        public void Does_serialize_DateTime_in_QueryString()
+        {
+            var dto = new HelloDateTime { DateTime = new DateTime(2001, 01, 01, 01, 01, 01) };
+
+            var url = dto.ToGetUrl();
+            url.Print();
+
+            Assert.That(url, Is.EqualTo("/json/reply/HelloDateTime?dateTime=" + Uri.EscapeDataString("2001-01-01T01:01:01-08:00")));
         }
     }
 }
