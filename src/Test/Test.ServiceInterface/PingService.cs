@@ -38,6 +38,7 @@ namespace Test.ServiceInterface
             "http://redisreact.servicestack.net",
             "http://awsrazor.servicestack.net",
             "http://awsapps.servicestack.net",
+            "http://awsrazor.servicestack.net/stars/dead/cobain/",
             //"http://restfiles.servicestack.net",
             //"http://redisstackoverflow.servicestack.net",
             //"http://northwind.servicestack.net",
