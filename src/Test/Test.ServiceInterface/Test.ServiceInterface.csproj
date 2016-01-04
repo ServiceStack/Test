@@ -90,6 +90,7 @@
     <Compile Include="RequiredRoleService.cs" />
     <Compile Include="SendVerbService.cs" />
     <Compile Include="SessionService.cs" />
+    <Compile Include="TestAuthService.cs" />
     <Compile Include="TestServices.cs" />
   </ItemGroup>
   <ItemGroup>
