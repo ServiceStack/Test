@@ -28,7 +28,7 @@ namespace AutoQueryTest
 
             Plugins.Add(new AutoQueryFeature
             {
-                //AutoQueryServiceBaseType = typeof(MyAutoQueryServiceBase),
+                AutoQueryServiceBaseType = typeof(MyAutoQueryServiceBase),
                 MaxLimit = 20000
             });
         }
