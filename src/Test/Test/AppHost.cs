@@ -16,6 +16,7 @@ using ServiceStack.Redis;
 using ServiceStack.Text;
 using ServiceStack.Validation;
 using Test.ServiceInterface;
+using Test.ServiceModel;
 
 namespace Test
 {
@@ -45,7 +46,8 @@ namespace Test
 
             JsConfig.EmitCamelCaseNames = true;
 
-            SetConfig(new HostConfig {
+            SetConfig(new HostConfig
+            {
                 DebugMode = true,
                 Return204NoContentForEmptyResponse = true,
             });
@@ -56,6 +58,11 @@ namespace Test
 
             container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(
                 AppSettings.GetString("AppDb"), PostgreSqlDialect.Provider));
+
+            using (var db = container.Resolve<IDbConnectionFactory>().Open())
+            {
+                db.DropAndCreateTable<Logger>();
+            }
 
             container.Register<IAuthRepository>(c =>
                 new OrmLiteAuthRepository(c.Resolve<IDbConnectionFactory>())
@@ -70,13 +77,14 @@ namespace Test
             CreateUser(authRepo, 2, "test2", "test2");
 
             Plugins.Add(new PostmanFeature());
-            
+
             Plugins.Add(new CorsFeature(
                 allowOriginWhitelist: new[] { "http://localhost", "http://localhost:56500", "http://test.servicestack.net", "http://null.jsbin.com" },
                 allowCredentials: true,
                 allowedHeaders: "Content-Type, Allow, Authorization"));
 
-            Plugins.Add(new RequestLogsFeature {
+            Plugins.Add(new RequestLogsFeature
+            {
                 //RequestLogger = new RedisRequestLogger(container.Resolve<IRedisClientsManager>()),
             });
             Plugins.Add(new RazorFormat());
@@ -84,7 +92,7 @@ namespace Test
             Plugins.Add(new AuthFeature(() => new CustomUserSession(),
                 new IAuthProvider[]
                 {
-                    new BasicAuthProvider(AppSettings),     
+                    new BasicAuthProvider(AppSettings),
                     new CredentialsAuthProvider(AppSettings),
                 }));
 
@@ -92,7 +100,7 @@ namespace Test
             Plugins.Add(new ValidationFeature());
             Plugins.Add(new AutoQueryFeature
             {
-                MaxLimit = 100,                
+                MaxLimit = 100,
             });
 
             container.RegisterValidators(typeof(ThrowValidationValidator).Assembly);
@@ -103,7 +111,7 @@ namespace Test
         }
 
 
-        private void CreateUser(OrmLiteAuthRepository authRepo, 
+        private void CreateUser(OrmLiteAuthRepository authRepo,
             int id, string username, string password, List<string> roles = null, List<string> permissions = null)
         {
             string hash;
