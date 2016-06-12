@@ -1,6 +1,6 @@
-COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.PostgreSQL\bin\Release\ServiceStack.OrmLite.* .
-COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.PostgreSQL\bin\Release\Mono.Security.dll .
-COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.PostgreSQL\bin\Release\Npgsql.dll .
+COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.PostgreSqlV45\bin\Release\ServiceStack.OrmLite.* .
+COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.PostgreSqlV45\bin\Release\Mono.Security.dll .
+COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.PostgreSqlV45\bin\Release\Npgsql.dll .
 
 COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.MySql\bin\Release\ServiceStack.OrmLite.MySql.* .
 COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.MySql\bin\Release\MySql.Data.* .
