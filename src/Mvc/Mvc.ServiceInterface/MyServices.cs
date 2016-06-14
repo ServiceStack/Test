@@ -16,7 +16,7 @@ namespace Mvc.ServiceInterface
         }
 
         [Route("/reset")]
-        public class Reset {}
+        public class Reset { }
         public object Any(Reset request)
         {
             ResetUsers((OrmLiteAuthRepository)TryResolve<IAuthRepository>());

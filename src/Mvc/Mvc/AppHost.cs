@@ -59,7 +59,7 @@ namespace Mvc
                     new AspNetWindowsAuthProvider(this) {  // Integrated Windows Auth
                         LoadUserAuthFilter = LoadUserAuthInfo,
                         AllowAllWindowsAuthUsers = true
-                    }, 
+                    },
                     new CredentialsAuthProvider(),        //HTML Form post of UserName/Password credentials
                     new BasicAuthProvider(),                    //Sign-in with HTTP Basic Auth
                     new DigestAuthProvider(AppSettings),        //Sign-in with HTTP Digest Auth
