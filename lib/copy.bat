@@ -1,7 +1,3 @@
-COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.PostgreSqlV45\bin\Release\ServiceStack.OrmLite.* .
-COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.PostgreSqlV45\bin\Release\Mono.Security.dll .
-COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.PostgreSqlV45\bin\Release\Npgsql.dll .
-
 COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.MySql\bin\Release\ServiceStack.OrmLite.MySql.* .
 COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.MySql\bin\Release\MySql.Data.* .
 
@@ -25,3 +21,8 @@ COPY C:\src\ServiceStack\src\ServiceStack.Server\bin\Release\ServiceStack.Server
 COPY C:\src\ServiceStack\src\ServiceStack.RabbitMq\bin\Release\ServiceStack.RabbitMq.* .
 COPY C:\src\ServiceStack\src\ServiceStack.Mvc\bin\Release\ServiceStack.Mvc.* .
 COPY C:\src\ServiceStack\src\ServiceStack.Razor\bin\Release\* .
+
+COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.PostgreSqlV45\bin\Release\ServiceStack.OrmLite.* .
+COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.PostgreSqlV45\bin\Release\Mono.Security.dll .
+COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.PostgreSqlV45\bin\Release\Npgsql.dll .
+

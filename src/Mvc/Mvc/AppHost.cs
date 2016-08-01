@@ -78,12 +78,16 @@ namespace Mvc
                     IncludeRegistrationService = true,
                 });
 
-            container.Register<IRedisClientsManager>(c =>
-                new PooledRedisClientManager("localhost:6379"));
-            container.Register(c => c.Resolve<IRedisClientsManager>().GetCacheClient());
+            //container.Register<IRedisClientsManager>(c =>
+            //    new PooledRedisClientManager("localhost:6379"));
+            //container.Register(c => c.Resolve<IRedisClientsManager>().GetCacheClient());
 
-            container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(
-                AppSettings.GetString("AppDb"), PostgreSqlDialect.Provider));
+            //container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(
+            //    AppSettings.GetString("AppDb"), PostgreSqlDialect.Provider));
+
+            var path = "~/App_Data/db.sqlite".MapHostAbsolutePath();
+            container.Register<IDbConnectionFactory>(c => 
+                new OrmLiteConnectionFactory(path, SqliteDialect.Provider));
 
             container.Register<IAuthRepository>(c =>
                 new OrmLiteAuthRepository(c.Resolve<IDbConnectionFactory>())
