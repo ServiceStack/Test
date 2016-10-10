@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test\Test.csproj", "{4389B305-B381-4B50-B1A8-BBB5259A0524}"
 EndProject
@@ -18,6 +18,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "External.ServiceModel", "External.ServiceModel\External.ServiceModel.csproj", "{E813C416-E358-4CC2-A188-6BA11A33091F}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VS.FSharp.SelfHost", "VS.FSharp.SelfHost\VS.FSharp.SelfHost.fsproj", "{3C8FC247-0231-443C-8B69-039F73C324A5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{1707F22E-E629-41CD-8C75-1A7F3F2BFA03}"
+	ProjectSection(SolutionItems) = preProject
+		..\lib\copy.bat = ..\lib\copy.bat
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

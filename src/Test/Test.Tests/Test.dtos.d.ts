@@ -1,6 +1,7 @@
 /* Options:
-Date: 2015-09-11 16:39:23
+Date: 2016-09-28 14:00:50
 Version: 4.00
+Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: http://localhost:56500
 
 GlobalNamespace: dtos
@@ -8,6 +9,7 @@ GlobalNamespace: dtos
 //AddServiceStackTypes: True
 //AddResponseStatus: False
 //AddImplicitVersion: 
+//AddDescriptionAsComments: True
 //IncludeTypes: 
 //ExcludeTypes: 
 //DefaultImports: 
@@ -44,24 +46,14 @@ declare module dtos
         meta?: { [index:string]: string; };
     }
 
-    enum ExternalEnum
-    {
-        foo,
-        bar,
-        baz,
-    }
+    type ExternalEnum = "Foo" | "Bar" | "Baz";
 
     interface ExternalType
     {
         externalEnum2?: ExternalEnum2;
     }
 
-    enum ExternalEnum3
-    {
-        un,
-        deux,
-        trois,
-    }
+    type ExternalEnum3 = "Un" | "Deux" | "Trois";
 
     interface MetadataTestChild
     {
@@ -92,47 +84,14 @@ declare module dtos
         result?: string;
     }
 
-    enum EnumType
-    {
-        value1,
-        value2,
-    }
+    type EnumType = "Value1" | "Value2";
 
     // @Flags()
     enum EnumFlags
     {
-        value1 = 1,
-        value2 = 2,
-        value3 = 4,
-    }
-
-    interface AllTypes
-    {
-        id?: number;
-        nullableId?: number;
-        byte?: number;
-        short?: number;
-        int?: number;
-        long?: number;
-        uShort?: number;
-        uInt?: number;
-        uLong?: number;
-        float?: number;
-        double?: number;
-        decimal?: number;
-        string?: string;
-        dateTime?: string;
-        timeSpan?: string;
-        dateTimeOffset?: DateTimeOffset;
-        guid?: Guid;
-        char?: Char;
-        nullableDateTime?: string;
-        nullableTimeSpan?: string;
-        stringList?: string[];
-        stringArray?: string[];
-        stringMap?: { [index:string]: string; };
-        intStringMap?: { [index:number]: string; };
-        subType?: SubType;
+        Value1 = 1,
+        Value2 = 2,
+        Value3 = 4,
     }
 
     interface AllCollectionTypes
@@ -145,6 +104,12 @@ declare module dtos
         pocoList?: Poco[];
         pocoLookup?: { [index:string]: Poco[]; };
         pocoLookupMap?: { [index:string]: { [index:string]: Poco; }[]; };
+    }
+
+    interface SubType
+    {
+        id?: number;
+        name?: string;
     }
 
     interface HelloBase
@@ -171,11 +136,6 @@ declare module dtos
     interface Item
     {
         value?: string;
-    }
-
-    interface InheritedItem
-    {
-        name?: string;
     }
 
     interface HelloWithReturnResponse
@@ -207,157 +167,15 @@ declare module dtos
         name?: string;
     }
 
-    enum InnerEnum
-    {
-        foo,
-        bar,
-        baz,
-    }
+    type InnerEnum = "Foo" | "Bar" | "Baz";
 
-    enum DayOfWeek
-    {
-        sunday,
-        monday,
-        tuesday,
-        wednesday,
-        thursday,
-        friday,
-        saturday,
-    }
+    type DayOfWeek = "Sunday" | "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday";
+
+    // @DataContract
+    type ScopeType = "Global" | "Sale";
 
     interface PingService
     {
-    }
-
-    interface CustomUserSession extends AuthUserSession
-    {
-        // @DataMember
-        customName?: string;
-
-        // @DataMember
-        customInfo?: string;
-    }
-
-    interface UnAuthInfo
-    {
-        customInfo?: string;
-    }
-
-    interface RequestLogEntry
-    {
-        id?: number;
-        dateTime?: string;
-        httpMethod?: string;
-        absoluteUri?: string;
-        pathInfo?: string;
-        requestBody?: string;
-        requestDto?: Object;
-        userAuthId?: string;
-        sessionId?: string;
-        ipAddress?: string;
-        forwardedFor?: string;
-        referer?: string;
-        headers?: { [index:string]: string; };
-        formData?: { [index:string]: string; };
-        items?: { [index:string]: string; };
-        session?: Object;
-        responseDto?: Object;
-        errorResponse?: Object;
-        requestDuration?: string;
-    }
-
-    interface QueryBase_1<T> extends QueryBase
-    {
-    }
-
-    interface OnlyDefinedInGenericType
-    {
-        id?: number;
-        name?: string;
-    }
-
-    interface QueryBase_2<From, Into> extends QueryBase
-    {
-    }
-
-    interface OnlyDefinedInGenericTypeFrom
-    {
-        id?: number;
-        name?: string;
-    }
-
-    interface OnlyDefinedInGenericTypeInto
-    {
-        id?: number;
-        name?: string;
-    }
-
-    interface Rockstar
-    {
-        id?: number;
-        firstName?: string;
-        lastName?: string;
-        age?: number;
-    }
-
-    // @DataContract
-    interface ResponseError
-    {
-        // @DataMember(Order=1, EmitDefaultValue=false)
-        errorCode?: string;
-
-        // @DataMember(Order=2, EmitDefaultValue=false)
-        fieldName?: string;
-
-        // @DataMember(Order=3, EmitDefaultValue=false)
-        message?: string;
-
-        // @DataMember(Order=4, EmitDefaultValue=false)
-        meta?: { [index:string]: string; };
-    }
-
-    enum ExternalEnum2
-    {
-        uno,
-        due,
-        tre,
-    }
-
-    interface MetadataTestNestedChild
-    {
-        name?: string;
-    }
-
-    interface MenuItemExample
-    {
-        // @DataMember(Order=1)
-        // @ApiMember()
-        name1?: string;
-
-        menuItemExampleItem?: MenuItemExampleItem;
-    }
-
-    interface SubType
-    {
-        id?: number;
-        name?: string;
-    }
-
-    interface TypesGroup
-    {
-    }
-
-    interface IAuthTokens
-    {
-        provider?: string;
-        userId?: string;
-        accessToken?: string;
-        accessTokenSecret?: string;
-        refreshToken?: string;
-        refreshTokenExpiry?: string;
-        requestToken?: string;
-        requestTokenSecret?: string;
-        items?: { [index:string]: string; };
     }
 
     // @DataContract
@@ -475,13 +293,62 @@ declare module dtos
         isAuthenticated?: boolean;
 
         // @DataMember(Order=38)
-        sequence?: string;
+        fromToken?: boolean;
 
         // @DataMember(Order=39)
-        tag?: number;
+        profileUrl?: string;
 
         // @DataMember(Order=40)
+        sequence?: string;
+
+        // @DataMember(Order=41)
+        tag?: number;
+
+        // @DataMember(Order=42)
         providerOAuthAccess?: IAuthTokens[];
+    }
+
+    interface CustomUserSession extends AuthUserSession
+    {
+        // @DataMember
+        customName?: string;
+
+        // @DataMember
+        customInfo?: string;
+    }
+
+    interface UnAuthInfo
+    {
+        customInfo?: string;
+    }
+
+    interface Logger
+    {
+        id?: number;
+        devices?: Device[];
+    }
+
+    interface RequestLogEntry
+    {
+        id?: number;
+        dateTime?: string;
+        httpMethod?: string;
+        absoluteUri?: string;
+        pathInfo?: string;
+        requestBody?: string;
+        requestDto?: Object;
+        userAuthId?: string;
+        sessionId?: string;
+        ipAddress?: string;
+        forwardedFor?: string;
+        referer?: string;
+        headers?: { [index:string]: string; };
+        formData?: { [index:string]: string; };
+        items?: { [index:string]: string; };
+        session?: Object;
+        responseDto?: Object;
+        errorResponse?: Object;
+        requestDuration?: string;
     }
 
     interface QueryBase
@@ -502,7 +369,101 @@ declare module dtos
         include?: string;
 
         // @DataMember(Order=6)
+        fields?: string;
+
+        // @DataMember(Order=7)
         meta?: { [index:string]: string; };
+    }
+
+    interface QueryBase_1<T> extends QueryBase
+    {
+    }
+
+    interface OnlyDefinedInGenericType
+    {
+        id?: number;
+        name?: string;
+    }
+
+    interface QueryBase_2<From, Into> extends QueryBase
+    {
+    }
+
+    interface OnlyDefinedInGenericTypeFrom
+    {
+        id?: number;
+        name?: string;
+    }
+
+    interface OnlyDefinedInGenericTypeInto
+    {
+        id?: number;
+        name?: string;
+    }
+
+    interface Rockstar
+    {
+        id?: number;
+        firstName?: string;
+        lastName?: string;
+        age?: number;
+    }
+
+    // @DataContract
+    interface ResponseError
+    {
+        // @DataMember(Order=1, EmitDefaultValue=false)
+        errorCode?: string;
+
+        // @DataMember(Order=2, EmitDefaultValue=false)
+        fieldName?: string;
+
+        // @DataMember(Order=3, EmitDefaultValue=false)
+        message?: string;
+
+        // @DataMember(Order=4, EmitDefaultValue=false)
+        meta?: { [index:string]: string; };
+    }
+
+    type ExternalEnum2 = "Uno" | "Due" | "Tre";
+
+    interface MetadataTestNestedChild
+    {
+        name?: string;
+    }
+
+    interface MenuItemExample
+    {
+        // @DataMember(Order=1)
+        // @ApiMember()
+        name1?: string;
+
+        menuItemExampleItem?: MenuItemExampleItem;
+    }
+
+    interface TypesGroup
+    {
+    }
+
+    interface IAuthTokens
+    {
+        provider?: string;
+        userId?: string;
+        accessToken?: string;
+        accessTokenSecret?: string;
+        refreshToken?: string;
+        refreshTokenExpiry?: string;
+        requestToken?: string;
+        requestTokenSecret?: string;
+        items?: { [index:string]: string; };
+    }
+
+    interface Device
+    {
+        id?: number;
+        type?: string;
+        timeStamp?: number;
+        channels?: Channel[];
     }
 
     interface MenuItemExampleItem
@@ -510,6 +471,12 @@ declare module dtos
         // @DataMember(Order=1)
         // @ApiMember()
         name1?: string;
+    }
+
+    interface Channel
+    {
+        name?: string;
+        value?: string;
     }
 
     interface CustomHttpErrorResponse
@@ -528,6 +495,11 @@ declare module dtos
         age?: number;
         required?: string;
         email?: string;
+        responseStatus?: ResponseStatus;
+    }
+
+    interface ThrowBusinessErrorResponse
+    {
         responseStatus?: ResponseStatus;
     }
 
@@ -601,6 +573,11 @@ declare module dtos
         allCollectionTypes?: AllCollectionTypes;
     }
 
+    interface HelloDateTime
+    {
+        dateTime?: string;
+    }
+
     // @DataContract
     interface HelloWithDataContractResponse
     {
@@ -647,6 +624,11 @@ declare module dtos
         result?: string;
     }
 
+    interface EnumResponse
+    {
+        operator?: ScopeType;
+    }
+
     interface PingResponse
     {
         responses?: { [index:string]: ResponseStatus; };
@@ -659,6 +641,13 @@ declare module dtos
         responseStatus?: ResponseStatus;
     }
 
+    interface SendVerbResponse
+    {
+        id?: number;
+        pathInfo?: string;
+        requestMethod?: string;
+    }
+
     interface GetSessionResponse
     {
         result?: CustomUserSession;
@@ -666,10 +655,60 @@ declare module dtos
         responseStatus?: ResponseStatus;
     }
 
+    interface StoreLogsResponse
+    {
+        existingLogs?: Logger[];
+        responseStatus?: ResponseStatus;
+    }
+
+    interface TestAuthResponse
+    {
+        userId?: string;
+        sessionId?: string;
+        userName?: string;
+        displayName?: string;
+        responseStatus?: ResponseStatus;
+    }
+
     // @Route("/wait/{ForMs}")
     interface Wait
     {
         forMs?: number;
+    }
+
+    // @Route("/echo/types")
+    interface EchoTypes
+    {
+        byte?: number;
+        short?: number;
+        int?: number;
+        long?: number;
+        uShort?: number;
+        uInt?: number;
+        uLong?: number;
+        float?: number;
+        double?: number;
+        decimal?: number;
+        string?: string;
+        dateTime?: string;
+        timeSpan?: string;
+        dateTimeOffset?: string;
+        guid?: string;
+        char?: string;
+    }
+
+    // @Route("/echo/collections")
+    interface EchoCollections
+    {
+        stringList?: string[];
+        stringArray?: string[];
+        stringMap?: { [index:string]: string; };
+        intStringMap?: { [index:number]: string; };
+    }
+
+    interface EchoComplexTypes
+    {
+        subType?: SubType;
     }
 
     // @DataContract
@@ -704,9 +743,12 @@ declare module dtos
         referrerUrl?: string;
 
         // @DataMember(Order=6)
-        responseStatus?: ResponseStatus;
+        bearerToken?: string;
 
         // @DataMember(Order=7)
+        responseStatus?: ResponseStatus;
+
+        // @DataMember(Order=8)
         meta?: { [index:string]: string; };
     }
 
@@ -775,6 +817,13 @@ declare module dtos
         message?: string;
     }
 
+    // @Route("/throwcustom400")
+    // @Route("/throwcustom400/{Message}")
+    interface ThrowCustom400
+    {
+        message?: string;
+    }
+
     // @Route("/throw/{Type}")
     interface ThrowType extends IReturn<ThrowTypeResponse>
     {
@@ -788,6 +837,11 @@ declare module dtos
         age?: number;
         required?: string;
         email?: string;
+    }
+
+    // @Route("/throwbusinesserror")
+    interface ThrowBusinessError extends IReturn<ThrowBusinessErrorResponse>
+    {
     }
 
     interface ExternalOperation extends IReturn<ExternalOperationResponse>
@@ -884,7 +938,7 @@ declare module dtos
     }
 
     // @Route("/metadatatest-array")
-    interface MetadataTestArray extends IReturn<MetadataTestChild[]>
+    interface MetadataTestArray extends IReturn<Array<MetadataTestChild>>
     {
         id?: number;
     }
@@ -933,12 +987,12 @@ declare module dtos
         nestedClassProp?: NestedClass;
     }
 
-    interface HelloList extends IReturn<ListResult[]>
+    interface HelloList extends IReturn<Array<ListResult>>
     {
         names?: string[];
     }
 
-    interface HelloArray extends IReturn<ArrayResult[]>
+    interface HelloArray extends IReturn<Array<ArrayResult>>
     {
         names?: string[];
     }
@@ -966,6 +1020,9 @@ declare module dtos
     // @DataContract
     interface AllowedAttributes
     {
+        /**
+        * Range Description
+        */
         // @DataMember(Name="Aliased")
         // @ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)
         range?: number;
@@ -977,6 +1034,35 @@ declare module dtos
         name?: string;
         allTypes?: AllTypes;
         allCollectionTypes?: AllCollectionTypes;
+    }
+
+    interface AllTypes
+    {
+        id?: number;
+        nullableId?: number;
+        byte?: number;
+        short?: number;
+        int?: number;
+        long?: number;
+        uShort?: number;
+        uInt?: number;
+        uLong?: number;
+        float?: number;
+        double?: number;
+        decimal?: number;
+        string?: string;
+        dateTime?: string;
+        timeSpan?: string;
+        dateTimeOffset?: string;
+        guid?: string;
+        char?: string;
+        nullableDateTime?: string;
+        nullableTimeSpan?: string;
+        stringList?: string[];
+        stringArray?: string[];
+        stringMap?: { [index:string]: string; };
+        intStringMap?: { [index:number]: string; };
+        subType?: SubType;
     }
 
     interface HelloString extends IReturn<string>
@@ -1023,10 +1109,6 @@ declare module dtos
     }
 
     interface HelloWithNestedInheritance extends HelloBase_1<Item>
-    {
-    }
-
-    interface HelloWithListInheritance extends Array<InheritedItem>
     {
     }
 
@@ -1086,6 +1168,16 @@ declare module dtos
         id?: number;
     }
 
+    interface HelloReturnVoid extends IReturnVoid
+    {
+        id?: number;
+    }
+
+    interface EnumRequest extends IReturn<EnumResponse>
+    {
+        operator?: ScopeType;
+    }
+
     // @Route("/ping")
     interface Ping extends IReturn<PingResponse>
     {
@@ -1101,6 +1193,32 @@ declare module dtos
     {
     }
 
+    interface SendDefault extends IReturn<SendVerbResponse>
+    {
+        id?: number;
+    }
+
+    // @Route("/sendrestget/{Id}", "GET")
+    interface SendRestGet extends IReturn<SendVerbResponse>
+    {
+        id?: number;
+    }
+
+    interface SendGet extends IReturn<SendVerbResponse>
+    {
+        id?: number;
+    }
+
+    interface SendPost extends IReturn<SendVerbResponse>
+    {
+        id?: number;
+    }
+
+    interface SendPut extends IReturn<SendVerbResponse>
+    {
+        id?: number;
+    }
+
     // @Route("/session")
     interface GetSession extends IReturn<GetSessionResponse>
     {
@@ -1110,6 +1228,16 @@ declare module dtos
     interface UpdateSession extends IReturn<GetSessionResponse>
     {
         customName?: string;
+    }
+
+    interface StoreLogs extends IReturn<StoreLogsResponse>
+    {
+        loggers?: Logger[];
+    }
+
+    // @Route("/testauth")
+    interface TestAuth extends IReturn<TestAuthResponse>
+    {
     }
 
     // @Route("/void-response")
@@ -1237,6 +1365,9 @@ declare module dtos
         cnonce?: string;
 
         // @DataMember(Order=15)
+        useTokenCookie?: boolean;
+
+        // @DataMember(Order=16)
         meta?: { [index:string]: string; };
     }
 
