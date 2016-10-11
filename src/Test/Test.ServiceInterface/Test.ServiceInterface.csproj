@@ -88,6 +88,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PingService.cs" />
     <Compile Include="RequiredRoleService.cs" />
+    <Compile Include="ReturnGenericListServices.cs" />
     <Compile Include="SendVerbService.cs" />
     <Compile Include="SessionService.cs" />
     <Compile Include="StoreLogsService.cs" />
