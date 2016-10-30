@@ -367,4 +367,11 @@ namespace Test.ServiceModel
         [EnumMember]
         Sale = 2,
     }
+
+    [Route("/hellotypes/{Name}")]
+    public class HelloTypes : IReturn<HelloTypes>
+    {
+        public string Name { get; set; } = "Default name";
+        public bool Happy { get; set; } = true;
+    }
 }

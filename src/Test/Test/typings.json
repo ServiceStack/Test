@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "servicestack-client": "registry:npm/servicestack-client#0.0.10+20160803174707"
+  },
+  "globalDependencies": {
+    "es6-shim": "registry:dt/es6-shim#0.31.2+20160602141504",
+    "isomorphic-fetch": "registry:dt/isomorphic-fetch#0.0.0+20160830175641",
+    "ss-utils": "registry:dt/ss-utils#0.0.1+20160213193252"
+  }
+}

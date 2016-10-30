@@ -1,5 +1,12 @@
-﻿/// <reference path="jquery.d.ts"/>
-/// <reference path="Test.dtos.d.ts"/>
+﻿/// <reference path="../typings/index.d.ts"/>
+
+import $ from "jquery";
+import "ss-utils"; 
+import { JsonServiceClient } from "servicestack-client";
+import {
+    Hello, HelloResponse,
+    GetRandomIds, GetRandomIdsResponse
+} from "./Test.dtos";
 
 function createUrl(path: string, params: any): string {
     for (var key in params) {
@@ -10,26 +17,31 @@ function createUrl(path: string, params: any): string {
 }
 
 $(document).bindHandlers({
-    sayHello: function () {
-        var request: dtos.Hello = { name: this.value };
-        $.getJSON(createUrl("/hello", request), function (r: dtos.HelloResponse) {
+    sayHello () {
+        var request = new Hello();
+        request.name = this.value;
+        $.getJSON(createUrl("/hello", request), function (r: HelloResponse) {
             $("#helloResult").html(r.result);
         });
     },
-    sayHelloRoute: function () {
-        var request: dtos.Hello = {};
+    sayHelloRoute () {
+        var request = new Hello();
         request.name = this.value;
         request.title = "Dr";
-        $.getJSON($.ss.createUrl("/hello/{Name}", request), request, function (r: dtos.HelloResponse) {
+        $.getJSON($.ss.createUrl("/hello/{Name}", request), request, function (r: HelloResponse) {
             $("#helloRouteResult").html(r.result);
         });
     },
-    generateIds: function () {
+    generateIds () {
         if (isNaN(parseInt(this.value))) return;
-        var request: dtos.GetRandomIds = { take: parseInt(this.value) };
-        $.getJSON(createUrl("/randomids", request), function (r: dtos.GetRandomIdsResponse) {
+        var request = new GetRandomIds();
+        request.take = parseInt(this.value);
+        $.getJSON(createUrl("/randomids", request), function (r: GetRandomIdsResponse) {
             var html = r.results.map(function (id) { return "<li>" + id + "</id>"; }).join('');
             $("#randomIdsResult").html("<ul>" + html + "</ul>");
         });
+    },
+    helloTypes () {
+        $("#helloTypesResult").html("test!");
     }
 });

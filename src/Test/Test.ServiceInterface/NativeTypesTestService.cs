@@ -192,5 +192,10 @@ namespace Test.ServiceInterface
         {
             return new EnumResponse { Operator = request.Operator };
         }
+
+        public object Any(HelloTypes request)
+        {
+            return request;
+        }
     }
 }
