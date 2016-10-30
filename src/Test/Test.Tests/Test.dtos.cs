@@ -1,11 +1,13 @@
 /* Options:
-Date: 2015-11-19 01:34:27
+Date: 2016-10-30 00:13:06
 Version: 4.00
+Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: http://localhost:56500
 
 //GlobalNamespace: 
 //MakePartial: True
 //MakeVirtual: True
+//MakeInternal: False
 //MakeDataContractsExtensible: False
 //AddReturnMarker: True
 //AddDescriptionAsComments: True
@@ -17,6 +19,7 @@ BaseUrl: http://localhost:56500
 //InitializeCollections: True
 //IncludeTypes: 
 //ExcludeTypes: 
+//AddNamespaces: 
 //AddDefaultXmlNamespace: http://schemas.servicestack.net/types
 */
 
@@ -132,6 +135,52 @@ namespace Test.ServiceInterface
         public virtual string Background { get; set; }
     }
 
+    [Route("/echo/collections")]
+    public partial class EchoCollections
+        : IReturn<EchoCollections>
+    {
+        public EchoCollections()
+        {
+            StringList = new List<string>{};
+            StringArray = new string[]{};
+            StringMap = new Dictionary<string, string>{};
+            IntStringMap = new Dictionary<int, string>{};
+        }
+
+        public virtual List<string> StringList { get; set; }
+        public virtual string[] StringArray { get; set; }
+        public virtual Dictionary<string, string> StringMap { get; set; }
+        public virtual Dictionary<int, string> IntStringMap { get; set; }
+    }
+
+    public partial class EchoComplexTypes
+        : IReturn<EchoComplexTypes>
+    {
+        public virtual SubType SubType { get; set; }
+    }
+
+    [Route("/echo/types")]
+    public partial class EchoTypes
+        : IReturn<EchoTypes>
+    {
+        public virtual byte Byte { get; set; }
+        public virtual short Short { get; set; }
+        public virtual int Int { get; set; }
+        public virtual long Long { get; set; }
+        public virtual ushort UShort { get; set; }
+        public virtual uint UInt { get; set; }
+        public virtual ulong ULong { get; set; }
+        public virtual float Float { get; set; }
+        public virtual double Double { get; set; }
+        public virtual decimal Decimal { get; set; }
+        public virtual string String { get; set; }
+        public virtual DateTime DateTime { get; set; }
+        public virtual TimeSpan TimeSpan { get; set; }
+        public virtual DateTimeOffset DateTimeOffset { get; set; }
+        public virtual Guid Guid { get; set; }
+        public virtual Char Char { get; set; }
+    }
+
     public partial class GetAccount
         : IReturn<Account>
     {
@@ -143,6 +192,18 @@ namespace Test.ServiceInterface
     {
         public virtual string Account { get; set; }
         public virtual string Project { get; set; }
+    }
+
+    [Route("/Request1", "GET")]
+    public partial class GetRequest1
+        : IReturn<List<ReturnedDto>>, IGet
+    {
+    }
+
+    [Route("/Request2", "GET")]
+    public partial class GetRequest2
+        : IReturn<List<ReturnedDto>>, IGet
+    {
     }
 
     [Route("/session")]
@@ -226,6 +287,11 @@ namespace Test.ServiceInterface
         public virtual string Name { get; set; }
     }
 
+    public partial class ReturnedDto
+    {
+        public virtual int Id { get; set; }
+    }
+
     [Route("/{Path*}")]
     public partial class RootPathRoutes
     {
@@ -268,6 +334,21 @@ namespace Test.ServiceInterface
         public virtual int Id { get; set; }
         public virtual string PathInfo { get; set; }
         public virtual string RequestMethod { get; set; }
+    }
+
+    [Route("/testauth")]
+    public partial class TestAuth
+        : IReturn<TestAuthResponse>
+    {
+    }
+
+    public partial class TestAuthResponse
+    {
+        public virtual string UserId { get; set; }
+        public virtual string SessionId { get; set; }
+        public virtual string UserName { get; set; }
+        public virtual string DisplayName { get; set; }
+        public virtual ResponseStatus ResponseStatus { get; set; }
     }
 
     [Route("/null-response")]
@@ -318,14 +399,23 @@ namespace Test.ServiceModel
     [DataContract]
     public partial class AllowedAttributes
     {
+        ///<summary>
+        ///Range Description
+        ///</summary>
         [DataMember(Name="Aliased")]
-        [ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)]
+        [ApiMember(ParameterType="path", Description="Range Description", DataType="double", IsRequired=true)]
         public virtual double Range { get; set; }
     }
 
     public partial class ArrayResult
     {
         public virtual string Result { get; set; }
+    }
+
+    public partial class Channel
+    {
+        public virtual string Name { get; set; }
+        public virtual string Value { get; set; }
     }
 
     public partial class CustomHttpError
@@ -339,6 +429,19 @@ namespace Test.ServiceModel
     {
         public virtual string Custom { get; set; }
         public virtual ResponseStatus ResponseStatus { get; set; }
+    }
+
+    public partial class Device
+    {
+        public Device()
+        {
+            Channels = new List<Channel>{};
+        }
+
+        public virtual long Id { get; set; }
+        public virtual string Type { get; set; }
+        public virtual long TimeStamp { get; set; }
+        public virtual List<Channel> Channels { get; set; }
     }
 
     public partial class EmptyClass
@@ -562,6 +665,14 @@ namespace Test.ServiceModel
         public virtual string Name { get; set; }
     }
 
+    [Route("/hellotypes/{Name}")]
+    public partial class HelloTypes
+        : IReturn<HelloTypes>
+    {
+        public virtual string Name { get; set; }
+        public virtual bool Happy { get; set; }
+    }
+
     public partial class HelloVerbResponse
     {
         public virtual string Result { get; set; }
@@ -709,6 +820,17 @@ namespace Test.ServiceModel
         public virtual string Result { get; set; }
     }
 
+    public partial class Logger
+    {
+        public Logger()
+        {
+            Devices = new List<Device>{};
+        }
+
+        public virtual long Id { get; set; }
+        public virtual List<Device> Devices { get; set; }
+    }
+
     [DataContract]
     public partial class MenuExample
     {
@@ -774,42 +896,6 @@ namespace Test.ServiceModel
         public virtual List<MetadataTestChild> Results { get; set; }
     }
 
-    public partial class OnlyDefinedInGenericType
-    {
-        public virtual int Id { get; set; }
-        public virtual string Name { get; set; }
-    }
-
-    public partial class OnlyDefinedInGenericTypeFrom
-    {
-        public virtual int Id { get; set; }
-        public virtual string Name { get; set; }
-    }
-
-    public partial class OnlyDefinedInGenericTypeInto
-    {
-        public virtual int Id { get; set; }
-        public virtual string Name { get; set; }
-    }
-
-    public partial class QueryPocoBase
-        : QueryBase<OnlyDefinedInGenericType>, IReturn<QueryResponse<OnlyDefinedInGenericType>>
-    {
-        public virtual int Id { get; set; }
-    }
-
-    public partial class QueryPocoIntoBase
-        : QueryBase<OnlyDefinedInGenericTypeFrom, OnlyDefinedInGenericTypeInto>, IReturn<QueryResponse<OnlyDefinedInGenericTypeInto>>
-    {
-        public virtual int Id { get; set; }
-    }
-
-    [Route("/rockstars")]
-    public partial class QueryRockstars
-        : QueryBase<Rockstar>, IReturn<QueryResponse<Rockstar>>
-    {
-    }
-
     [Route("/requires-role")]
     public partial class RequiresRole
         : IReturn<RequiresRoleResponse>
@@ -829,19 +915,33 @@ namespace Test.ServiceModel
         public virtual Hello Hello { get; set; }
     }
 
-    public partial class Rockstar
-    {
-        public virtual int Id { get; set; }
-        public virtual string FirstName { get; set; }
-        public virtual string LastName { get; set; }
-        public virtual int? Age { get; set; }
-    }
-
     [DataContract]
     public enum ScopeType
     {
         Global = 1,
         Sale = 2,
+    }
+
+    public partial class StoreLogs
+        : IReturn<StoreLogsResponse>
+    {
+        public StoreLogs()
+        {
+            Loggers = new List<Logger>{};
+        }
+
+        public virtual List<Logger> Loggers { get; set; }
+    }
+
+    public partial class StoreLogsResponse
+    {
+        public StoreLogsResponse()
+        {
+            ExistingLogs = new List<Logger>{};
+        }
+
+        public virtual List<Logger> ExistingLogs { get; set; }
+        public virtual ResponseStatus ResponseStatus { get; set; }
     }
 
     [Route("/throw404")]
