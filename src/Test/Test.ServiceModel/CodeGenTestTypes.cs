@@ -372,6 +372,6 @@ namespace Test.ServiceModel
     public class HelloTypes : IReturn<HelloTypes>
     {
         public string Name { get; set; } = "Default name";
-        public bool Happy { get; set; } = true;
+        public bool Happy { get; set; }
     }
 }

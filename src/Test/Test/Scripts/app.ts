@@ -5,7 +5,8 @@ import "ss-utils";
 import { JsonServiceClient } from "servicestack-client";
 import {
     Hello, HelloResponse,
-    GetRandomIds, GetRandomIdsResponse
+    GetRandomIds, GetRandomIdsResponse,
+    HelloTypes
 } from "./Test.dtos";
 
 function createUrl(path: string, params: any): string {
@@ -15,6 +16,8 @@ function createUrl(path: string, params: any): string {
     }
     return path;
 }
+
+var client = new JsonServiceClient("/");
 
 $(document).bindHandlers({
     sayHello () {
@@ -42,6 +45,11 @@ $(document).bindHandlers({
         });
     },
     helloTypes () {
-        $("#helloTypesResult").html("test!");
+        var request = new HelloTypes();
+        request.name = this.value;
+        request.happy = false;
+        client.get(request).then((r) => {
+            $("#helloTypesResult").html(JSON.stringify(r));
+        });
     }
 });

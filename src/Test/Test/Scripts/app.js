@@ -1,8 +1,9 @@
 /// <reference path="../typings/index.d.ts"/>
-System.register(["jquery", "ss-utils", "./Test.dtos"], function(exports_1, context_1) {
+System.register(["jquery", "ss-utils", "servicestack-client", "./Test.dtos"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var jquery_1, Test_dtos_1;
+    var jquery_1, servicestack_client_1, Test_dtos_1;
+    var client;
     function createUrl(path, params) {
         for (var key in params) {
             path += path.indexOf('?') <= 0 ? "?" : "&";
@@ -16,10 +17,14 @@ System.register(["jquery", "ss-utils", "./Test.dtos"], function(exports_1, conte
                 jquery_1 = jquery_1_1;
             },
             function (_1) {},
+            function (servicestack_client_1_1) {
+                servicestack_client_1 = servicestack_client_1_1;
+            },
             function (Test_dtos_1_1) {
                 Test_dtos_1 = Test_dtos_1_1;
             }],
         execute: function() {
+            client = new servicestack_client_1.JsonServiceClient("/");
             jquery_1.default(document).bindHandlers({
                 sayHello: function () {
                     var request = new Test_dtos_1.Hello();
@@ -47,7 +52,12 @@ System.register(["jquery", "ss-utils", "./Test.dtos"], function(exports_1, conte
                     });
                 },
                 helloTypes: function () {
-                    jquery_1.default("#helloTypesResult").html("test!");
+                    var request = new Test_dtos_1.HelloTypes();
+                    request.name = this.value;
+                    request.happy = false;
+                    client.get(request).then(function (r) {
+                        jquery_1.default("#helloTypesResult").html(JSON.stringify(r));
+                    });
                 }
             });
         }
