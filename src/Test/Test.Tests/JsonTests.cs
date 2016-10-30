@@ -77,5 +77,12 @@ namespace Test.Tests
 
             Assert.That(url, Is.EqualTo("/json/reply/HelloDateTime?dateTime=" + Uri.EscapeDataString("2001-01-01T01:01:01-08:00")));
         }
+
+        [Test]
+        public void Does_not_serialize_default_value()
+        {
+            var dto = new HelloTypes { Happy = false, Int = 0, Name = "test" };
+            Assert.That(dto.ToJson(), Is.EqualTo("{\"Name\":\"test\",\"Happy\":false,\"Int\":0}"));
+        }
     }
 }

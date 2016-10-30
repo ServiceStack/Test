@@ -1,5 +1,5 @@
 /* Options:
-Date: 2016-10-30 00:13:06
+Date: 2016-10-30 00:30:52
 Version: 4.00
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: http://localhost:56500
@@ -403,7 +403,7 @@ namespace Test.ServiceModel
         ///Range Description
         ///</summary>
         [DataMember(Name="Aliased")]
-        [ApiMember(ParameterType="path", Description="Range Description", DataType="double", IsRequired=true)]
+        [ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)]
         public virtual double Range { get; set; }
     }
 
@@ -671,6 +671,7 @@ namespace Test.ServiceModel
     {
         public virtual string Name { get; set; }
         public virtual bool Happy { get; set; }
+        public virtual int Int { get; set; }
     }
 
     public partial class HelloVerbResponse
@@ -896,6 +897,42 @@ namespace Test.ServiceModel
         public virtual List<MetadataTestChild> Results { get; set; }
     }
 
+    public partial class OnlyDefinedInGenericType
+    {
+        public virtual int Id { get; set; }
+        public virtual string Name { get; set; }
+    }
+
+    public partial class OnlyDefinedInGenericTypeFrom
+    {
+        public virtual int Id { get; set; }
+        public virtual string Name { get; set; }
+    }
+
+    public partial class OnlyDefinedInGenericTypeInto
+    {
+        public virtual int Id { get; set; }
+        public virtual string Name { get; set; }
+    }
+
+    public partial class QueryPocoBase
+        : QueryBase<OnlyDefinedInGenericType>, IReturn<QueryResponse<OnlyDefinedInGenericType>>
+    {
+        public virtual int Id { get; set; }
+    }
+
+    public partial class QueryPocoIntoBase
+        : QueryBase<OnlyDefinedInGenericTypeFrom, OnlyDefinedInGenericTypeInto>, IReturn<QueryResponse<OnlyDefinedInGenericTypeInto>>
+    {
+        public virtual int Id { get; set; }
+    }
+
+    [Route("/rockstars")]
+    public partial class QueryRockstars
+        : QueryBase<Rockstar>, IReturn<QueryResponse<Rockstar>>
+    {
+    }
+
     [Route("/requires-role")]
     public partial class RequiresRole
         : IReturn<RequiresRoleResponse>
@@ -913,6 +950,14 @@ namespace Test.ServiceModel
         public virtual int Id { get; set; }
         public virtual string Name { get; set; }
         public virtual Hello Hello { get; set; }
+    }
+
+    public partial class Rockstar
+    {
+        public virtual int Id { get; set; }
+        public virtual string FirstName { get; set; }
+        public virtual string LastName { get; set; }
+        public virtual int? Age { get; set; }
     }
 
     [DataContract]
