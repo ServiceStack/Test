@@ -1,5 +1,5 @@
 /* Options:
-Date: 2016-10-30 00:30:52
+Date: 2016-10-30 00:40:37
 Version: 4.00
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: http://localhost:56500
@@ -403,7 +403,7 @@ namespace Test.ServiceModel
         ///Range Description
         ///</summary>
         [DataMember(Name="Aliased")]
-        [ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)]
+        [ApiMember(ParameterType="path", Description="Range Description", DataType="double", IsRequired=true)]
         public virtual double Range { get; set; }
     }
 
@@ -669,8 +669,8 @@ namespace Test.ServiceModel
     public partial class HelloTypes
         : IReturn<HelloTypes>
     {
-        public virtual string Name { get; set; }
-        public virtual bool Happy { get; set; }
+        public virtual string String { get; set; }
+        public virtual bool Bool { get; set; }
         public virtual int Int { get; set; }
     }
 

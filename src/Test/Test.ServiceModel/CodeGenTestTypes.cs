@@ -371,8 +371,8 @@ namespace Test.ServiceModel
     [Route("/hellotypes/{Name}")]
     public class HelloTypes : IReturn<HelloTypes>
     {
-        public string Name { get; set; } = "Default name";
-        public bool Happy { get; set; } = true;
+        public string String { get; set; }
+        public bool Bool { get; set; }
         public int Int { get; set; }
     }
 }

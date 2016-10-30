@@ -1,5 +1,5 @@
 /* Options:
-Date: 2016-10-29 23:24:44
+Date: 2016-10-30 00:41:33
 Version: 4.00
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: http://localhost:56500
@@ -665,8 +665,9 @@ export class EnumResponse
 // @Route("/hellotypes/{Name}")
 export class HelloTypes implements IReturn<HelloTypes>
 {
-    name: string;
-    happy: boolean;
+    string: string;
+    bool: boolean;
+    int: number;
     createResponse() { return new HelloTypes(); }
     getTypeName() { return "HelloTypes"; }
 }
@@ -1110,7 +1111,7 @@ export class AllowedAttributes
     * Range Description
     */
     // @DataMember(Name="Aliased")
-    // @ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)
+    // @ApiMember(ParameterType="path", Description="Range Description", DataType="double", IsRequired=true)
     range: number;
 }
 

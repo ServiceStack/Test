@@ -53,8 +53,9 @@ System.register(["jquery", "ss-utils", "servicestack-client", "./Test.dtos"], fu
                 },
                 helloTypes: function () {
                     var request = new Test_dtos_1.HelloTypes();
-                    request.name = this.value;
-                    request.happy = false;
+                    request.string = this.value;
+                    request.bool = false;
+                    request.int = 0;
                     client.get(request).then(function (r) {
                         jquery_1.default("#helloTypesResult").html(JSON.stringify(r));
                     });

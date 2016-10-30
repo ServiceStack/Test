@@ -79,10 +79,10 @@ namespace Test.Tests
         }
 
         [Test]
-        public void Does_not_serialize_default_value()
+        public void Does_serialize_default_values()
         {
-            var dto = new HelloTypes { Happy = false, Int = 0, Name = "test" };
-            Assert.That(dto.ToJson(), Is.EqualTo("{\"Name\":\"test\",\"Happy\":false,\"Int\":0}"));
+            var dto = new HelloTypes { String = "test", Bool = false, Int = 0 };
+            Assert.That(dto.ToJson(), Is.EqualTo("{\"String\":\"test\",\"Bool\":false,\"Int\":0}"));
         }
     }
 }

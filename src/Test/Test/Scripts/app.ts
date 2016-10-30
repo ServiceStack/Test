@@ -46,8 +46,9 @@ $(document).bindHandlers({
     },
     helloTypes () {
         var request = new HelloTypes();
-        request.name = this.value;
-        request.happy = false;
+        request.string = this.value;
+        request.bool = false;
+        request.int = 0;
         client.get(request).then((r) => {
             $("#helloTypesResult").html(JSON.stringify(r));
         });
