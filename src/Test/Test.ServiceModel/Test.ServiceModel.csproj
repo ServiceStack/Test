@@ -51,6 +51,7 @@
     <Compile Include="GetRandomIds.cs" />
     <Compile Include="MetadataTest.cs" />
     <Compile Include="RequiresRole.cs" />
+    <Compile Include="ReturnData.cs" />
     <Compile Include="StoreLogs.cs" />
     <Compile Include="Types\AllTypes.cs" />
     <Compile Include="CodeGenTestTypes.cs" />
