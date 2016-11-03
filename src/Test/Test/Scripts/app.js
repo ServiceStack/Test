@@ -59,6 +59,25 @@ System.register(["jquery", "ss-utils", "servicestack-client", "./Test.dtos"], fu
                     client.get(request).then(function (r) {
                         jquery_1.default("#helloTypesResult").html(JSON.stringify(r));
                     });
+                },
+                rawString: function () {
+                    var request = new Test_dtos_1.ReturnString();
+                    request.data = this.value;
+                    client.get(request)
+                        .then(function (text) {
+                        jquery_1.default("#rawStringResult").html(text);
+                    });
+                },
+                rawBytes: function () {
+                    var bytesToBase64 = function (array) { return btoa(String.fromCharCode.apply(null, new Uint8Array(array))); };
+                    var base64ToBytes = function (b64) { return new Uint8Array(atob(b64).split("").map(function (c) { return c.charCodeAt(0); })); };
+                    var bytesToString = function (array) { return String.fromCharCode.apply(String, array); };
+                    var request = new Test_dtos_1.ReturnBytes();
+                    request.data = base64ToBytes(this.value);
+                    client.get(request)
+                        .then(function (bytes) {
+                        jquery_1.default("#rawBytesResult").html(bytesToBase64(bytes) + "<br/>" + bytesToString(bytes));
+                    });
                 }
             });
         }

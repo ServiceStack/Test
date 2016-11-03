@@ -10,7 +10,7 @@ System.config({
   map: {
     "es6-shim": "github:es-shims/es6-shim@0.35.1",
     "jquery": "npm:jquery@3.1.1",
-    "servicestack-client": "npm:servicestack-client@0.0.11",
+    "servicestack-client": "npm:servicestack-client@0.0.14",
     "ss-utils": "npm:ss-utils@0.1.4",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
@@ -153,7 +153,7 @@ System.config({
       "string_decoder": "npm:string_decoder@0.10.31",
       "util-deprecate": "npm:util-deprecate@1.0.2"
     },
-    "npm:servicestack-client@0.0.11": {
+    "npm:servicestack-client@0.0.14": {
       "es6-shim": "npm:es6-shim@0.35.1",
       "isomorphic-fetch": "npm:isomorphic-fetch@2.2.1"
     },

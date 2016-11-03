@@ -3,10 +3,13 @@
 import $ from "jquery";
 import "ss-utils"; 
 import { JsonServiceClient } from "servicestack-client";
+//import { JsonServiceClient } from "./JsonServiceClient";
+
 import {
     Hello, HelloResponse,
     GetRandomIds, GetRandomIdsResponse,
-    HelloTypes
+    HelloTypes,
+    ReturnString, ReturnBytes, ReturnStream
 } from "./Test.dtos";
 
 function createUrl(path: string, params: any): string {
@@ -52,5 +55,27 @@ $(document).bindHandlers({
         client.get(request).then((r) => {
             $("#helloTypesResult").html(JSON.stringify(r));
         });
+    },
+    rawString() {
+        var request = new ReturnString();
+        request.data = this.value;
+
+        client.get(request)
+            .then(text => {
+                $("#rawStringResult").html(text);
+            });
+    },
+    rawBytes() {
+        const bytesToBase64 = (array) => btoa(String.fromCharCode.apply(null, new Uint8Array(array)));
+        const base64ToBytes = (b64) => new Uint8Array(atob(b64).split("").map(c => c.charCodeAt(0)));
+        const bytesToString = (array) => String.fromCharCode.apply(String, array);
+
+        var request = new ReturnBytes();
+        request.data = base64ToBytes(this.value);
+
+        client.get(request)
+            .then(bytes => {
+                $("#rawBytesResult").html(bytesToBase64(bytes) + "<br/>" + bytesToString(bytes));
+            });
     }
 });
