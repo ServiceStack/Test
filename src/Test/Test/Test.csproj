@@ -127,6 +127,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\JsonServiceClient.ts" />
     <TypeScriptCompile Include="Scripts\app.ts" />
     <None Include="error.cshtml" />
     <Content Include="config.js" />
