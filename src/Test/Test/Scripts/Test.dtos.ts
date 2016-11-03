@@ -1,5 +1,5 @@
 /* Options:
-Date: 2016-10-30 00:41:33
+Date: 2016-11-03 06:15:27
 Version: 4.00
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: http://localhost:56500
@@ -1285,6 +1285,38 @@ export class RequiresRole implements IReturn<RequiresRoleResponse>
 {
     createResponse() { return new RequiresRoleResponse(); }
     getTypeName() { return "RequiresRole"; }
+}
+
+// @Route("/return/string")
+export class ReturnString implements IReturn<string>
+{
+    data: string;
+    createResponse() { return ""; }
+    getTypeName() { return "ReturnString"; }
+}
+
+// @Route("/return/bytes")
+export class ReturnBytes implements IReturn<Uint8Array>
+{
+    data: Uint8Array;
+    createResponse() { return new Uint8Array(0); }
+    getTypeName() { return "ReturnBytes"; }
+}
+
+// @Route("/return/stream")
+export class ReturnStream implements IReturn<Blob>
+{
+    data: Uint8Array;
+    createResponse() { return new Blob(); }
+    getTypeName() { return "ReturnStream"; }
+}
+
+// @Route("/return/httpwebresponse")
+export class ReturnHttpWebResponse implements IReturn<Blob>
+{
+    data: Uint8Array;
+    createResponse() { return new Blob(); }
+    getTypeName() { return "ReturnHttpWebResponse"; }
 }
 
 // @Route("/Request1", "GET")
