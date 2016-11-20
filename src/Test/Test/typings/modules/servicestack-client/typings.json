@@ -5,8 +5,6 @@
     "raw": "registry:npm/servicestack-client#0.0.10+20160803174707",
     "main": "./lib/index.d.ts",
     "version": "0.0.10",
-    "global": false,
-    "name": "servicestack-client",
-    "type": "typings"
+    "name": "servicestack-client"
   }
 }

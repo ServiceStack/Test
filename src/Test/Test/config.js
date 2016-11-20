@@ -10,7 +10,7 @@ System.config({
   map: {
     "es6-shim": "github:es-shims/es6-shim@0.35.1",
     "jquery": "npm:jquery@3.1.1",
-    "servicestack-client": "npm:servicestack-client@0.0.14",
+    "servicestack-client": "npm:servicestack-client@0.0.15",
     "ss-utils": "npm:ss-utils@0.1.4",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
@@ -64,7 +64,7 @@ System.config({
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "pako": "npm:pako@0.2.9",
       "process": "github:jspm/nodelibs-process@0.1.2",
-      "readable-stream": "npm:readable-stream@2.1.5",
+      "readable-stream": "npm:readable-stream@2.2.2",
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:buffer-shims@1.0.0": {
@@ -103,7 +103,7 @@ System.config({
     },
     "npm:isomorphic-fetch@2.2.1": {
       "node-fetch": "npm:node-fetch@1.6.3",
-      "whatwg-fetch": "npm:whatwg-fetch@1.0.0"
+      "whatwg-fetch": "npm:whatwg-fetch@2.0.1"
     },
     "npm:node-fetch@1.6.3": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
@@ -141,7 +141,7 @@ System.config({
       "stream-browserify": "npm:stream-browserify@1.0.0",
       "string_decoder": "npm:string_decoder@0.10.31"
     },
-    "npm:readable-stream@2.1.5": {
+    "npm:readable-stream@2.2.2": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "buffer-shims": "npm:buffer-shims@1.0.0",
       "core-util-is": "npm:core-util-is@1.0.2",
@@ -153,7 +153,8 @@ System.config({
       "string_decoder": "npm:string_decoder@0.10.31",
       "util-deprecate": "npm:util-deprecate@1.0.2"
     },
-    "npm:servicestack-client@0.0.14": {
+    "npm:servicestack-client@0.0.15": {
+      "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "es6-shim": "npm:es6-shim@0.35.1",
       "isomorphic-fetch": "npm:isomorphic-fetch@2.2.1"
     },
