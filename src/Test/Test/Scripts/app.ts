@@ -9,7 +9,8 @@ import {
     Hello, HelloResponse,
     GetRandomIds, GetRandomIdsResponse,
     HelloTypes,
-    ReturnString, ReturnBytes, ReturnStream
+    ReturnString, ReturnBytes, ReturnStream,
+    TestAuth, TestAuthResponse
 } from "./Test.dtos";
 
 function createUrl(path: string, params: any): string {
@@ -76,6 +77,21 @@ $(document).bindHandlers({
         client.get(request)
             .then(bytes => {
                 $("#rawBytesResult").html(bytesToBase64(bytes) + "<br/>" + bytesToString(bytes));
+            });
+    },
+    basicAuth() {
+        var testAuth = new JsonServiceClient("/");
+
+        testAuth.userName = $("#txtBasicAuthUser").val();
+        testAuth.password = $("#txtBasicAuthPass").val();
+
+        testAuth.post(new TestAuth())
+            .then(r => {
+                $("#basicAuthResult").html(JSON.stringify(r));
+            })
+            .catch(e => {
+                console.log('error: ', e);
+                $("#basicAuthResult").html("Error: " + JSON.stringify(e.responseStatus));
             });
     }
 });

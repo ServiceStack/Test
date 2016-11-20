@@ -110,10 +110,14 @@ export class JsonServiceClient {
     baseUrl: string;
     replyBaseUrl: string;
     oneWayBaseUrl: string;
-    mode: string;
-    credentials: string;
+    mode: RequestMode;
+    credentials: RequestCredentials;
     headers: Headers;
+    userName: string;
+    password: string;
+    static toBase64: (rawString: string) => string;
     constructor(baseUrl: string);
+    setCredentials(userName: string, password: string): void;
     get<T>(request: IReturn<T>): Promise<T>;
     delete<T>(request: IReturn<T>): Promise<T>;
     post<T>(request: IReturn<T>): Promise<T>;

@@ -2,7 +2,7 @@
 System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ResponseStatus, ResponseError, ErrorResponse, HttpMethods, JsonServiceClient, createErrorResponse, toCamelCase, sanitize, nameOf, css, splitOnFirst, splitOnLast, splitCase, humanize, queryString, combinePaths, createPath, createUrl, appendQueryString, qsValue, bytesToBase64, uint6ToB64, toDate, toDateFmt, padInt, dateFmt, dateFmtHM, timeFmt12;
+    var ResponseStatus, ResponseError, ErrorResponse, HttpMethods, JsonServiceClient, createErrorResponse, toCamelCase, sanitize, nameOf, css, splitOnFirst, splitOnLast, splitCase, humanize, queryString, combinePaths, createPath, createUrl, appendQueryString, qsValue, bytesToBase64, uint6ToB64, _btoa, toDate, toDateFmt, padInt, dateFmt, dateFmtHM, timeFmt12;
     return {
         setters:[],
         execute: function() {
@@ -52,6 +52,10 @@ System.register([], function(exports_1, context_1) {
                     this.headers = new Headers();
                     this.headers.set("Content-Type", "application/json");
                 }
+                JsonServiceClient.prototype.setCredentials = function (userName, password) {
+                    this.userName = userName;
+                    this.password = password;
+                };
                 JsonServiceClient.prototype.get = function (request) {
                     return this.send(HttpMethods.Get, request);
                 };
@@ -72,6 +76,9 @@ System.register([], function(exports_1, context_1) {
                     var hasRequestBody = HttpMethods.hasRequestBody(method);
                     if (!hasRequestBody)
                         url = appendQueryString(url, request);
+                    if (this.userName != null && this.password != null) {
+                        this.headers.set('Authorization', 'Basic ' + JsonServiceClient.toBase64(this.userName + ":" + this.password));
+                    }
                     // Set `compress` false due to common error
                     // https://github.com/bitinn/node-fetch/issues/93#issuecomment-200791658
                     var reqOptions = {
@@ -284,6 +291,7 @@ System.register([], function(exports_1, context_1) {
                     return bytesToBase64(arg);
                 return encodeURIComponent(arg) || "";
             };
+            //from: https://github.com/madmurphy/stringview.js/blob/master/stringview.js
             exports_1("bytesToBase64", bytesToBase64 = function (aBytes) {
                 var eqLen = (3 - (aBytes.length % 3)) % 3, sB64Enc = "";
                 for (var nMod3, nLen = aBytes.length, nUint24 = 0, nIdx = 0; nIdx < nLen; nIdx++) {
@@ -307,6 +315,15 @@ System.register([], function(exports_1, context_1) {
                             nUint6 - 4
                             : nUint6 === 62 ? 43
                                 : nUint6 === 63 ? 47 : 65;
+            };
+            _btoa = typeof btoa == 'function'
+                ? btoa
+                : function (str) { return new Buffer(str).toString('base64'); };
+            //from: http://stackoverflow.com/a/30106551/85785
+            JsonServiceClient.toBase64 = function (str) {
+                return _btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+                    return String.fromCharCode(new Number('0x' + p1).valueOf());
+                }));
             };
             exports_1("toDate", toDate = function (s) { return new Date(parseFloat(/Date\(([^)]+)\)/.exec(s)[1])); });
             exports_1("toDateFmt", toDateFmt = function (s) { return dateFmt(toDate(s)); });

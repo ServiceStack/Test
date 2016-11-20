@@ -78,6 +78,19 @@ System.register(["jquery", "ss-utils", "servicestack-client", "./Test.dtos"], fu
                         .then(function (bytes) {
                         jquery_1.default("#rawBytesResult").html(bytesToBase64(bytes) + "<br/>" + bytesToString(bytes));
                     });
+                },
+                basicAuth: function () {
+                    var testAuth = new servicestack_client_1.JsonServiceClient("/");
+                    testAuth.userName = jquery_1.default("#txtBasicAuthUser").val();
+                    testAuth.password = jquery_1.default("#txtBasicAuthPass").val();
+                    testAuth.post(new Test_dtos_1.TestAuth())
+                        .then(function (r) {
+                        jquery_1.default("#basicAuthResult").html(JSON.stringify(r));
+                    })
+                        .catch(function (e) {
+                        console.log('error: ', e);
+                        jquery_1.default("#basicAuthResult").html("Error: " + JSON.stringify(e.responseStatus));
+                    });
                 }
             });
         }

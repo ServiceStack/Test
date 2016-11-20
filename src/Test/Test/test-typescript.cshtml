@@ -29,6 +29,12 @@
     <input type="text" id="txtRawData" data-keyup="rawBytes" placeholder="Base64" value="Zm9v" />
     <div id="rawBytesResult"></div>
 
+    <h3>Basic Auth</h3>
+    <input type="text" id="txtBasicAuthUser" placeholder="UserName" value="test" />
+    <input type="text" id="txtBasicAuthPass" placeholder="Password" value="test" /> 
+    <button data-click="basicAuth">Send</button>
+    <div id="basicAuthResult"></div>
+
     <script src="config.js"></script>
     <script>
         // set our baseURL reference path
