@@ -10,7 +10,7 @@ System.config({
   map: {
     "es6-shim": "github:es-shims/es6-shim@0.35.1",
     "jquery": "npm:jquery@3.1.1",
-    "servicestack-client": "npm:servicestack-client@0.0.15",
+    "servicestack-client": "npm:servicestack-client@0.0.16",
     "ss-utils": "npm:ss-utils@0.1.4",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
@@ -83,7 +83,7 @@ System.config({
     },
     "npm:encoding@0.1.12": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
-      "iconv-lite": "npm:iconv-lite@0.4.13"
+      "iconv-lite": "npm:iconv-lite@0.4.15"
     },
     "npm:es6-shim@0.35.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
@@ -91,7 +91,7 @@ System.config({
     "npm:https-browserify@0.0.0": {
       "http": "github:jspm/nodelibs-http@1.7.1"
     },
-    "npm:iconv-lite@0.4.13": {
+    "npm:iconv-lite@0.4.15": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "stream": "github:jspm/nodelibs-stream@0.1.0",
@@ -153,7 +153,7 @@ System.config({
       "string_decoder": "npm:string_decoder@0.10.31",
       "util-deprecate": "npm:util-deprecate@1.0.2"
     },
-    "npm:servicestack-client@0.0.15": {
+    "npm:servicestack-client@0.0.16": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "es6-shim": "npm:es6-shim@0.35.1",
       "isomorphic-fetch": "npm:isomorphic-fetch@2.2.1"

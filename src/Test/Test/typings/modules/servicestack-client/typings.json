@@ -1,8 +1,8 @@
 {
   "resolution": "main",
   "tree": {
-    "src": "https://raw.githubusercontent.com/ServiceStack/servicestack-client/1a3c40c74581682efc3345c73d8a2ec038de46fc/typings.json",
-    "raw": "registry:npm/servicestack-client#0.0.10+20160803174707",
+    "src": "https://raw.githubusercontent.com/ServiceStack/servicestack-client/e82c7d62b3667f3da2a55c006a8e49a0fe3f4c4b/typings.json",
+    "raw": "registry:npm/servicestack-client#0.0.15+20161120205912",
     "main": "./lib/index.d.ts",
     "version": "0.0.10",
     "name": "servicestack-client"

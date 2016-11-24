@@ -3,7 +3,7 @@
     "dependencies": {
       "es6-shim": "github:es-shims/es6-shim@^0.35.1",
       "jquery": "npm:jquery@^3.1.1",
-      "servicestack-client": "npm:servicestack-client@^0.0.15",
+      "servicestack-client": "npm:servicestack-client@^0.0.16",
       "ss-utils": "npm:ss-utils@^0.1.4"
     }
   }
