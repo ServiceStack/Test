@@ -11,6 +11,10 @@ System.register(["jquery", "ss-utils", "servicestack-client", "./Test.dtos"], fu
         }
         return path;
     }
+    function handleError(e, id) {
+        console.log('error: ', e);
+        jquery_1.default(id).html("Error: " + JSON.stringify(e.responseStatus));
+    }
     return {
         setters:[
             function (jquery_1_1) {
@@ -87,10 +91,12 @@ System.register(["jquery", "ss-utils", "servicestack-client", "./Test.dtos"], fu
                         .then(function (r) {
                         jquery_1.default("#basicAuthResult").html(JSON.stringify(r));
                     })
-                        .catch(function (e) {
-                        console.log('error: ', e);
-                        jquery_1.default("#basicAuthResult").html("Error: " + JSON.stringify(e.responseStatus));
-                    });
+                        .catch(function (e) { return handleError(e, "#basicAuthResult"); });
+                },
+                returnVoid: function () {
+                    client.post(new Test_dtos_1.HelloReturnVoid())
+                        .then(function (r) { return jquery_1.default("#returnVoidResult").html("SUCCESS!"); })
+                        .catch(function (e) { return handleError(e, "#returnVoidResult"); });
                 }
             });
         }

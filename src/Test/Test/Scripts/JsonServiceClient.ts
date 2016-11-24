@@ -45,7 +45,7 @@ export class JsonServiceClient {
     headers: Headers;
     userName: string;
     password: string;
-    static toBase64: (rawString:string) => string;
+    static toBase64: (rawString: string) => string;
 
     constructor(baseUrl: string) {
         if (baseUrl == null)
@@ -61,7 +61,7 @@ export class JsonServiceClient {
         this.headers.set("Content-Type", "application/json");
     }
 
-    setCredentials(userName:string, password:string): void {
+    setCredentials(userName: string, password: string): void {
         this.userName = userName;
         this.password = password;
     }
@@ -94,7 +94,7 @@ export class JsonServiceClient {
             url = appendQueryString(url, request);
 
         if (this.userName != null && this.password != null) {
-            this.headers.set('Authorization', 'Basic '+ JsonServiceClient.toBase64(`${this.userName}:${this.password}`));
+            this.headers.set('Authorization', 'Basic ' + JsonServiceClient.toBase64(`${this.userName}:${this.password}`));
         }
 
         // Set `compress` false due to common error
@@ -124,7 +124,8 @@ export class JsonServiceClient {
                     return res.text().then(o => o as Object as T);
 
                 var contentType = res.headers.get("content-type");
-                if (contentType && contentType.indexOf("application/json") !== -1) {
+                var isJson = contentType && contentType.indexOf("application/json") !== -1;
+                if (isJson) {
                     return res.json().then(o => o as Object as T);
                 }
 
@@ -134,11 +135,16 @@ export class JsonServiceClient {
 
                     return res.arrayBuffer().then(o => new Uint8Array(o) as Object as T);
 
-                } else if (x instanceof Blob) {
+                } else if (typeof Blob == "function" && x instanceof Blob) {
                     if (typeof res.blob != 'function')
                         throw new Error("This fetch polyfill does not implement 'blob'");
 
                     return res.blob().then(o => o as Object as T);
+                }
+
+                let contentLength = res.headers.get("content-length");
+                if (contentLength === "0" || (contentLength == null && !isJson)) {
+                    return x;
                 }
 
                 return res.json().then(o => o as Object as T); //fallback
@@ -343,15 +349,15 @@ export const bytesToBase64 = (aBytes: Uint8Array): string => {
         : sB64Enc.substring(0, sB64Enc.length - eqLen) + (eqLen === 1 ? "=" : "==");
 }
 
-const uint6ToB64 = (nUint6: number) : number =>
-     nUint6 < 26 ?
-      nUint6 + 65
-    : nUint6 < 52 ?
-      nUint6 + 71
-    : nUint6 < 62 ?
-      nUint6 - 4
-    : nUint6 === 62 ? 43
-    : nUint6 === 63 ? 47 : 65;
+const uint6ToB64 = (nUint6: number): number =>
+    nUint6 < 26 ?
+        nUint6 + 65
+        : nUint6 < 52 ?
+            nUint6 + 71
+            : nUint6 < 62 ?
+                nUint6 - 4
+                : nUint6 === 62 ? 43
+                    : nUint6 === 63 ? 47 : 65;
 
 //JsonServiceClient.toBase64 requires IE10+ or node
 interface NodeBuffer extends Uint8Array {
@@ -366,8 +372,8 @@ var _btoa = typeof btoa == 'function'
     : (str) => new Buffer(str).toString('base64');
 
 //from: http://stackoverflow.com/a/30106551/85785
-JsonServiceClient.toBase64 = (str:string) => 
-    _btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match:any, p1:string) =>
+JsonServiceClient.toBase64 = (str: string) =>
+    _btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match: any, p1: string) =>
         String.fromCharCode(new Number('0x' + p1).valueOf())
     ));
 

@@ -10,7 +10,8 @@ import {
     GetRandomIds, GetRandomIdsResponse,
     HelloTypes,
     ReturnString, ReturnBytes, ReturnStream,
-    TestAuth, TestAuthResponse
+    TestAuth, TestAuthResponse,
+    HelloReturnVoid
 } from "./Test.dtos";
 
 function createUrl(path: string, params: any): string {
@@ -89,9 +90,16 @@ $(document).bindHandlers({
             .then(r => {
                 $("#basicAuthResult").html(JSON.stringify(r));
             })
-            .catch(e => {
-                console.log('error: ', e);
-                $("#basicAuthResult").html("Error: " + JSON.stringify(e.responseStatus));
-            });
+            .catch(e => handleError(e, "#basicAuthResult"));
+    },
+    returnVoid() {
+        client.post(new HelloReturnVoid())
+            .then(r => $("#returnVoidResult").html("SUCCESS!"))
+            .catch(e => handleError(e, "#returnVoidResult"));
     }
 });
+
+function handleError(e, id) {
+    console.log('error: ', e);
+    $(id).html("Error: " + JSON.stringify(e.responseStatus));
+}

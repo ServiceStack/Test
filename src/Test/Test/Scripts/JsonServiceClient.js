@@ -101,7 +101,8 @@ System.register([], function(exports_1, context_1) {
                         if (typeof x === 'string')
                             return res.text().then(function (o) { return o; });
                         var contentType = res.headers.get("content-type");
-                        if (contentType && contentType.indexOf("application/json") !== -1) {
+                        var isJson = contentType && contentType.indexOf("application/json") !== -1;
+                        if (isJson) {
                             return res.json().then(function (o) { return o; });
                         }
                         if (x instanceof Uint8Array) {
@@ -109,10 +110,14 @@ System.register([], function(exports_1, context_1) {
                                 throw new Error("This fetch polyfill does not implement 'arrayBuffer'");
                             return res.arrayBuffer().then(function (o) { return new Uint8Array(o); });
                         }
-                        else if (x instanceof Blob) {
+                        else if (typeof Blob == "function" && x instanceof Blob) {
                             if (typeof res.blob != 'function')
                                 throw new Error("This fetch polyfill does not implement 'blob'");
                             return res.blob().then(function (o) { return o; });
+                        }
+                        var contentLength = res.headers.get("content-length");
+                        if (contentLength === "0" || (contentLength == null && !isJson)) {
+                            return x;
                         }
                         return res.json().then(function (o) { return o; }); //fallback
                     })
