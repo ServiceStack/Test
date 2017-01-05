@@ -197,5 +197,12 @@ namespace Test.ServiceInterface
         {
             return request;
         }
+
+        public object Any(HelloZip request)
+        {
+            return request.Test == null
+                ? new HelloZipResponse { Result = $"Hello, {request.Name} {base.Request.ContentLength}" }
+                : new HelloZipResponse { Result = $"Hello, {request.Name} ({request.Test?.Count}) {base.Request.ContentLength}" };
+        }
     }
 }

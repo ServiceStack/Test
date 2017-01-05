@@ -375,4 +375,22 @@ namespace Test.ServiceModel
         public bool Bool { get; set; }
         public int Int { get; set; }
     }
+
+    [DataContract]
+    [Route("/hellozip")]
+    public class HelloZip : IReturn<HelloZipResponse>
+    {
+        [DataMember]
+        public string Name { get; set; }
+
+        [DataMember]
+        public List<string> Test { get; set; }
+    }
+
+    [DataContract]
+    public class HelloZipResponse
+    {
+        [DataMember]
+        public string Result { get; set; }
+    }
 }
