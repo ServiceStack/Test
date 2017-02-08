@@ -23,6 +23,7 @@ namespace Test.ServiceModel.Types
         public DateTimeOffset DateTimeOffset { get; set; }
         public Guid Guid { get; set; }
         public Char Char { get; set; }
+        public KeyValuePair<string, string> KeyValuePair { get; set; }
         public DateTime? NullableDateTime { get; set; }
         public TimeSpan? NullableTimeSpan { get; set; }
         public List<string> StringList { get; set; }
