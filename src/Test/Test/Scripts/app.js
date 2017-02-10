@@ -64,6 +64,13 @@ System.register(["jquery", "ss-utils", "servicestack-client", "./Test.dtos"], fu
                         jquery_1.default("#helloTypesResult").html(JSON.stringify(r));
                     });
                 },
+                echoTypes: function () {
+                    var request = new Test_dtos_1.EchoTypes();
+                    request.string = this.value;
+                    client.post(request).then(function (r) {
+                        jquery_1.default("#echoTypesResult").html(r.string);
+                    });
+                },
                 rawString: function () {
                     var request = new Test_dtos_1.ReturnString();
                     request.data = this.value;

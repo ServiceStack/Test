@@ -1,5 +1,5 @@
 /* Options:
-Date: 2016-11-03 06:15:27
+Date: 2017-02-10 11:04:42
 Version: 4.00
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: http://localhost:56500
@@ -22,7 +22,7 @@ System.register([], function(exports_1, context_1) {
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var ResponseError, ResponseStatus, ExternalType, MetadataTestNestedChild, MetadataTestChild, MenuItemExampleItem, MenuItemExample, MenuExample, NestedClass, ListResult, ArrayResult, EnumFlags, Poco, AllCollectionTypes, SubType, HelloBase, HelloResponseBase, HelloBase_1, Item, HelloWithReturnResponse, HelloType, EmptyClass, InnerType, PingService, ReturnedDto, AuthUserSession, CustomUserSession, UnAuthInfo, Channel, Device, Logger, RequestLogEntry, QueryBase, QueryBase_1, OnlyDefinedInGenericType, QueryBase_2, OnlyDefinedInGenericTypeFrom, OnlyDefinedInGenericTypeInto, Rockstar, TypesGroup, CustomHttpErrorResponse, ThrowTypeResponse, ThrowValidationResponse, ThrowBusinessErrorResponse, ExternalOperationResponse, ExternalOperation2Response, ExternalReturnTypeResponse, Account, Project, MetadataTestResponse, GetExampleResponse, GetRandomIdsResponse, HelloResponse, HelloAnnotatedResponse, AllTypes, HelloAllTypesResponse, HelloDateTime, HelloWithDataContractResponse, HelloWithDescriptionResponse, HelloWithInheritanceResponse, HelloWithAlternateReturnResponse, HelloWithRouteResponse, HelloWithTypeResponse, HelloInnerTypesResponse, HelloVerbResponse, EnumResponse, HelloTypes, PingResponse, RequiresRoleResponse, SendVerbResponse, GetSessionResponse, StoreLogsResponse, TestAuthResponse, Wait, EchoTypes, EchoCollections, EchoComplexTypes, RequestLogsResponse, AuthenticateResponse, AssignRolesResponse, UnAssignRolesResponse, QueryResponse, CustomHttpError, ThrowHttpError, Throw404, ThrowCustom400, ThrowType, ThrowValidation, ThrowBusinessError, ExternalOperation, ExternalOperation2, ExternalOperation3, ExternalOperation4, RootPathRoutes, GetAccount, GetProject, ImageAsStream, ImageAsBytes, ImageAsCustomResult, ImageWriteToResponse, ImageAsFile, ImageAsRedirect, DrawImage, MetadataTest, MetadataTestArray, GetExample, GetRandomIds, TextFileTest, Hello, HelloAnnotated, HelloWithNestedClass, HelloList, HelloArray, HelloWithEnum, RestrictedAttributes, AllowedAttributes, HelloAllTypes, HelloString, HelloVoid, HelloWithDataContract, HelloWithDescription, HelloWithInheritance, HelloWithGenericInheritance, HelloWithGenericInheritance2, HelloWithNestedInheritance, HelloWithReturn, HelloWithRoute, HelloWithType, HelloInterface, HelloInnerTypes, HelloBuiltin, HelloGet, HelloPost, HelloPut, HelloDelete, HelloPatch, HelloReturnVoid, EnumRequest, Ping, ResetConnections, RequiresRole, ReturnString, ReturnBytes, ReturnStream, ReturnHttpWebResponse, GetRequest1, GetRequest2, SendDefault, SendRestGet, SendGet, SendPost, SendPut, GetSession, UpdateSession, StoreLogs, TestAuth, TestVoidResponse, TestNullResponse, RequestLogs, Authenticate, AssignRoles, UnAssignRoles, QueryPocoBase, QueryPocoIntoBase, QueryRockstars;
+    var ResponseError, ResponseStatus, ExternalType, MetadataTestNestedChild, MetadataTestChild, MenuItemExampleItem, MenuItemExample, MenuExample, NestedClass, ListResult, ArrayResult, EnumFlags, Poco, AllCollectionTypes, KeyValuePair, SubType, HelloBase, HelloResponseBase, HelloBase_1, Item, HelloWithReturnResponse, HelloType, EmptyClass, InnerType, PingService, ReturnedDto, AuthUserSession, CustomUserSession, UnAuthInfo, Channel, Device, Logger, QueryBase, QueryBase_1, OnlyDefinedInGenericType, QueryBase_2, OnlyDefinedInGenericTypeFrom, OnlyDefinedInGenericTypeInto, Rockstar, TypesGroup, CustomHttpErrorResponse, ThrowTypeResponse, ThrowValidationResponse, ThrowBusinessErrorResponse, ExternalOperationResponse, ExternalOperation2Response, ExternalReturnTypeResponse, Account, Project, MetadataTestResponse, GetExampleResponse, GetRandomIdsResponse, HelloResponse, HelloAnnotatedResponse, AllTypes, HelloAllTypesResponse, HelloDateTime, HelloWithDataContractResponse, HelloWithDescriptionResponse, HelloWithInheritanceResponse, HelloWithAlternateReturnResponse, HelloWithRouteResponse, HelloWithTypeResponse, HelloInnerTypesResponse, HelloVerbResponse, EnumResponse, HelloTypes, HelloZipResponse, PingResponse, RequiresRoleResponse, SendVerbResponse, GetSessionResponse, StoreLogsResponse, TestAuthResponse, Wait, EchoTypes, EchoCollections, EchoComplexTypes, AuthenticateResponse, AssignRolesResponse, UnAssignRolesResponse, QueryResponse, CustomHttpError, ThrowHttpError, Throw404, ThrowCustom400, ThrowType, ThrowValidation, ThrowBusinessError, ExternalOperation, ExternalOperation2, ExternalOperation3, ExternalOperation4, RootPathRoutes, GetAccount, GetProject, ImageAsStream, ImageAsBytes, ImageAsCustomResult, ImageWriteToResponse, ImageAsFile, ImageAsRedirect, DrawImage, MetadataTest, MetadataTestArray, GetExample, GetRandomIds, TextFileTest, Hello, HelloAnnotated, HelloWithNestedClass, HelloList, HelloArray, HelloWithEnum, RestrictedAttributes, AllowedAttributes, HelloAllTypes, HelloString, HelloVoid, HelloWithDataContract, HelloWithDescription, HelloWithInheritance, HelloWithGenericInheritance, HelloWithGenericInheritance2, HelloWithNestedInheritance, HelloWithReturn, HelloWithRoute, HelloWithType, HelloInterface, HelloInnerTypes, HelloBuiltin, HelloGet, HelloPost, HelloPut, HelloDelete, HelloPatch, HelloReturnVoid, EnumRequest, HelloZip, Ping, ResetConnections, RequiresRole, ReturnString, ReturnBytes, ReturnStream, GetRequest1, GetRequest2, SendDefault, SendRestGet, SendGet, SendPost, SendPut, GetSession, UpdateSession, StoreLogs, TestAuth, TestVoidResponse, TestNullResponse, Authenticate, AssignRoles, UnAssignRoles, QueryPocoBase, QueryPocoIntoBase, QueryRockstars;
     return {
         setters:[],
         execute: function() {
@@ -114,6 +114,12 @@ System.register([], function(exports_1, context_1) {
                 return AllCollectionTypes;
             }());
             exports_1("AllCollectionTypes", AllCollectionTypes);
+            KeyValuePair = (function () {
+                function KeyValuePair() {
+                }
+                return KeyValuePair;
+            }());
+            exports_1("KeyValuePair", KeyValuePair);
             SubType = (function () {
                 function SubType() {
                 }
@@ -219,12 +225,6 @@ System.register([], function(exports_1, context_1) {
                 return Logger;
             }());
             exports_1("Logger", Logger);
-            RequestLogEntry = (function () {
-                function RequestLogEntry() {
-                }
-                return RequestLogEntry;
-            }());
-            exports_1("RequestLogEntry", RequestLogEntry);
             QueryBase = (function () {
                 function QueryBase() {
                 }
@@ -457,6 +457,13 @@ System.register([], function(exports_1, context_1) {
                 return HelloTypes;
             }());
             exports_1("HelloTypes", HelloTypes);
+            // @DataContract
+            HelloZipResponse = (function () {
+                function HelloZipResponse() {
+                }
+                return HelloZipResponse;
+            }());
+            exports_1("HelloZipResponse", HelloZipResponse);
             PingResponse = (function () {
                 function PingResponse() {
                 }
@@ -528,13 +535,6 @@ System.register([], function(exports_1, context_1) {
                 return EchoComplexTypes;
             }());
             exports_1("EchoComplexTypes", EchoComplexTypes);
-            // @DataContract
-            RequestLogsResponse = (function () {
-                function RequestLogsResponse() {
-                }
-                return RequestLogsResponse;
-            }());
-            exports_1("RequestLogsResponse", RequestLogsResponse);
             // @DataContract
             AuthenticateResponse = (function () {
                 function AuthenticateResponse() {
@@ -1018,6 +1018,16 @@ System.register([], function(exports_1, context_1) {
                 return EnumRequest;
             }());
             exports_1("EnumRequest", EnumRequest);
+            // @Route("/hellozip")
+            // @DataContract
+            HelloZip = (function () {
+                function HelloZip() {
+                }
+                HelloZip.prototype.createResponse = function () { return new HelloZipResponse(); };
+                HelloZip.prototype.getTypeName = function () { return "HelloZip"; };
+                return HelloZip;
+            }());
+            exports_1("HelloZip", HelloZip);
             // @Route("/ping")
             Ping = (function () {
                 function Ping() {
@@ -1070,15 +1080,6 @@ System.register([], function(exports_1, context_1) {
                 return ReturnStream;
             }());
             exports_1("ReturnStream", ReturnStream);
-            // @Route("/return/httpwebresponse")
-            ReturnHttpWebResponse = (function () {
-                function ReturnHttpWebResponse() {
-                }
-                ReturnHttpWebResponse.prototype.createResponse = function () { return new Blob(); };
-                ReturnHttpWebResponse.prototype.getTypeName = function () { return "ReturnHttpWebResponse"; };
-                return ReturnHttpWebResponse;
-            }());
-            exports_1("ReturnHttpWebResponse", ReturnHttpWebResponse);
             // @Route("/Request1", "GET")
             GetRequest1 = (function () {
                 function GetRequest1() {
@@ -1187,16 +1188,6 @@ System.register([], function(exports_1, context_1) {
                 return TestNullResponse;
             }());
             exports_1("TestNullResponse", TestNullResponse);
-            // @Route("/requestlogs")
-            // @DataContract
-            RequestLogs = (function () {
-                function RequestLogs() {
-                }
-                RequestLogs.prototype.createResponse = function () { return new RequestLogsResponse(); };
-                RequestLogs.prototype.getTypeName = function () { return "RequestLogs"; };
-                return RequestLogs;
-            }());
-            exports_1("RequestLogs", RequestLogs);
             // @Route("/auth")
             // @Route("/auth/{provider}")
             // @Route("/authenticate")

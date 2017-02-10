@@ -23,6 +23,215 @@ export class ErrorResponse {
     responseStatus: ResponseStatus;
 }
 
+export interface ISseCommand {
+    userId: string;
+    displayName: string;
+    channels: string;
+    profileUrl: string;
+}
+
+export interface ISseHeartbeat extends ISseCommand { }
+export interface ISseJoin extends ISseCommand { }
+export interface ISseLeave extends ISseCommand { }
+export interface ISseUpdate extends ISseCommand { }
+
+export interface ISseConnect extends ISseCommand {
+    id: string;
+    unRegisterUrl: string;
+    heartbeatUrl: string;
+    updateSubscriberUrl: string;
+    heartbeatIntervalMs: number;
+    idleTimeoutMs: number;
+}
+
+export interface IReconnectServerEventsOptions {
+    url?: string;
+    onerror?: (...args: any[]) => void;
+    onmessage?: (...args: any[]) => void;
+    errorArgs?: any[];
+}
+
+/**
+ * EventSource
+ */
+export enum ReadyState { CONNECTING = 0, OPEN = 1, CLOSED = 2 }
+
+export interface IEventSourceStatic extends EventTarget {
+    new (url: string, eventSourceInitDict?: IEventSourceInit): IEventSourceStatic;
+    url: string;
+    withCredentials: boolean;
+    CONNECTING: ReadyState; // constant, always 0
+    OPEN: ReadyState; // constant, always 1
+    CLOSED: ReadyState; // constant, always 2
+    readyState: ReadyState;
+    onopen: Function;
+    onmessage: (event: IOnMessageEvent) => void;
+    onerror: Function;
+    close: () => void;
+}
+
+export interface IEventSourceInit {
+    withCredentials?: boolean;
+}
+
+export interface IOnMessageEvent {
+    data: string;
+}
+
+declare var EventSource: IEventSourceStatic;
+
+export class ServerEventsClient {
+    eventSourceUrl: string;
+    updateSubscriberUrl: string;
+    eventSourceStop: boolean;
+
+    constructor(
+        baseUrl: string,
+        public channels: string[],
+        public options: any = {},
+        public eventSource: IEventSourceStatic = null) {
+        if (this.channels.length === 0)
+            throw "at least 1 channel is required";
+
+        this.eventSourceUrl = combinePaths(baseUrl, "event-stream") + "?";
+        this.updateChannels(channels);
+
+        if (eventSource == null) {
+            this.eventSource = new EventSource(this.eventSourceUrl);
+            this.eventSource.onmessage = this.onMessage.bind(this);
+        }
+    }
+
+    onMessage(e: IOnMessageEvent) {
+        var opt = this.options;
+
+        var parts = splitOnFirst(e.data, " ");
+        var selector = parts[0];
+        var selParts = splitOnFirst(selector, "@");
+        if (selParts.length > 1) {
+            (e as any).channel = selParts[0];
+            selector = selParts[1];
+        }
+        const json = parts[1];
+        const msg = json ? JSON.parse(json) : null;
+
+        parts = splitOnFirst(selector, ".");
+        if (parts.length <= 1)
+            throw "invalid selector format: " + selector;
+
+        var op = parts[0],
+            target = parts[1].replace(new RegExp("%20", "g"), " ");
+
+        if (opt.validate && opt.validate(op, target, msg, json) === false)
+            return;
+
+        const tokens = splitOnFirst(target, "$");
+        const [cmd, cssSel] = tokens;
+        const els = cssSel && document.querySelectorAll(cssSel);
+        const el = els && els[0];
+
+        var headers = new Headers();
+        headers.set("Content-Type", "text/plain");
+
+        if (op === "cmd") {
+            if (cmd === "onConnect") {
+                Object.assign(opt, msg);
+                if (opt.heartbeatUrl) {
+                    if (opt.heartbeat) {
+                        window.clearInterval(opt.heartbeat);
+                    }
+                    opt.heartbeat = window.setInterval(() => {
+                        if (this.eventSource.readyState === 2) //CLOSED
+                        {
+                            window.clearInterval(opt.heartbeat);
+                            const stopFn = opt.handlers["onStop"];
+                            if (stopFn != null)
+                                stopFn.apply(this.eventSource);
+                            this.reconnectServerEvents({ errorArgs: { error: "CLOSED" } });
+                            return;
+                        }
+
+                        fetch(new Request(opt.heartbeatUrl, { method: "POST", mode: "cors", headers: headers }))
+                            .then(res => {
+                                if (!res.ok)
+                                    throw res;
+                            })
+                            .catch(res => {
+                                this.reconnectServerEvents({ errorArgs: [res] });
+                            });
+                    }, parseInt(opt.heartbeatIntervalMs) || 10000);
+                }
+                if (opt.unRegisterUrl) {
+                    window.onunload = () => {
+                        fetch(new Request(opt.unRegisterUrl, { method: "POST", mode: "cors", headers: headers }))
+                            .then(res => {
+                                if (!res.ok)
+                                    throw res;
+                            })
+                            .catch(res => null); //ignore
+                    };
+                }
+                this.updateSubscriberUrl = opt.updateSubscriberUrl;
+                this.updateChannels((opt.channels || "").split(","));
+            }
+            var fn = opt.handlers[cmd];
+            if (fn) {
+                fn.call(el || document.body, msg, e);
+            }
+        }
+        else if (op === "trigger") {
+            //$(el || document).trigger(cmd, [msg, e]); //no jQuery
+            if (opt.trigger && opt.trigger[cmd] == typeof "function") {
+                opt.trigger[cmd].call(el || document, msg, e);
+            }
+        }
+        else if (op === "css") {
+            css(els || document.querySelectorAll("body"), cmd, msg);
+        }
+        else {
+            var r = opt.receivers && opt.receivers[op];
+            this.invokeReceiver(r, cmd, el, msg, e, op);
+        }
+
+        if (opt.success) {
+            opt.success(selector, msg, e);
+        }
+    }
+
+    reconnectServerEvents(opt: any = {}) {
+        if (this.eventSourceStop)
+            return this.eventSource;
+
+        const hold = this.eventSource;
+        const es = new EventSource(opt.url || this.eventSourceUrl || hold.url);
+        es.onerror = opt.onerror || hold.onerror;
+        es.onmessage = opt.onmessage || hold.onmessage;
+        const fn = this.options.handlers["onReconnect"];
+        if (fn != null)
+            fn.apply(es, opt.errorArgs);
+        hold.close();
+        return this.eventSource = es;
+    }
+
+    invokeReceiver(r: any, cmd: string, el: Element, msg: string, e: any, name: string) {
+        if (r) {
+            if (typeof (r[cmd]) == "function") {
+                r[cmd].call(el || r[cmd], msg, e);
+            } else {
+                r[cmd] = msg;
+            }
+        }
+    }
+
+    updateChannels(channels: string[]) {
+        this.channels = channels;
+        const url = this.eventSource != null
+            ? this.eventSource.url
+            : this.eventSourceUrl;
+        this.eventSourceUrl = url.substring(0, Math.min(url.indexOf("?"), url.length)) + "?channels=" + channels.join(",") + "&t=" + new Date().getTime();
+    }
+}
+
 export class HttpMethods {
     static Get = "GET";
     static Post = "POST";
@@ -45,6 +254,9 @@ export class JsonServiceClient {
     headers: Headers;
     userName: string;
     password: string;
+    requestFilter: (req: Request) => void;
+    responseFilter: (res: IResponse) => void;
+
     static toBase64: (rawString: string) => string;
 
     constructor(baseUrl: string) {
@@ -111,10 +323,16 @@ export class JsonServiceClient {
         if (hasRequestBody)
             (req as any).body = JSON.stringify(request);
 
-        return fetch(url, req)
+        if (this.requestFilter != null)
+            this.requestFilter(req);
+
+        return fetch(req)
             .then(res => {
                 if (!res.ok)
                     throw res;
+
+                if (this.responseFilter != null)
+                    this.responseFilter(res);
 
                 var x = typeof request.createResponse == 'function'
                     ? request.createResponse()
@@ -190,6 +408,7 @@ export const sanitize = (status: any): any => {
     if (status.errors)
         return status;
     var to: any = {};
+
     for (let k in status) {
         if (status.hasOwnProperty(k)) {
             if (status[k] instanceof Object)
@@ -200,6 +419,16 @@ export const sanitize = (status: any): any => {
     }
 
     to.errors = [];
+    if (status.Errors != null) {
+        for (var i = 0, len = status.Errors.length; i < len; i++) {
+            var o = status.Errors[i];
+            var err = {};
+            for (var k in o)
+                err[toCamelCase(k)] = o[k];
+            to.errors.push(err);
+        }
+    }
+
     return to;
 }
 

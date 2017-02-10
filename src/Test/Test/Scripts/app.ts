@@ -11,7 +11,8 @@ import {
     HelloTypes,
     ReturnString, ReturnBytes, ReturnStream,
     TestAuth, TestAuthResponse,
-    HelloReturnVoid
+    HelloReturnVoid,
+    EchoTypes
 } from "./Test.dtos";
 
 function createUrl(path: string, params: any): string {
@@ -56,6 +57,14 @@ $(document).bindHandlers({
         request.int = 0;
         client.get(request).then((r) => {
             $("#helloTypesResult").html(JSON.stringify(r));
+        });
+    },
+    echoTypes() {
+        var request = new EchoTypes();
+        request.string = this.value;
+
+        client.post(request).then(r => {
+            $("#echoTypesResult").html(r.string);
         });
     },
     rawString() {

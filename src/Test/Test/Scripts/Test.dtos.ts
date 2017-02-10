@@ -1,5 +1,5 @@
 /* Options:
-Date: 2016-11-03 06:15:27
+Date: 2017-02-10 11:04:42
 Version: 4.00
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: http://localhost:56500
@@ -18,10 +18,12 @@ BaseUrl: http://localhost:56500
 
 export interface IReturnVoid
 {
+    createResponse() : void;
 }
 
 export interface IReturn<T>
 {
+    createResponse() : T;
 }
 
 // @DataContract
@@ -145,6 +147,12 @@ export class AllCollectionTypes
     pocoList: Poco[];
     pocoLookup: { [index:string]: Poco[]; };
     pocoLookupMap: { [index:string]: { [index:string]: Poco; }[]; };
+}
+
+export class KeyValuePair<TKey, TValue>
+{
+    key: TKey;
+    value: TValue;
 }
 
 export class SubType
@@ -396,29 +404,6 @@ export class Logger
     devices: Device[];
 }
 
-export class RequestLogEntry
-{
-    id: number;
-    dateTime: string;
-    httpMethod: string;
-    absoluteUri: string;
-    pathInfo: string;
-    requestBody: string;
-    requestDto: Object;
-    userAuthId: string;
-    sessionId: string;
-    ipAddress: string;
-    forwardedFor: string;
-    referer: string;
-    headers: { [index:string]: string; };
-    formData: { [index:string]: string; };
-    items: { [index:string]: string; };
-    session: Object;
-    responseDto: Object;
-    errorResponse: Object;
-    requestDuration: string;
-}
-
 export class QueryBase
 {
     // @DataMember(Order=1)
@@ -588,6 +573,7 @@ export class AllTypes
     dateTimeOffset: string;
     guid: string;
     char: string;
+    keyValuePair: KeyValuePair<string, string>;
     nullableDateTime: string;
     nullableTimeSpan: string;
     stringList: string[];
@@ -670,6 +656,13 @@ export class HelloTypes implements IReturn<HelloTypes>
     int: number;
     createResponse() { return new HelloTypes(); }
     getTypeName() { return "HelloTypes"; }
+}
+
+// @DataContract
+export class HelloZipResponse
+{
+    // @DataMember
+    result: string;
 }
 
 export class PingResponse
@@ -760,19 +753,6 @@ export class EchoComplexTypes implements IReturn<EchoComplexTypes>
     subType: SubType;
     createResponse() { return new EchoComplexTypes(); }
     getTypeName() { return "EchoComplexTypes"; }
-}
-
-// @DataContract
-export class RequestLogsResponse
-{
-    // @DataMember(Order=1)
-    results: RequestLogEntry[];
-
-    // @DataMember(Order=2)
-    usage: { [index:string]: string; };
-
-    // @DataMember(Order=3)
-    responseStatus: ResponseStatus;
 }
 
 // @DataContract
@@ -1111,7 +1091,7 @@ export class AllowedAttributes
     * Range Description
     */
     // @DataMember(Name="Aliased")
-    // @ApiMember(ParameterType="path", Description="Range Description", DataType="double", IsRequired=true)
+    // @ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)
     range: number;
 }
 
@@ -1268,6 +1248,19 @@ export class EnumRequest implements IReturn<EnumResponse>
     getTypeName() { return "EnumRequest"; }
 }
 
+// @Route("/hellozip")
+// @DataContract
+export class HelloZip implements IReturn<HelloZipResponse>
+{
+    // @DataMember
+    name: string;
+
+    // @DataMember
+    test: string[];
+    createResponse() { return new HelloZipResponse(); }
+    getTypeName() { return "HelloZip"; }
+}
+
 // @Route("/ping")
 export class Ping implements IReturn<PingResponse>
 {
@@ -1309,14 +1302,6 @@ export class ReturnStream implements IReturn<Blob>
     data: Uint8Array;
     createResponse() { return new Blob(); }
     getTypeName() { return "ReturnStream"; }
-}
-
-// @Route("/return/httpwebresponse")
-export class ReturnHttpWebResponse implements IReturn<Blob>
-{
-    data: Uint8Array;
-    createResponse() { return new Blob(); }
-    getTypeName() { return "ReturnHttpWebResponse"; }
 }
 
 // @Route("/Request1", "GET")
@@ -1406,73 +1391,6 @@ export class TestVoidResponse
 // @Route("/null-response")
 export class TestNullResponse
 {
-}
-
-// @Route("/requestlogs")
-// @DataContract
-export class RequestLogs implements IReturn<RequestLogsResponse>
-{
-    // @DataMember(Order=1)
-    beforeSecs: number;
-
-    // @DataMember(Order=2)
-    afterSecs: number;
-
-    // @DataMember(Order=3)
-    ipAddress: string;
-
-    // @DataMember(Order=4)
-    forwardedFor: string;
-
-    // @DataMember(Order=5)
-    userAuthId: string;
-
-    // @DataMember(Order=6)
-    sessionId: string;
-
-    // @DataMember(Order=7)
-    referer: string;
-
-    // @DataMember(Order=8)
-    pathInfo: string;
-
-    // @DataMember(Order=9)
-    ids: number[];
-
-    // @DataMember(Order=10)
-    beforeId: number;
-
-    // @DataMember(Order=11)
-    afterId: number;
-
-    // @DataMember(Order=12)
-    hasResponse: boolean;
-
-    // @DataMember(Order=13)
-    withErrors: boolean;
-
-    // @DataMember(Order=14)
-    skip: number;
-
-    // @DataMember(Order=15)
-    take: number;
-
-    // @DataMember(Order=16)
-    enableSessionTracking: boolean;
-
-    // @DataMember(Order=17)
-    enableResponseTracking: boolean;
-
-    // @DataMember(Order=18)
-    enableErrorTracking: boolean;
-
-    // @DataMember(Order=19)
-    durationLongerThan: string;
-
-    // @DataMember(Order=20)
-    durationLessThan: string;
-    createResponse() { return new RequestLogsResponse(); }
-    getTypeName() { return "RequestLogs"; }
 }
 
 // @Route("/auth")

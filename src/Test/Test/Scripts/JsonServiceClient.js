@@ -2,7 +2,7 @@
 System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ResponseStatus, ResponseError, ErrorResponse, HttpMethods, JsonServiceClient, createErrorResponse, toCamelCase, sanitize, nameOf, css, splitOnFirst, splitOnLast, splitCase, humanize, queryString, combinePaths, createPath, createUrl, appendQueryString, qsValue, bytesToBase64, uint6ToB64, _btoa, toDate, toDateFmt, padInt, dateFmt, dateFmtHM, timeFmt12;
+    var ResponseStatus, ResponseError, ErrorResponse, ReadyState, ServerEventsClient, HttpMethods, JsonServiceClient, createErrorResponse, toCamelCase, sanitize, nameOf, css, splitOnFirst, splitOnLast, splitCase, humanize, queryString, combinePaths, createPath, createUrl, appendQueryString, qsValue, bytesToBase64, uint6ToB64, _btoa, toDate, toDateFmt, padInt, dateFmt, dateFmtHM, timeFmt12;
     return {
         setters:[],
         execute: function() {
@@ -24,6 +24,150 @@ System.register([], function(exports_1, context_1) {
                 return ErrorResponse;
             }());
             exports_1("ErrorResponse", ErrorResponse);
+            /**
+             * EventSource
+             */
+            (function (ReadyState) {
+                ReadyState[ReadyState["CONNECTING"] = 0] = "CONNECTING";
+                ReadyState[ReadyState["OPEN"] = 1] = "OPEN";
+                ReadyState[ReadyState["CLOSED"] = 2] = "CLOSED";
+            })(ReadyState || (ReadyState = {}));
+            exports_1("ReadyState", ReadyState);
+            ServerEventsClient = (function () {
+                function ServerEventsClient(baseUrl, channels, options, eventSource) {
+                    if (options === void 0) { options = {}; }
+                    if (eventSource === void 0) { eventSource = null; }
+                    this.channels = channels;
+                    this.options = options;
+                    this.eventSource = eventSource;
+                    if (this.channels.length === 0)
+                        throw "at least 1 channel is required";
+                    this.eventSourceUrl = combinePaths(baseUrl, "event-stream") + "?";
+                    this.updateChannels(channels);
+                    if (eventSource == null) {
+                        this.eventSource = new EventSource(this.eventSourceUrl);
+                        this.eventSource.onmessage = this.onMessage.bind(this);
+                    }
+                }
+                ServerEventsClient.prototype.onMessage = function (e) {
+                    var _this = this;
+                    var opt = this.options;
+                    var parts = splitOnFirst(e.data, " ");
+                    var selector = parts[0];
+                    var selParts = splitOnFirst(selector, "@");
+                    if (selParts.length > 1) {
+                        e.channel = selParts[0];
+                        selector = selParts[1];
+                    }
+                    var json = parts[1];
+                    var msg = json ? JSON.parse(json) : null;
+                    parts = splitOnFirst(selector, ".");
+                    if (parts.length <= 1)
+                        throw "invalid selector format: " + selector;
+                    var op = parts[0], target = parts[1].replace(new RegExp("%20", "g"), " ");
+                    if (opt.validate && opt.validate(op, target, msg, json) === false)
+                        return;
+                    var tokens = splitOnFirst(target, "$");
+                    var cmd = tokens[0], cssSel = tokens[1];
+                    var els = cssSel && document.querySelectorAll(cssSel);
+                    var el = els && els[0];
+                    var headers = new Headers();
+                    headers.set("Content-Type", "text/plain");
+                    if (op === "cmd") {
+                        if (cmd === "onConnect") {
+                            Object.assign(opt, msg);
+                            if (opt.heartbeatUrl) {
+                                if (opt.heartbeat) {
+                                    window.clearInterval(opt.heartbeat);
+                                }
+                                opt.heartbeat = window.setInterval(function () {
+                                    if (_this.eventSource.readyState === 2) {
+                                        window.clearInterval(opt.heartbeat);
+                                        var stopFn = opt.handlers["onStop"];
+                                        if (stopFn != null)
+                                            stopFn.apply(_this.eventSource);
+                                        _this.reconnectServerEvents({ errorArgs: { error: "CLOSED" } });
+                                        return;
+                                    }
+                                    fetch(new Request(opt.heartbeatUrl, { method: "POST", mode: "cors", headers: headers }))
+                                        .then(function (res) {
+                                        if (!res.ok)
+                                            throw res;
+                                    })
+                                        .catch(function (res) {
+                                        _this.reconnectServerEvents({ errorArgs: [res] });
+                                    });
+                                }, parseInt(opt.heartbeatIntervalMs) || 10000);
+                            }
+                            if (opt.unRegisterUrl) {
+                                window.onunload = function () {
+                                    fetch(new Request(opt.unRegisterUrl, { method: "POST", mode: "cors", headers: headers }))
+                                        .then(function (res) {
+                                        if (!res.ok)
+                                            throw res;
+                                    })
+                                        .catch(function (res) { return null; }); //ignore
+                                };
+                            }
+                            this.updateSubscriberUrl = opt.updateSubscriberUrl;
+                            this.updateChannels((opt.channels || "").split(","));
+                        }
+                        var fn = opt.handlers[cmd];
+                        if (fn) {
+                            fn.call(el || document.body, msg, e);
+                        }
+                    }
+                    else if (op === "trigger") {
+                        //$(el || document).trigger(cmd, [msg, e]); //no jQuery
+                        if (opt.trigger && opt.trigger[cmd] == typeof "function") {
+                            opt.trigger[cmd].call(el || document, msg, e);
+                        }
+                    }
+                    else if (op === "css") {
+                        css(els || document.querySelectorAll("body"), cmd, msg);
+                    }
+                    else {
+                        var r = opt.receivers && opt.receivers[op];
+                        this.invokeReceiver(r, cmd, el, msg, e, op);
+                    }
+                    if (opt.success) {
+                        opt.success(selector, msg, e);
+                    }
+                };
+                ServerEventsClient.prototype.reconnectServerEvents = function (opt) {
+                    if (opt === void 0) { opt = {}; }
+                    if (this.eventSourceStop)
+                        return this.eventSource;
+                    var hold = this.eventSource;
+                    var es = new EventSource(opt.url || this.eventSourceUrl || hold.url);
+                    es.onerror = opt.onerror || hold.onerror;
+                    es.onmessage = opt.onmessage || hold.onmessage;
+                    var fn = this.options.handlers["onReconnect"];
+                    if (fn != null)
+                        fn.apply(es, opt.errorArgs);
+                    hold.close();
+                    return this.eventSource = es;
+                };
+                ServerEventsClient.prototype.invokeReceiver = function (r, cmd, el, msg, e, name) {
+                    if (r) {
+                        if (typeof (r[cmd]) == "function") {
+                            r[cmd].call(el || r[cmd], msg, e);
+                        }
+                        else {
+                            r[cmd] = msg;
+                        }
+                    }
+                };
+                ServerEventsClient.prototype.updateChannels = function (channels) {
+                    this.channels = channels;
+                    var url = this.eventSource != null
+                        ? this.eventSource.url
+                        : this.eventSourceUrl;
+                    this.eventSourceUrl = url.substring(0, Math.min(url.indexOf("?"), url.length)) + "?channels=" + channels.join(",") + "&t=" + new Date().getTime();
+                };
+                return ServerEventsClient;
+            }());
+            exports_1("ServerEventsClient", ServerEventsClient);
             HttpMethods = (function () {
                 function HttpMethods() {
                 }
@@ -72,6 +216,7 @@ System.register([], function(exports_1, context_1) {
                     return this.send(HttpMethods.Patch, request);
                 };
                 JsonServiceClient.prototype.send = function (method, request) {
+                    var _this = this;
                     var url = combinePaths(this.replyBaseUrl, nameOf(request));
                     var hasRequestBody = HttpMethods.hasRequestBody(method);
                     if (!hasRequestBody)
@@ -91,10 +236,14 @@ System.register([], function(exports_1, context_1) {
                     var req = new Request(url, reqOptions);
                     if (hasRequestBody)
                         req.body = JSON.stringify(request);
-                    return fetch(url, req)
+                    if (this.requestFilter != null)
+                        this.requestFilter(req);
+                    return fetch(req)
                         .then(function (res) {
                         if (!res.ok)
                             throw res;
+                        if (_this.responseFilter != null)
+                            _this.responseFilter(res);
                         var x = typeof request.createResponse == 'function'
                             ? request.createResponse()
                             : null;
@@ -159,15 +308,24 @@ System.register([], function(exports_1, context_1) {
                 if (status.errors)
                     return status;
                 var to = {};
-                for (var k in status) {
-                    if (status.hasOwnProperty(k)) {
-                        if (status[k] instanceof Object)
-                            to[toCamelCase(k)] = sanitize(status[k]);
+                for (var k_1 in status) {
+                    if (status.hasOwnProperty(k_1)) {
+                        if (status[k_1] instanceof Object)
+                            to[toCamelCase(k_1)] = sanitize(status[k_1]);
                         else
-                            to[toCamelCase(k)] = status[k];
+                            to[toCamelCase(k_1)] = status[k_1];
                     }
                 }
                 to.errors = [];
+                if (status.Errors != null) {
+                    for (var i = 0, len = status.Errors.length; i < len; i++) {
+                        var o = status.Errors[i];
+                        var err = {};
+                        for (var k in o)
+                            err[toCamelCase(k)] = o[k];
+                        to.errors.push(err);
+                    }
+                }
                 return to;
             });
             exports_1("nameOf", nameOf = function (o) {
