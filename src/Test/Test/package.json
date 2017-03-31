@@ -1,10 +1,24 @@
 {
-  "jspm": {
-    "dependencies": {
-      "es6-shim": "github:es-shims/es6-shim@^0.35.1",
-      "jquery": "npm:jquery@^3.1.1",
-      "servicestack-client": "npm:servicestack-client@^0.0.16",
-      "ss-utils": "npm:ss-utils@^0.1.4"
-    }
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "es6-shim": "^0.35.3",
+    "jquery": "^3.2.1",
+    "servicestack-client": "0.0.30",
+    "ss-utils": "^0.1.5"
+  },
+  "devDependencies": {
+    "ss-utils": "^0.1.6",
+    "ts-loader": "^2.0.3",
+    "typescript": "^2.2.2",
+    "webpack": "^2.2.1"
   }
 }

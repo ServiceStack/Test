@@ -1,8 +1,6 @@
 ﻿<html>
 <head>
     <title>Test TypeScript</title>
-
-    <script src="system.js"></script>
 </head>
 <body>
     <h3>Greeting</h3>
@@ -43,15 +41,6 @@
     <button data-click="returnVoid">Send</button>
     <div id="returnVoidResult"></div>
 
-    <script src="config.js"></script>
-    <script>
-        // set our baseURL reference path
-        SystemJS.config({
-            //baseURL: '/js'
-        });
-
-        // loads /js/main.js
-        SystemJS.import('Scripts/app.js');
-    </script>
+    <script src="/Scripts/app.bundle.js"></script>
 </body>
 </html>

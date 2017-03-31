@@ -1,6 +1,4 @@
-﻿/// <reference path="../typings/index.d.ts"/>
-
-import $ from "jquery";
+﻿import * as $ from "jquery";
 import "ss-utils"; 
 import { JsonServiceClient } from "servicestack-client";
 //import { JsonServiceClient } from "./JsonServiceClient";
