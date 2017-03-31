@@ -82,6 +82,7 @@
     <Compile Include="ExternalServices.cs" />
     <Compile Include="GitHubServices.cs" />
     <Compile Include="ImageService.cs" />
+    <Compile Include="JwtServices.cs" />
     <Compile Include="MetadataTestService.cs" />
     <Compile Include="MyServices.cs" />
     <Compile Include="NativeTypesTestService.cs" />

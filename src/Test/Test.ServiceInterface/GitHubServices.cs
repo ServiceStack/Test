@@ -2,7 +2,8 @@
 
 namespace Test.ServiceInterface
 {
-    [FallbackRoute("/{Path*}")]
+    //Leave Uncommented as FallbackRoute breaks servicestack-client tests
+    //[FallbackRoute("/{Path*}")]
     public class RootPathRoutes
     {
         public string Path { get; set; }
