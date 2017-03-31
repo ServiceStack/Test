@@ -92,6 +92,7 @@ namespace Test
             Plugins.Add(new AuthFeature(() => new CustomUserSession(),
                 new IAuthProvider[]
                 {
+                    new JwtAuthProvider(AppSettings),
                     new BasicAuthProvider(AppSettings),
                     new CredentialsAuthProvider(AppSettings),
                 }));
@@ -109,7 +110,6 @@ namespace Test
             var nativeTypes = this.GetPlugin<NativeTypesFeature>();
             nativeTypes.MetadataTypesConfig.ExportTypes.Add(typeof(DayOfWeek));
         }
-
 
         private void CreateUser(OrmLiteAuthRepository authRepo,
             int id, string username, string password, List<string> roles = null, List<string> permissions = null)
