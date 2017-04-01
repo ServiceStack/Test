@@ -79,6 +79,11 @@
             Cache the User Session so it can be reused between subsequent API Key Requests
             </summary>
         </member>
+        <member name="P:ServiceStack.Auth.ApiKeyAuthProvider.AllowInHttpParams">
+            <summary>
+            Whether to allow API Keys in 'apikey' QueryString or FormData
+            </summary>
+        </member>
         <member name="T:ServiceStack.Auth.JwtAuthProvider">
             <summary>
             Used to Issue and process JWT Tokens and registers ConvertSessionToToken Service to convert Sessions to JWT Tokens
@@ -5487,6 +5492,80 @@
             <summary>
               Looks up a localized string similar to Unknown scope..
             </summary>
+        </member>
+        <member name="T:ServiceStack.Configuration.MultiAppSettingsBuilder">
+            <summary>
+            Represents a builder for the <see cref="T:ServiceStack.Configuration.MultiAppSettings"/> class.
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Configuration.MultiAppSettingsBuilder.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ServiceStack.Configuration.MultiAppSettingsBuilder"/> class with a specified <paramref name="tier"/>.
+            </summary>
+            <param name="tier">The <paramref name="tier"/> of the <see cref="T:ServiceStack.Configuration.MultiAppSettingsBuilder"/>.</param>
+        </member>
+        <member name="M:ServiceStack.Configuration.MultiAppSettingsBuilder.AddAppSettings">
+            <summary>
+            Adds an <see cref="T:ServiceStack.Configuration.AppSettings"/> that reads configuration values from the Web.config file.
+            </summary>
+            <returns>The <see cref="T:ServiceStack.Configuration.MultiAppSettingsBuilder"/>.</returns>
+        </member>
+        <member name="M:ServiceStack.Configuration.MultiAppSettingsBuilder.AddAppSettings(System.String)">
+            <summary>
+            Adds an <see cref="T:ServiceStack.Configuration.AppSettings"/> that reads configuration values from the Web.config file.
+            </summary>
+            <param name="tier">The tier of the <see cref="T:ServiceStack.Configuration.AppSettings"/>.</param>
+            <returns>The <see cref="T:ServiceStack.Configuration.MultiAppSettingsBuilder"/>.</returns>
+        </member>
+        <member name="M:ServiceStack.Configuration.MultiAppSettingsBuilder.AddDictionarySettings(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Adds a <see cref="T:ServiceStack.Configuration.DictionarySettings"/> that reads configuration values from a dictionary.
+            </summary>
+            <param name="map">The dictionary of settings to add.</param>
+            <returns>The <see cref="T:ServiceStack.Configuration.MultiAppSettingsBuilder"/>.</returns>
+        </member>
+        <member name="M:ServiceStack.Configuration.MultiAppSettingsBuilder.AddEnvironmentalVariables">
+            <summary>
+            Adds an <see cref="T:ServiceStack.Configuration.EnvironmentVariableSettings"/> that reads configuration values from environmental variables.
+            </summary>
+            <returns>The <see cref="T:ServiceStack.Configuration.MultiAppSettingsBuilder"/>.</returns>
+        </member>
+        <member name="M:ServiceStack.Configuration.MultiAppSettingsBuilder.AddEnvironmentalVariables(System.String)">
+            <summary>
+            Adds an <see cref="T:ServiceStack.Configuration.EnvironmentVariableSettings"/> that reads configuration values from environmental variables.
+            </summary>
+            <param name="tier">The tier of the <see cref="T:ServiceStack.Configuration.AppSettings"/>.</param>
+            <returns>The <see cref="T:ServiceStack.Configuration.MultiAppSettingsBuilder"/>.</returns>
+        </member>
+        <member name="M:ServiceStack.Configuration.MultiAppSettingsBuilder.AddTextFile(System.String)">
+            <summary>
+            Adds an <see cref="T:ServiceStack.Configuration.TextFileSettings"/> that reads configuration values from a text file at <paramref name="path"/>.
+            </summary>
+            <param name="path">The path of the text file.</param>
+            <returns>The <see cref="T:ServiceStack.Configuration.MultiAppSettingsBuilder"/>.</returns>
+        </member>
+        <member name="M:ServiceStack.Configuration.MultiAppSettingsBuilder.AddTextFile(System.String,System.String)">
+            <summary>
+            Adds an <see cref="T:ServiceStack.Configuration.TextFileSettings"/> that reads configuration values from a text file at <paramref name="path"/> with a specified <paramref name="delimeter"/>.
+            </summary>
+            <param name="path">The path of the text file.</param>
+            <param name="delimeter">The delimeter fo the text file.</param>
+            <returns>The <see cref="T:ServiceStack.Configuration.MultiAppSettingsBuilder"/>.</returns>
+        </member>
+        <member name="M:ServiceStack.Configuration.MultiAppSettingsBuilder.AddTextFile(System.String,System.String,System.String)">
+            <summary>
+            Adds an <see cref="T:ServiceStack.Configuration.TextFileSettings"/> that reads configuration values from a text file at <paramref name="path"/> with a specified <paramref name="delimeter"/>.
+            </summary>
+            <param name="path">The path of the text file.</param>
+            <param name="delimeter">The delimeter fo the text file.</param>
+            <param name="tier">The tier of the <see cref="T:ServiceStack.Configuration.TextFileSettings"/>.</param>
+            <returns>The <see cref="T:ServiceStack.Configuration.MultiAppSettingsBuilder"/>.</returns>
+        </member>
+        <member name="M:ServiceStack.Configuration.MultiAppSettingsBuilder.Build">
+            <summary>
+            Builds an <see cref="T:ServiceStack.Configuration.IAppSettings"/>.
+            </summary>
+            <returns>An <see cref="T:ServiceStack.Configuration.IAppSettings"/>.</returns>
         </member>
         <member name="F:ServiceStack.Configuration.Config.DefaultNamespace">
             <summary>
