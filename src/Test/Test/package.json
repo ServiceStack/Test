@@ -12,7 +12,7 @@
   "dependencies": {
     "es6-shim": "^0.35.3",
     "jquery": "^3.2.1",
-    "servicestack-client": "0.0.30",
+    "servicestack-client": "0.0.33",
     "ss-utils": "^0.1.5"
   },
   "devDependencies": {

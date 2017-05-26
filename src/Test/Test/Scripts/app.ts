@@ -1,4 +1,5 @@
 ﻿import * as $ from "jquery";
+import "es6-shim";
 import "ss-utils"; 
 import { JsonServiceClient } from "servicestack-client";
 //import { JsonServiceClient } from "./JsonServiceClient";

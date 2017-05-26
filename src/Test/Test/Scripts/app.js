@@ -1,5 +1,7 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var $ = require("jquery");
+require("es6-shim");
 require("ss-utils");
 var servicestack_client_1 = require("servicestack-client");
 //import { JsonServiceClient } from "./JsonServiceClient";
