@@ -87,6 +87,7 @@
   <ItemGroup>
     <Compile Include="JsonTests.cs" />
     <Compile Include="OAuthIntegrationTests.cs" />
+    <Compile Include="ProxyFeatureTests.cs" />
     <Compile Include="StackApis.dtos.cs" />
     <Compile Include="Test.dtos.cs" />
     <Compile Include="UnitTest1.cs" />
