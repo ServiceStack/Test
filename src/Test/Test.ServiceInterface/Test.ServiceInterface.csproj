@@ -91,6 +91,7 @@
     <Compile Include="RequiredRoleService.cs" />
     <Compile Include="ReturnDataService.cs" />
     <Compile Include="ReturnGenericListServices.cs" />
+    <Compile Include="SendRawService.cs" />
     <Compile Include="SendVerbService.cs" />
     <Compile Include="SessionService.cs" />
     <Compile Include="StoreLogsService.cs" />

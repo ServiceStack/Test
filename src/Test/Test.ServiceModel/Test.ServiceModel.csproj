@@ -50,6 +50,7 @@
     <Compile Include="GenerateBuiltInTypes.cs" />
     <Compile Include="GetRandomIds.cs" />
     <Compile Include="MetadataTest.cs" />
+    <Compile Include="SendJson.cs" />
     <Compile Include="RequiresRole.cs" />
     <Compile Include="ReturnData.cs" />
     <Compile Include="StoreLogs.cs" />
