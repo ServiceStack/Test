@@ -4,68 +4,6 @@
         <name>ServiceStack.Server</name>
     </assembly>
     <members>
-        <member name="T:ServiceStack.Messaging.Redis.RedisMqServer">
-            <summary>
-            Creates a Redis MQ Server that processes each message on its own background thread.
-            i.e. if you register 3 handlers it will create 7 background threads:
-              - 1 listening to the Redis MQ Subscription, getting notified of each new message
-              - 3x1 Normal InQ for each message handler
-              - 3x1 PriorityQ for each message handler (Turn off with DisablePriorityQueues)
-            
-            When RedisMqServer Starts it creates a background thread subscribed to the Redis MQ Topic that
-            listens for new incoming messages. It also starts 2 background threads for each message type:
-             - 1 for processing the services Priority Queue and 1 processing the services normal Inbox Queue.
-            
-            Priority Queue's can be enabled on a message-per-message basis by specifying types in the 
-            OnlyEnablePriortyQueuesForTypes property. The DisableAllPriorityQueues property disables all Queues.
-            
-            The Start/Stop methods are idempotent i.e. It's safe to call them repeatedly on multiple threads 
-            and the Redis MQ Server will only have Started or Stopped once.
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Messaging.Redis.RedisMqServer.RequestFilter">
-            <summary>
-            Execute global transformation or custom logic before a request is processed.
-            Must be thread-safe.
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Messaging.Redis.RedisMqServer.ResponseFilter">
-            <summary>
-            Execute global transformation or custom logic on the response.
-            Must be thread-safe.
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Messaging.Redis.RedisMqServer.ErrorHandler">
-            <summary>
-            Execute global error handler logic. Must be thread-safe.
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Messaging.Redis.RedisMqServer.PriortyQueuesWhitelist">
-            <summary>
-            If you only want to enable priority queue handlers (and threads) for specific msg types
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Messaging.Redis.RedisMqServer.DisablePriorityQueues">
-            <summary>
-            Don't listen on any Priority Queues
-            </summary>
-        </member>
-        <member name="P:ServiceStack.Messaging.Redis.RedisMqServer.PublishResponsesWhitelist">
-            <summary>
-            Opt-in to only publish responses on this white list. 
-            Publishes all responses by default.
-            </summary>
-        </member>
-        <member name="T:ServiceStack.Messaging.Redis.RedisTransientMessageFactory">
-            <summary>
-            Transient message queues are a one-pass message queue service that starts
-            processing messages when Start() is called. Any subsequent Start() calls 
-            while the service is running is ignored.
-            
-            The transient service will continue to run until all messages have been 
-            processed after which time it will shutdown all processing until Start() is called again.
-            </summary>
-        </member>
         <member name="T:ServiceStack.Messaging.Rcon.Client">
             <summary>
             Base rcon class.
@@ -300,6 +238,68 @@
             Processes a received packet.
             </summary>
             <param name="packet">The packet.</param>
+        </member>
+        <member name="T:ServiceStack.Messaging.Redis.RedisMqServer">
+            <summary>
+            Creates a Redis MQ Server that processes each message on its own background thread.
+            i.e. if you register 3 handlers it will create 7 background threads:
+              - 1 listening to the Redis MQ Subscription, getting notified of each new message
+              - 3x1 Normal InQ for each message handler
+              - 3x1 PriorityQ for each message handler (Turn off with DisablePriorityQueues)
+            
+            When RedisMqServer Starts it creates a background thread subscribed to the Redis MQ Topic that
+            listens for new incoming messages. It also starts 2 background threads for each message type:
+             - 1 for processing the services Priority Queue and 1 processing the services normal Inbox Queue.
+            
+            Priority Queue's can be enabled on a message-per-message basis by specifying types in the 
+            OnlyEnablePriortyQueuesForTypes property. The DisableAllPriorityQueues property disables all Queues.
+            
+            The Start/Stop methods are idempotent i.e. It's safe to call them repeatedly on multiple threads 
+            and the Redis MQ Server will only have Started or Stopped once.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Messaging.Redis.RedisMqServer.RequestFilter">
+            <summary>
+            Execute global transformation or custom logic before a request is processed.
+            Must be thread-safe.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Messaging.Redis.RedisMqServer.ResponseFilter">
+            <summary>
+            Execute global transformation or custom logic on the response.
+            Must be thread-safe.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Messaging.Redis.RedisMqServer.ErrorHandler">
+            <summary>
+            Execute global error handler logic. Must be thread-safe.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Messaging.Redis.RedisMqServer.PriortyQueuesWhitelist">
+            <summary>
+            If you only want to enable priority queue handlers (and threads) for specific msg types
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Messaging.Redis.RedisMqServer.DisablePriorityQueues">
+            <summary>
+            Don't listen on any Priority Queues
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Messaging.Redis.RedisMqServer.PublishResponsesWhitelist">
+            <summary>
+            Opt-in to only publish responses on this white list. 
+            Publishes all responses by default.
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Messaging.Redis.RedisTransientMessageFactory">
+            <summary>
+            Transient message queues are a one-pass message queue service that starts
+            processing messages when Start() is called. Any subsequent Start() calls 
+            while the service is running is ignored.
+            
+            The transient service will continue to run until all messages have been 
+            processed after which time it will shutdown all processing until Start() is called again.
+            </summary>
         </member>
         <member name="T:ServiceStack.MiniProfiler.Storage.SqlServerStorage">
             <summary>

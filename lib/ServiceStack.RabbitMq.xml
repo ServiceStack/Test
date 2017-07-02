@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ServiceStack.RabbitMq</name>
+    </assembly>
+    <members>
+        <member name="P:ServiceStack.RabbitMq.RabbitMqServer.ConnectionFactory">
+            <summary>
+            The RabbitMQ.Client Connection factory to introspect connection properties and create a low-level connection
+            </summary>
+        </member>
+        <member name="P:ServiceStack.RabbitMq.RabbitMqServer.AutoReconnect">
+            <summary>
+            Whether Rabbit MQ should auto-retry connecting when a connection to Rabbit MQ Server instance is dropped
+            </summary>
+        </member>
+        <member name="P:ServiceStack.RabbitMq.RabbitMqServer.RetryCount">
+            <summary>
+            How many times a message should be retried before sending to the DLQ (Max of 1).
+            </summary>
+        </member>
+        <member name="P:ServiceStack.RabbitMq.RabbitMqServer.UsePolling">
+            <summary>
+            Whether to use polling for consuming messages instead of a long-term subscription
+            </summary>
+        </member>
+        <member name="P:ServiceStack.RabbitMq.RabbitMqServer.KeepAliveRetryAfterMs">
+            <summary>
+            Wait before Starting the MQ Server after a restart 
+            </summary>
+        </member>
+        <member name="F:ServiceStack.RabbitMq.RabbitMqServer.messageFactory">
+            <summary>
+            The Message Factory used by this MQ Server
+            </summary>
+        </member>
+        <member name="P:ServiceStack.RabbitMq.RabbitMqServer.RequestFilter">
+            <summary>
+            Execute global transformation or custom logic before a request is processed.
+            Must be thread-safe.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.RabbitMq.RabbitMqServer.ResponseFilter">
+            <summary>
+            Execute global transformation or custom logic on the response.
+            Must be thread-safe.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.RabbitMq.RabbitMqServer.ErrorHandler">
+            <summary>
+            Execute global error handler logic. Must be thread-safe.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.RabbitMq.RabbitMqServer.PriortyQueuesWhitelist">
+            <summary>
+            If you only want to enable priority queue handlers (and threads) for specific msg types
+            </summary>
+        </member>
+        <member name="P:ServiceStack.RabbitMq.RabbitMqServer.DisablePriorityQueues">
+            <summary>
+            Don't listen on any Priority Queues
+            </summary>
+        </member>
+        <member name="P:ServiceStack.RabbitMq.RabbitMqServer.PublishResponsesWhitelist">
+            <summary>
+            Opt-in to only publish responses on this white list. 
+            Publishes all responses by default.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.RabbitMq.RabbitMqServer.DisablePublishingResponses">
+            <summary>
+            Don't publish any response messages
+            </summary>
+        </member>
+    </members>
+</doc>
