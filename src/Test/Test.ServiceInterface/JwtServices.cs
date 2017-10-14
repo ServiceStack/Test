@@ -15,6 +15,13 @@ namespace Test.ServiceInterface
         public DateTime? JwtExpiry { get; set; }
     }
 
+    [Route("/jwt-refresh")]
+    public class CreateRefreshJwt : AuthUserSession, IReturn<CreateJwtResponse>
+    {
+        public string UserId { get; set; }
+        public DateTime? JwtExpiry { get; set; }
+    }
+
     public class CreateJwtResponse
     {
         public string Token { get; set; }
@@ -42,6 +49,40 @@ namespace Test.ServiceInterface
             return new CreateJwtResponse
             {
                 Token = token
+            };
+        }
+        
+        public object Any(CreateRefreshJwt request)
+        {
+            var jwtProvider = (JwtAuthProvider)AuthenticateService.GetAuthProvider(JwtAuthProvider.Name);
+
+            var jwtHeader = new JsonObject
+            {
+                {"typ", "JWTR"}, //RefreshToken
+                {"alg", jwtProvider.HashAlgorithm}
+            };
+
+            var keyId = jwtProvider.GetKeyId();
+            if (keyId != null)
+                jwtHeader["kid"] = keyId;
+
+            var now = DateTime.UtcNow;
+            var jwtPayload = new JsonObject
+            {
+                {"sub", request.UserId ?? "1"},
+                {"iat", now.ToUnixTime().ToString()},
+                {"exp", (request.JwtExpiry ?? DateTime.UtcNow.AddDays(1)).ToUnixTime().ToString()},
+            };
+
+            if (jwtProvider.Audience != null)
+                jwtPayload["aud"] = jwtProvider.Audience;
+
+            var hashAlgoritm = jwtProvider.GetHashAlgorithm();
+            var refreshToken = JwtAuthProvider.CreateJwt(jwtHeader, jwtPayload, hashAlgoritm);
+
+            return new CreateJwtResponse
+            {
+                Token = refreshToken
             };
         }
     }

@@ -30,11 +30,29 @@ namespace Test.ServiceInterface
             return new HttpResult(new FileInfo("~/textfile.txt".MapHostAbsolutePath()), 
                 asAttachment:request.AsAttachment);
         }
+
+        [AddHeader(ContentType = MimeTypes.PlainText)]
+        public object Any(ReturnText request) => request.Text;
+
+        [AddHeader(ContentType = MimeTypes.Html)]
+        public object Any(ReturnHtml request) => request.Text;
     }
 
     [Route("/textfile-test")]
     public class TextFileTest
     {
         public bool AsAttachment { get; set; }
+    }
+
+    [Route("/return/text")]
+    public class ReturnText
+    {
+        public string Text { get; set; }
+    }
+
+    [Route("/return/html")]
+    public class ReturnHtml
+    {
+        public string Text { get; set; }
     }
 }
