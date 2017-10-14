@@ -75,7 +75,7 @@ namespace Test.ServiceInterface
                     throw new AuthenticationException(request.Message ?? "We haz issue Authenticatting");
                 case "UnauthorizedAccessException":
                     throw new UnauthorizedAccessException(request.Message ?? "You shall not pass!");
-                case "OptimisticConcurrencyException":
+                case "OptimisticConcurrencyExceptieon":
                     throw new OptimisticConcurrencyException(request.Message ?? "Sorry too optimistic");
                 case "UnhandledException":
                     throw new FileNotFoundException(request.Message ?? "File was never here");

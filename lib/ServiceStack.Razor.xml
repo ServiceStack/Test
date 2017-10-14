@@ -63,12 +63,12 @@
             A common hook into ServiceStack and the hosting infrastructure used to resolve requests.
             </summary>
         </member>
-        <member name="M:ServiceStack.Razor.Managers.RazorPageResolver.ProcessRequest(ServiceStack.Web.IRequest,ServiceStack.Web.IResponse,System.String)">
+        <member name="M:ServiceStack.Razor.Managers.RazorPageResolver.ProcessRequestAsync(ServiceStack.Web.IRequest,ServiceStack.Web.IResponse,System.String)">
             <summary>
             This is called by the hosting environment via CatchAll usually for content pages.
             </summary>
         </member>
-        <member name="M:ServiceStack.Razor.Managers.RazorPageResolver.ProcessRequest(ServiceStack.Web.IRequest,ServiceStack.Web.IResponse,System.Object)">
+        <member name="M:ServiceStack.Razor.Managers.RazorPageResolver.ProcessRequestAsync(ServiceStack.Web.IRequest,System.Object,System.IO.Stream)">
             <summary>
             Called by the HtmlFormat:IPlugin who checks to see if any registered view engines can handle the response DTO.
             If this view engine can handle the response DTO, then process it, otherwise, returning false will

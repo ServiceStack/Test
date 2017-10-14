@@ -69,6 +69,11 @@
             Enable the authentication feature and configure the AuthService.
             </summary>
         </member>
+        <member name="P:ServiceStack.AuthFeature.SaveUserNamesInLowerCase">
+            <summary>
+            Should UserName or Emails be saved in AuthRepository in LowerCase
+            </summary>
+        </member>
         <member name="T:ServiceStack.Auth.IManageApiKeys">
             <summary>
             The Interface Auth Repositories need to implement to support API Keys
@@ -4272,7 +4277,7 @@
              and precision of 2 and 5 respectively.
              </summary>
         </member>
-        <member name="M:ServiceStack.Formats.MarkdownFormat.SerializeToStream(ServiceStack.Web.IRequest,System.Object,System.IO.Stream)">
+        <member name="M:ServiceStack.Formats.MarkdownFormat.SerializeToStreamAsync(ServiceStack.Web.IRequest,System.Object,System.IO.Stream)">
             <summary>
             Render Markdown for text/markdown and text/plain ContentTypes
             </summary>
@@ -4339,30 +4344,6 @@
             Deletes a specified cookie by setting its value to empty and expiration to -1 days
             </summary>
         </member>
-        <member name="M:ServiceStack.Host.Handlers.IndexPageHttpHandler.ProcessRequest(ServiceStack.Web.IRequest,ServiceStack.Web.IResponse,System.String)">
-            <summary>
-            Non ASP.NET requests
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Host.Handlers.IndexPageHttpHandler.ProcessRequest(System.Web.HttpContextBase)">
-            <summary>
-            ASP.NET requests
-            </summary>
-        </member>
-        <member name="M:ServiceStack.Host.Handlers.RedirectHttpHandler.ProcessRequest(ServiceStack.Web.IRequest,ServiceStack.Web.IResponse,System.String)">
-            <summary>
-            Non ASP.NET requests
-            </summary>
-            <param name="request"></param>
-            <param name="response"></param>
-            <param name="operationName"></param>
-        </member>
-        <member name="M:ServiceStack.Host.Handlers.RedirectHttpHandler.ProcessRequest(System.Web.HttpContextBase)">
-            <summary>
-            ASP.NET requests
-            </summary>
-            <param name="context"></param>
-        </member>
         <member name="M:ServiceStack.Host.Handlers.StaticFileHandler.#ctor(System.String)">
             <summary>
             Return File at specified virtualPath from AppHost.VirtualFiles ContentRootPath
@@ -4410,7 +4391,7 @@
             </summary>
             <returns>Reserved Url if the process completes successfully</returns>
         </member>
-        <member name="M:ServiceStack.Host.RestHandler.CreateRequest(ServiceStack.Web.IRequest,System.String)">
+        <member name="M:ServiceStack.Host.RestHandler.CreateRequestAsync(ServiceStack.Web.IRequest,System.String)">
             <summary>
             Used in Unit tests
             </summary>
@@ -4465,6 +4446,16 @@
         <member name="M:ServiceStack.Host.ServiceController.Execute(System.Object)">
             <summary>
             Execute using empty RequestContext
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Host.ServiceController.Execute(System.Object,ServiceStack.Web.IRequest)">
+            <summary>
+            Execute a Service with a Request DTO. See ExecuteAsync for a non-blocking alternative.
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Host.ServiceController.ExecuteAsync(System.Object,ServiceStack.Web.IRequest)">
+            <summary>
+            Execute a Service with a Request DTO.
             </summary>
         </member>
         <member name="M:ServiceStack.Host.XsdMetadata.GetBaseTypeWithTheSameName(System.Type)">
@@ -4930,7 +4921,7 @@
             Deletes a specified cookie by setting its value to empty and expiration to -1 days
             </summary>
         </member>
-        <member name="M:ServiceStack.HttpResponseExtensionsInternal.WriteToResponse(ServiceStack.Web.IResponse,System.Object,ServiceStack.Web.ResponseSerializerDelegate,ServiceStack.Web.IRequest,System.Byte[],System.Byte[])">
+        <member name="M:ServiceStack.HttpResponseExtensionsInternal.WriteToResponse(ServiceStack.Web.IResponse,System.Object,ServiceStack.Web.StreamSerializerDelegateAsync,ServiceStack.Web.IRequest,System.Byte[],System.Byte[],System.Threading.CancellationToken)">
             <summary>
             Writes to response.
             Response headers are customizable by implementing IHasOptions an returning Dictionary of Http headers.
@@ -5004,9 +4995,19 @@
             Writes partial range as specified by start-end, from fromStream to toStream.
             </summary>
         </member>
+        <member name="M:ServiceStack.HttpResultUtils.WritePartialToAsync(System.IO.Stream,System.IO.Stream,System.Int64,System.Int64,System.Threading.CancellationToken)">
+            <summary>
+            Writes partial range as specified by start-end, from fromStream to toStream.
+            </summary>
+        </member>
         <member name="T:ServiceStack.IAppHost">
             <summary>
             ASP.NET or HttpListener ServiceStack host
+            </summary>
+        </member>
+        <member name="P:ServiceStack.IAppHost.ServiceAssemblies">
+            <summary>
+            The assemblies reflected to find api services provided in the AppHost constructor
             </summary>
         </member>
         <member name="M:ServiceStack.IAppHost.Register``1(``0)">
@@ -5078,6 +5079,11 @@
         <member name="P:ServiceStack.IAppHost.GlobalResponseFilters">
             <summary>
             Add Response Filters for HTTP Responses
+            </summary>
+        </member>
+        <member name="P:ServiceStack.IAppHost.GlobalResponseFiltersAsync">
+            <summary>
+            Add Async Response Filters for HTTP Responses
             </summary>
         </member>
         <member name="P:ServiceStack.IAppHost.GlobalMessageRequestFilters">
@@ -5232,6 +5238,11 @@
         <member name="P:ServiceStack.IAppHost.VirtualFiles">
             <summary>
             Read/Write Virtual FileSystem. Defaults to FileSystemVirtualPathProvider
+            </summary>
+        </member>
+        <member name="P:ServiceStack.IAppHost.AddVirtualFileSources">
+            <summary>
+            Register additional Virtual File Sources
             </summary>
         </member>
         <member name="M:ServiceStack.IAppHost.CreateServiceRunner``1(ServiceStack.Host.ActionContext)">
@@ -6642,11 +6653,6 @@
             Try to keep everything static so we can easily be reused.
             </summary>
         </member>
-        <member name="M:ServiceStack.MiniProfiler.UI.MiniProfilerHandler.ProcessRequest(System.Web.HttpContextBase)">
-            <summary>
-            Returns either includes' css/javascript or results' html.
-            </summary>
-        </member>
         <member name="M:ServiceStack.MiniProfiler.UI.MiniProfilerHandler.Includes(ServiceStack.Web.IRequest,ServiceStack.Web.IResponse,System.String)">
             <summary>
             Handles rendering static content files.
@@ -6851,6 +6857,11 @@
             Warning: ThreadStatic Items aren't pinned to the same request in async services which callback on different threads.
             </summary>
         </member>
+        <member name="M:ServiceStack.RequestContext.StartRequestContext">
+            <summary>
+            Start a new Request context, everything deeper in Async pipeline will get this new RequestContext dictionary.
+            </summary>
+        </member>
         <member name="P:ServiceStack.RequestContext.Items">
             <summary>
             Gets a list of items for this request. 
@@ -6871,7 +6882,7 @@
             </summary>
             <returns>true if any dependencies were released</returns>
         </member>
-        <member name="M:ServiceStack.RequestExtensions.ToOptimizedResult``1(ServiceStack.Web.IRequest,``0)">
+        <member name="M:ServiceStack.RequestExtensions.ToOptimizedResult(ServiceStack.Web.IRequest,System.Object)">
             <summary>
             Returns the optimized result for the IRequestContext. 
             Does not use or store results in any cache.
@@ -6937,6 +6948,31 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:ServiceStack.RequestFilterAsyncAttribute">
+            <summary>
+            Base class to create request filter attributes only for specific HTTP methods (GET, POST...)
+            </summary>
+        </member>
+        <member name="M:ServiceStack.RequestFilterAsyncAttribute.#ctor(ServiceStack.ApplyTo)">
+            <summary>
+            Creates a new <see cref="T:ServiceStack.RequestFilterAttribute"/>
+            </summary>
+            <param name="applyTo">Defines when the filter should be executed</param>
+        </member>
+        <member name="M:ServiceStack.RequestFilterAsyncAttribute.ExecuteAsync(ServiceStack.Web.IRequest,ServiceStack.Web.IResponse,System.Object)">
+            <summary>
+            This method is only executed if the HTTP method matches the <see cref="P:ServiceStack.RequestFilterAsyncAttribute.ApplyTo"/> property.
+            </summary>
+            <param name="req">The http request wrapper</param>
+            <param name="res">The http response wrapper</param>
+            <param name="requestDto">The request DTO</param>
+        </member>
+        <member name="M:ServiceStack.RequestFilterAsyncAttribute.Copy">
+            <summary>
+            Create a ShallowCopy of this instance.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="P:ServiceStack.RequestLogsFeature.AtRestPath">
             <summary>
             RequestLogs service Route, default is /requestlogs
@@ -6960,6 +6996,11 @@
         <member name="P:ServiceStack.RequestLogsFeature.EnableErrorTracking">
             <summary>
             Turn On/Off Tracking of Exceptions
+            </summary>
+        </member>
+        <member name="P:ServiceStack.RequestLogsFeature.SkipLogging">
+            <summary>
+            Don't log matching requests
             </summary>
         </member>
         <member name="P:ServiceStack.RequestLogsFeature.Capacity">
@@ -6986,6 +7027,11 @@
             <summary>
             Don't log request bodys for services with sensitive information.
             By default Auth and Registration requests are hidden.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.RequestLogsFeature.LimitToServiceRequests">
+            <summary>
+            Limit logging to only Service Requests
             </summary>
         </member>
         <member name="T:ServiceStack.RequiredPermissionAttribute">
@@ -7046,6 +7092,31 @@
             <param name="requestDto">The response DTO</param>
         </member>
         <member name="M:ServiceStack.ResponseFilterAttribute.Copy">
+            <summary>
+            Create a ShallowCopy of this instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:ServiceStack.ResponseFilterAsyncAttribute">
+            <summary>
+            Base class to create response filter attributes only for specific HTTP methods (GET, POST...)
+            </summary>
+        </member>
+        <member name="M:ServiceStack.ResponseFilterAsyncAttribute.#ctor(ServiceStack.ApplyTo)">
+            <summary>
+            Creates a new <see cref="T:ServiceStack.ResponseFilterAttribute"/>
+            </summary>
+            <param name="applyTo">Defines when the filter should be executed</param>
+        </member>
+        <member name="M:ServiceStack.ResponseFilterAsyncAttribute.ExecuteAsync(ServiceStack.Web.IRequest,ServiceStack.Web.IResponse,System.Object)">
+            <summary>
+            This method is only executed if the HTTP method matches the <see cref="P:ServiceStack.ResponseFilterAsyncAttribute.ApplyTo"/> property.
+            </summary>
+            <param name="req">The http request wrapper</param>
+            <param name="res">The http response wrapper</param>
+            <param name="requestDto">The response DTO</param>
+        </member>
+        <member name="M:ServiceStack.ResponseFilterAsyncAttribute.Copy">
             <summary>
             Create a ShallowCopy of this instance.
             </summary>
@@ -7179,12 +7250,6 @@
             </summary>
             <param name="urlBase">Url to listen to</param>
         </member>
-        <member name="M:ServiceStack.ServiceStackHost.RedirectDirectory(ServiceStack.Web.IHttpRequest)">
-            <summary>
-            Retain the same behavior as ASP.NET and redirect requests to directores 
-            without a trailing '/'
-            </summary>
-        </member>
         <member name="P:ServiceStack.ServiceStackHost.Container">
             <summary>
             The AppHost.Container. Note: it is not thread safe to register dependencies after AppStart.
@@ -7213,7 +7278,7 @@
             Collection of ResponseConverters.
             Can be used to convert/change Output Dto
             
-            Called directly after response is handled, even before <see cref="M:ServiceStack.ServiceStackHost.ApplyResponseFilters(ServiceStack.Web.IRequest,ServiceStack.Web.IResponse,System.Object)"></see>!
+            Called directly after response is handled, even before <see cref="M:ServiceStack.ServiceStackHost.ApplyResponseFiltersAsync(ServiceStack.Web.IRequest,ServiceStack.Web.IResponse,System.Object)"></see>!
             </summary>
         </member>
         <member name="P:ServiceStack.ServiceStackHost.ViewEngines">
@@ -7294,14 +7359,14 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ServiceStack.ServiceStackHost.ApplyRequestFilters(ServiceStack.Web.IRequest,ServiceStack.Web.IResponse,System.Object)">
+        <member name="M:ServiceStack.ServiceStackHost.ApplyRequestFiltersAsync(ServiceStack.Web.IRequest,ServiceStack.Web.IResponse,System.Object)">
             <summary>
             Applies the request filters. Returns whether or not the request has been handled 
             and no more processing should be done.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ServiceStack.ServiceStackHost.ApplyResponseFilters(ServiceStack.Web.IRequest,ServiceStack.Web.IResponse,System.Object)">
+        <member name="M:ServiceStack.ServiceStackHost.ApplyResponseFiltersAsync(ServiceStack.Web.IRequest,ServiceStack.Web.IResponse,System.Object)">
             <summary>
             Applies the response filters. Returns whether or not the request has been handled 
             and no more processing should be done.
@@ -7464,16 +7529,6 @@
             </summary>
             <param name="container">The IoC container</param>
             <param name="assemblies">The assemblies to scan for a validator</param>
-        </member>
-        <member name="T:ServiceStack.VirtualPath.InMemoryVirtualPathProvider">
-            <summary>
-            In Memory Virtual Path Provider.
-            </summary>
-        </member>
-        <member name="M:ServiceStack.VirtualFileExtensions.Refresh(ServiceStack.IO.IVirtualFile)">
-            <summary>
-            Refresh file stats for this node if supported
-            </summary>
         </member>
         <member name="T:Funq.Container">
             <summary>

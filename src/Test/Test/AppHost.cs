@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Funq;
 using ServiceStack;
-using ServiceStack.Api.Swagger;
+using ServiceStack.Api.OpenApi;
 using ServiceStack.Auth;
 using ServiceStack.Caching;
 using ServiceStack.Configuration;
@@ -97,7 +97,7 @@ namespace Test
                     new CredentialsAuthProvider(AppSettings),
                 }));
 
-            Plugins.Add(new SwaggerFeature());
+            Plugins.Add(new OpenApiFeature());
             Plugins.Add(new ValidationFeature());
             Plugins.Add(new AutoQueryFeature
             {
