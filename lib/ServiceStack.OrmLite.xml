@@ -2285,6 +2285,11 @@
             For Types that are natively supported by RDBMS's and shouldn't be quoted
             </summary>
         </member>
+        <member name="P:ServiceStack.OrmLite.IOrmLiteDialectProvider.OnOpenConnection">
+            <summary>
+            Invoked when a DB Connection is opened
+            </summary>
+        </member>
         <member name="M:ServiceStack.OrmLite.IOrmLiteDialectProvider.GetConverter(System.Type)">
             <summary>
             Gets the explicit Converter registered for a specific type
@@ -2700,7 +2705,22 @@
             Alias for OpenDbConnection
             </summary>
         </member>
+        <member name="M:ServiceStack.OrmLite.OrmLiteConnectionFactoryExtensions.OpenAsync(ServiceStack.Data.IDbConnectionFactory,System.Threading.CancellationToken)">
+            <summary>
+            Alias for OpenDbConnectionAsync
+            </summary>
+        </member>
         <member name="M:ServiceStack.OrmLite.OrmLiteConnectionFactoryExtensions.Open(ServiceStack.Data.IDbConnectionFactory,System.String)">
+            <summary>
+            Alias for OpenDbConnection
+            </summary>
+        </member>
+        <member name="M:ServiceStack.OrmLite.OrmLiteConnectionFactoryExtensions.OpenDbConnection(ServiceStack.Data.IDbConnectionFactory,System.String)">
+            <summary>
+            Alias for OpenDbConnection
+            </summary>
+        </member>
+        <member name="M:ServiceStack.OrmLite.OrmLiteConnectionFactoryExtensions.OpenDbConnectionString(ServiceStack.Data.IDbConnectionFactory,System.String)">
             <summary>
             Alias for OpenDbConnection
             </summary>
