@@ -916,20 +916,20 @@ namespace Test.ServiceModel
     }
 
     public partial class QueryPocoBase
-        : QueryBase<OnlyDefinedInGenericType>, IReturn<QueryResponse<OnlyDefinedInGenericType>>
+        : QueryDb<OnlyDefinedInGenericType>, IReturn<QueryResponse<OnlyDefinedInGenericType>>
     {
         public virtual int Id { get; set; }
     }
 
     public partial class QueryPocoIntoBase
-        : QueryBase<OnlyDefinedInGenericTypeFrom, OnlyDefinedInGenericTypeInto>, IReturn<QueryResponse<OnlyDefinedInGenericTypeInto>>
+        : QueryDb<OnlyDefinedInGenericTypeFrom, OnlyDefinedInGenericTypeInto>, IReturn<QueryResponse<OnlyDefinedInGenericTypeInto>>
     {
         public virtual int Id { get; set; }
     }
 
     [Route("/rockstars")]
     public partial class QueryRockstars
-        : QueryBase<Rockstar>, IReturn<QueryResponse<Rockstar>>
+        : QueryDb<Rockstar>, IReturn<QueryResponse<Rockstar>>
     {
     }
 

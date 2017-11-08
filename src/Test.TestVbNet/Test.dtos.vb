@@ -1,6 +1,7 @@
 ' Options:
-'Date: 2015-09-11 16:38:41
-'Version: 4.00
+'Date: 2017-11-07 22:37:21
+'Version: 5.00
+'Tip: To override a DTO option, remove "''" prefix before updating
 'BaseUrl: http://localhost:56500
 '
 '''GlobalNamespace: 
@@ -15,8 +16,10 @@
 '''AddResponseStatus: False
 '''AddImplicitVersion: 
 '''InitializeCollections: True
+'''ExportValueTypes: False
 '''IncludeTypes: 
 '''ExcludeTypes: 
+'''AddNamespaces: 
 '''AddDefaultXmlNamespace: http://schemas.servicestack.net/types
 
 Imports System
@@ -25,6 +28,7 @@ Imports System.Collections.Generic
 Imports System.Runtime.Serialization
 Imports ServiceStack
 Imports ServiceStack.DataAnnotations
+Imports System.IO
 Imports External.ServiceModel
 Imports Test.ServiceModel
 Imports Test.ServiceModel.Types
@@ -96,6 +100,30 @@ Namespace Global
             Public Overridable Property Name As String
         End Class
 
+        <Route("/jwt")>
+        Public Partial Class CreateJwt
+            Inherits AuthUserSession
+            Implements IReturn(Of CreateJwtResponse)
+            Public Overridable Property JwtExpiry As Nullable(Of Date)
+        End Class
+
+        Public Partial Class CreateJwtResponse
+            Public Overridable Property Token As String
+            Public Overridable Property ResponseStatus As ResponseStatus
+        End Class
+
+        <Route("/jwt-refresh")>
+        Public Partial Class CreateRefreshJwt
+            Implements IReturn(Of CreateRefreshJwtResponse)
+            Public Overridable Property UserAuthId As String
+            Public Overridable Property JwtExpiry As Nullable(Of Date)
+        End Class
+
+        Public Partial Class CreateRefreshJwtResponse
+            Public Overridable Property Token As String
+            Public Overridable Property ResponseStatus As ResponseStatus
+        End Class
+
         Public Partial Class CustomUserSession
             Inherits AuthUserSession
             <DataMember>
@@ -116,6 +144,48 @@ Namespace Global
             Public Overridable Property Background As String
         End Class
 
+        <Route("/echo/collections")>
+        Public Partial Class EchoCollections
+            Implements IReturn(Of EchoCollections)
+            Public Sub New()
+                StringList = New List(Of String)
+                StringArray = New String(){}
+                StringMap = New Dictionary(Of String, String)
+                IntStringMap = New Dictionary(Of Integer, String)
+            End Sub
+
+            Public Overridable Property StringList As List(Of String)
+            Public Overridable Property StringArray As String()
+            Public Overridable Property StringMap As Dictionary(Of String, String)
+            Public Overridable Property IntStringMap As Dictionary(Of Integer, String)
+        End Class
+
+        Public Partial Class EchoComplexTypes
+            Implements IReturn(Of EchoComplexTypes)
+            Public Overridable Property SubType As SubType
+        End Class
+
+        <Route("/echo/types")>
+        Public Partial Class EchoTypes
+            Implements IReturn(Of EchoTypes)
+            Public Overridable Property [Byte] As Byte
+            Public Overridable Property [Short] As Short
+            Public Overridable Property Int As Integer
+            Public Overridable Property [Long] As Long
+            Public Overridable Property [UShort] As UInt16
+            Public Overridable Property UInt As UInt32
+            Public Overridable Property [ULong] As UInt64
+            Public Overridable Property Float As Single
+            Public Overridable Property [Double] As Double
+            Public Overridable Property [Decimal] As Decimal
+            Public Overridable Property [String] As String
+            Public Overridable Property DateTime As Date
+            Public Overridable Property TimeSpan As TimeSpan
+            Public Overridable Property DateTimeOffset As DateTimeOffset
+            Public Overridable Property Guid As Guid
+            Public Overridable Property [Char] As Char
+        End Class
+
         Public Partial Class GetAccount
             Implements IReturn(Of Account)
             Public Overridable Property Account As String
@@ -125,6 +195,18 @@ Namespace Global
             Implements IReturn(Of Project)
             Public Overridable Property Account As String
             Public Overridable Property Project As String
+        End Class
+
+        <Route("/Request1", "GET")>
+        Public Partial Class GetRequest1
+            Implements IReturn(Of List(Of ReturnedDto))
+            Implements IGet
+        End Class
+
+        <Route("/Request2", "GET")>
+        Public Partial Class GetRequest2
+            Implements IReturn(Of List(Of ReturnedDto))
+            Implements IGet
         End Class
 
         <Route("/session")>
@@ -194,9 +276,71 @@ Namespace Global
             Public Overridable Property Name As String
         End Class
 
-        <Route("/{Path*}")>
+        Public Partial Class ReturnedDto
+            Public Overridable Property Id As Integer
+        End Class
+
+        <Route("/return/html")>
+        Public Partial Class ReturnHtml
+            Public Overridable Property Text As String
+        End Class
+
+        <Route("/return/text")>
+        Public Partial Class ReturnText
+            Public Overridable Property Text As String
+        End Class
+
         Public Partial Class RootPathRoutes
             Public Overridable Property Path As String
+        End Class
+
+        Public Partial Class SendDefault
+            Implements IReturn(Of SendVerbResponse)
+            Public Overridable Property Id As Integer
+        End Class
+
+        Public Partial Class SendGet
+            Implements IReturn(Of SendVerbResponse)
+            Implements IGet
+            Public Overridable Property Id As Integer
+        End Class
+
+        Public Partial Class SendPost
+            Implements IReturn(Of SendVerbResponse)
+            Implements IPost
+            Public Overridable Property Id As Integer
+        End Class
+
+        Public Partial Class SendPut
+            Implements IReturn(Of SendVerbResponse)
+            Implements IPut
+            Public Overridable Property Id As Integer
+        End Class
+
+        <Route("/sendrestget/{Id}", "GET")>
+        Public Partial Class SendRestGet
+            Implements IReturn(Of SendVerbResponse)
+            Implements IGet
+            Public Overridable Property Id As Integer
+        End Class
+
+        Public Partial Class SendVerbResponse
+            Public Overridable Property Id As Integer
+            Public Overridable Property PathInfo As String
+            Public Overridable Property RequestMethod As String
+        End Class
+
+        <Route("/testauth")>
+        Public Partial Class TestAuth
+            Implements IReturn(Of TestAuthResponse)
+        End Class
+
+        Public Partial Class TestAuthResponse
+            Public Overridable Property UserId As String
+            Public Overridable Property SessionId As String
+            Public Overridable Property UserName As String
+            Public Overridable Property DisplayName As String
+            Public Overridable Property ResponseStatus As ResponseStatus
         End Class
 
         <Route("/null-response")>
@@ -235,17 +379,25 @@ Namespace Global
         '''AllowedAttributes Description
         '''</Summary>
         <Route("/allowed-attributes", "GET")>
-        <Api("AllowedAttributes Description")>
-        <ApiResponse(400, "Your request was not understood")>
+        <Api(Description:="AllowedAttributes Description")>
+        <ApiResponse(Description:="Your request was not understood", StatusCode:=400)>
         <DataContract>
         Public Partial Class AllowedAttributes
+            '''<Summary>
+            '''Range Description
+            '''</Summary>
             <DataMember(Name:="Aliased")>
-            <ApiMember(Description:="Range Description", ParameterType:="path", DataType:="double", IsRequired:=true)>
+            <ApiMember(DataType:="double", Description:="Range Description", IsRequired:=true, ParameterType:="path")>
             Public Overridable Property Range As Double
         End Class
 
         Public Partial Class ArrayResult
             Public Overridable Property Result As String
+        End Class
+
+        Public Partial Class Channel
+            Public Overridable Property Name As String
+            Public Overridable Property Value As String
         End Class
 
         Public Partial Class CustomHttpError
@@ -259,6 +411,17 @@ Namespace Global
             Public Overridable Property ResponseStatus As ResponseStatus
         End Class
 
+        Public Partial Class Device
+            Public Sub New()
+                Channels = New List(Of Channel)
+            End Sub
+
+            Public Overridable Property Id As Long
+            Public Overridable Property Type As String
+            Public Overridable Property TimeStamp As Long
+            Public Overridable Property Channels As List(Of Channel)
+        End Class
+
         Public Partial Class EmptyClass
         End Class
 
@@ -268,6 +431,16 @@ Namespace Global
             Value2 = 2
             Value3 = 4
         End Enum
+
+        Public Partial Class EnumRequest
+            Implements IReturn(Of EnumResponse)
+            Implements IPut
+            Public Overridable Property [Operator] As ScopeType
+        End Class
+
+        Public Partial Class EnumResponse
+            Public Overridable Property [Operator] As ScopeType
+        End Class
 
         Public Enum EnumType
             Value1
@@ -370,6 +543,11 @@ Namespace Global
             Public Overridable Property DayOfWeek As DayOfWeek
         End Class
 
+        Public Partial Class HelloDateTime
+            Implements IReturn(Of HelloDateTime)
+            Public Overridable Property DateTime As Date
+        End Class
+
         Public Partial Class HelloDelete
             Implements IReturn(Of HelloVerbResponse)
             Implements IDelete
@@ -428,9 +606,22 @@ Namespace Global
             Public Overridable Property Result As String
         End Class
 
+        Public Partial Class HelloReturnVoid
+            Implements IReturnVoid
+            Public Overridable Property Id As Integer
+        End Class
+
         Public Partial Class HelloString
             Implements IReturn(Of String)
             Public Overridable Property Name As String
+        End Class
+
+        <Route("/hellotypes/{Name}")>
+        Public Partial Class HelloTypes
+            Implements IReturn(Of HelloTypes)
+            Public Overridable Property [String] As String
+            Public Overridable Property Bool As Boolean
+            Public Overridable Property Int As Integer
         End Class
 
         Public Partial Class HelloVerbResponse
@@ -504,10 +695,6 @@ Namespace Global
             Public Overridable Property Result As String
         End Class
 
-        Public Partial Class HelloWithListInheritance
-            Inherits List(Of InheritedItem)
-        End Class
-
         Public Partial Class HelloWithNestedClass
             Implements IReturn(Of HelloResponse)
             Public Overridable Property Name As String
@@ -519,7 +706,7 @@ Namespace Global
         End Class
 
         Public Partial Class HelloWithNestedInheritance
-            Inherits HelloBase(Of HelloWithNestedInheritance.Item)
+            Inherits HelloBase(Of Item)
 
             Public Partial Class Item
                 Public Overridable Property Value As String
@@ -550,12 +737,29 @@ Namespace Global
             Public Overridable Property Result As HelloType
         End Class
 
+        <Route("/hellozip")>
+        <DataContract>
+        Public Partial Class HelloZip
+            Implements IReturn(Of HelloZipResponse)
+            Public Sub New()
+                Test = New List(Of String)
+            End Sub
+
+            <DataMember>
+            Public Overridable Property Name As String
+
+            <DataMember>
+            Public Overridable Property Test As List(Of String)
+        End Class
+
+        <DataContract>
+        Public Partial Class HelloZipResponse
+            <DataMember>
+            Public Overridable Property Result As String
+        End Class
+
         Public Interface IEmptyInterface
         End Interface
-
-        Public Partial Class InheritedItem
-            Public Overridable Property Name As String
-        End Class
 
         Public Interface IPoco
             Property Name As String
@@ -563,6 +767,15 @@ Namespace Global
 
         Public Partial Class ListResult
             Public Overridable Property Result As String
+        End Class
+
+        Public Partial Class Logger
+            Public Sub New()
+                Devices = New List(Of Device)
+            End Sub
+
+            Public Overridable Property Id As Long
+            Public Overridable Property Devices As List(Of Device)
         End Class
 
         <DataContract>
@@ -636,20 +849,20 @@ Namespace Global
         End Class
 
         Public Partial Class QueryPocoBase
-            Inherits QueryBase(Of OnlyDefinedInGenericType)
+            Inherits QueryDb(Of OnlyDefinedInGenericType)
             Implements IReturn(Of QueryResponse(Of OnlyDefinedInGenericType))
             Public Overridable Property Id As Integer
         End Class
 
         Public Partial Class QueryPocoIntoBase
-            Inherits QueryBase(Of OnlyDefinedInGenericTypeFrom, OnlyDefinedInGenericTypeInto)
+            Inherits QueryDb(Of OnlyDefinedInGenericTypeFrom, OnlyDefinedInGenericTypeInto)
             Implements IReturn(Of QueryResponse(Of OnlyDefinedInGenericTypeInto))
             Public Overridable Property Id As Integer
         End Class
 
         <Route("/rockstars")>
         Public Partial Class QueryRockstars
-            Inherits QueryBase(Of Rockstar)
+            Inherits QueryDb(Of Rockstar)
             Implements IReturn(Of QueryResponse(Of Rockstar))
         End Class
 
@@ -669,6 +882,32 @@ Namespace Global
             Public Overridable Property Hello As Hello
         End Class
 
+        <Route("/return/bytes")>
+        Public Partial Class ReturnBytes
+            Implements IReturn(Of Byte())
+            Public Sub New()
+                Data = New Byte(){}
+            End Sub
+
+            Public Overridable Property Data As Byte()
+        End Class
+
+        <Route("/return/stream")>
+        Public Partial Class ReturnStream
+            Implements IReturn(Of Stream)
+            Public Sub New()
+                Data = New Byte(){}
+            End Sub
+
+            Public Overridable Property Data As Byte()
+        End Class
+
+        <Route("/return/string")>
+        Public Partial Class ReturnString
+            Implements IReturn(Of String)
+            Public Overridable Property Data As String
+        End Class
+
         Public Partial Class Rockstar
             Public Overridable Property Id As Integer
             Public Overridable Property FirstName As String
@@ -676,9 +915,71 @@ Namespace Global
             Public Overridable Property Age As Nullable(Of Integer)
         End Class
 
+        <DataContract>
+        Public Enum ScopeType
+            [Global] = 1
+            Sale = 2
+        End Enum
+
+        <Route("/sendjson")>
+        Public Partial Class SendJson
+            Implements IReturn(Of String)
+            Public Overridable Property Id As Integer
+            Public Overridable Property Name As String
+        End Class
+
+        <Route("/sendraw")>
+        Public Partial Class SendRaw
+            Implements IReturn(Of Byte())
+            Public Overridable Property Id As Integer
+            Public Overridable Property Name As String
+            Public Overridable Property ContentType As String
+        End Class
+
+        <Route("/sendtext")>
+        Public Partial Class SendText
+            Implements IReturn(Of String)
+            Public Overridable Property Id As Integer
+            Public Overridable Property Name As String
+            Public Overridable Property ContentType As String
+        End Class
+
+        Public Partial Class StoreLogs
+            Implements IReturn(Of StoreLogsResponse)
+            Public Sub New()
+                Loggers = New List(Of Logger)
+            End Sub
+
+            Public Overridable Property Loggers As List(Of Logger)
+        End Class
+
+        Public Partial Class StoreLogsResponse
+            Public Sub New()
+                ExistingLogs = New List(Of Logger)
+            End Sub
+
+            Public Overridable Property ExistingLogs As List(Of Logger)
+            Public Overridable Property ResponseStatus As ResponseStatus
+        End Class
+
         <Route("/throw404")>
         <Route("/throw404/{Message}")>
         Public Partial Class Throw404
+            Public Overridable Property Message As String
+        End Class
+
+        <Route("/throwbusinesserror")>
+        Public Partial Class ThrowBusinessError
+            Implements IReturn(Of ThrowBusinessErrorResponse)
+        End Class
+
+        Public Partial Class ThrowBusinessErrorResponse
+            Public Overridable Property ResponseStatus As ResponseStatus
+        End Class
+
+        <Route("/throwcustom400")>
+        <Route("/throwcustom400/{Message}")>
+        Public Partial Class ThrowCustom400
             Public Overridable Property Message As String
         End Class
 
@@ -779,6 +1080,7 @@ Namespace Global
             Public Overridable Property DateTimeOffset As DateTimeOffset
             Public Overridable Property Guid As Guid
             Public Overridable Property [Char] As Char
+            Public Overridable Property KeyValuePair As KeyValuePair(Of String, String)
             Public Overridable Property NullableDateTime As Nullable(Of Date)
             Public Overridable Property NullableTimeSpan As Nullable(Of TimeSpan)
             Public Overridable Property StringList As List(Of String)

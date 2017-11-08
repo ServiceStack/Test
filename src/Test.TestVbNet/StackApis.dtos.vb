@@ -1,8 +1,10 @@
 ' Options:
-'Date: 2014-11-23 05:02:03
-'Version: 1
+'Date: 2017-11-08 03:36:57
+'Version: 4.50
+'Tip: To override a DTO option, remove "''" prefix before updating
 'BaseUrl: http://stackapis.servicestack.net
 '
+'''GlobalNamespace: 
 '''MakePartial: True
 '''MakeVirtual: True
 '''MakeDataContractsExtensible: False
@@ -10,9 +12,13 @@
 '''AddDescriptionAsComments: True
 '''AddDataContractAttributes: False
 '''AddIndexesToDataMembers: False
+'''AddGeneratedCodeAttributes: False
 '''AddResponseStatus: False
 '''AddImplicitVersion: 
 '''InitializeCollections: True
+'''IncludeTypes: 
+'''ExcludeTypes: 
+'''AddNamespaces: 
 '''AddDefaultXmlNamespace: http://schemas.servicestack.net/types
 
 Imports System
@@ -61,8 +67,9 @@ Namespace Global
         End Class
 
         <Route("/questions")>
+        <AutoQueryViewer(Title:="Explore StackOverflow Questions", Description:="Find ServiceStack Questions on StackOverflow", IconUrl:="material-icons:cast", DefaultSearchField:="Title", DefaultSearchType:="Contains", DefaultSearchText:="ServiceStack")>
         Public Partial Class StackOverflowQuery
-            Inherits QueryBase(Of Question)
+            Inherits QueryDb(Of Question)
             Implements IReturn(Of QueryResponse(Of Question))
             Public Overridable Property ScoreGreaterThan As Nullable(Of Integer)
         End Class
@@ -87,17 +94,17 @@ Namespace Global
             End Sub
 
             Public Overridable Property QuestionId As Integer
+            Public Overridable Property Title As String
+            Public Overridable Property Score As Integer
+            Public Overridable Property ViewCount As Integer
+            Public Overridable Property IsAnswered As Boolean
+            Public Overridable Property AnswerCount As Integer
+            Public Overridable Property Link As String
             Public Overridable Property Tags As String()
             Public Overridable Property Owner As User
-            Public Overridable Property IsAnswered As Boolean
-            Public Overridable Property ViewCount As Integer
-            Public Overridable Property AnswerCount As Integer
-            Public Overridable Property Score As Integer
             Public Overridable Property LastActivityDate As Integer
             Public Overridable Property CreationDate As Integer
             Public Overridable Property LastEditDate As Integer
-            Public Overridable Property Link As String
-            Public Overridable Property Title As String
             Public Overridable Property AcceptedAnswerId As Nullable(Of Integer)
         End Class
 

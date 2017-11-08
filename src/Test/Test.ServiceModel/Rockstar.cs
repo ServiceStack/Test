@@ -3,7 +3,7 @@
 namespace Test.ServiceModel
 {
     [Route("/rockstars")]
-    public class QueryRockstars : QueryBase<Rockstar> {}
+    public class QueryRockstars : QueryDb<Rockstar> {}
 
     public class Rockstar
     {

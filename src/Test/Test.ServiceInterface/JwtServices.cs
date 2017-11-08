@@ -15,14 +15,21 @@ namespace Test.ServiceInterface
         public DateTime? JwtExpiry { get; set; }
     }
 
-    [Route("/jwt-refresh")]
-    public class CreateRefreshJwt : AuthUserSession, IReturn<CreateJwtResponse>
+    public class CreateJwtResponse
     {
-        public string UserId { get; set; }
+        public string Token { get; set; }
+
+        public ResponseStatus ResponseStatus { get; set; }
+    }
+
+    [Route("/jwt-refresh")]
+    public class CreateRefreshJwt : IReturn<CreateRefreshJwtResponse>
+    {
+        public string UserAuthId { get; set; }
         public DateTime? JwtExpiry { get; set; }
     }
 
-    public class CreateJwtResponse
+    public class CreateRefreshJwtResponse
     {
         public string Token { get; set; }
 
@@ -69,7 +76,7 @@ namespace Test.ServiceInterface
             var now = DateTime.UtcNow;
             var jwtPayload = new JsonObject
             {
-                {"sub", request.UserId ?? "1"},
+                {"sub", request.UserAuthId ?? "1"},
                 {"iat", now.ToUnixTime().ToString()},
                 {"exp", (request.JwtExpiry ?? DateTime.UtcNow.AddDays(1)).ToUnixTime().ToString()},
             };
@@ -80,7 +87,7 @@ namespace Test.ServiceInterface
             var hashAlgoritm = jwtProvider.GetHashAlgorithm();
             var refreshToken = JwtAuthProvider.CreateJwt(jwtHeader, jwtPayload, hashAlgoritm);
 
-            return new CreateJwtResponse
+            return new CreateRefreshJwtResponse
             {
                 Token = refreshToken
             };
