@@ -109,6 +109,8 @@ namespace Test
             JavaGenerator.AddGsonImport = true;
             var nativeTypes = this.GetPlugin<NativeTypesFeature>();
             nativeTypes.MetadataTypesConfig.ExportTypes.Add(typeof(DayOfWeek));
+
+            Plugins.Add(new MiniProfilerFeature());
         }
 
         private void CreateUser(OrmLiteAuthRepository authRepo,

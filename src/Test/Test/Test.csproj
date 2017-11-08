@@ -74,6 +74,10 @@
     <Reference Include="ServiceStack.Logging.Log4Net">
       <HintPath>..\..\..\lib\ServiceStack.Logging.Log4Net.dll</HintPath>
     </Reference>
+    <Reference Include="ServiceStack.NetFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\ServiceStack.NetFramework.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceStack.OrmLite, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\ServiceStack.OrmLite.dll</HintPath>

@@ -1,5 +1,6 @@
 ﻿using System;
 using ServiceStack;
+using ServiceStack.MiniProfiler;
 
 namespace Test
 {
@@ -9,6 +10,17 @@ namespace Test
         {
             Licensing.RegisterLicenseFromFileIfExists(@"~/appsettings.license.txt".MapHostAbsolutePath());
             new AppHost().Init();
+        }
+
+        protected void Application_BeginRequest(object src, EventArgs e)
+        {
+            if (Request.IsLocal)
+                Profiler.Start();
+        }
+
+        protected void Application_EndRequest(object src, EventArgs e)
+        {
+            Profiler.Stop();
         }
     }
 }
