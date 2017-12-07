@@ -111,6 +111,11 @@ namespace Test
             nativeTypes.MetadataTypesConfig.ExportTypes.Add(typeof(DayOfWeek));
 
             Plugins.Add(new MiniProfilerFeature());
+
+            Plugins.Add(new ServerEventsFeature
+            {
+                LimitToAuthenticatedUsers = true
+            });
         }
 
         private void CreateUser(OrmLiteAuthRepository authRepo,
