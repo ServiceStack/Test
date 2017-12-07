@@ -24,7 +24,7 @@ namespace Test.ServiceInterface
             return new TestAuthResponse
             {
                 UserId = session.UserAuthId,
-                UserName = session.UserAuthName,
+                UserName = session.UserAuthName ?? session.UserName,
                 DisplayName = session.DisplayName
                     ?? session.UserName
                     ?? "{0} {1}".Fmt(session.FirstName, session.LastName).Trim(),
