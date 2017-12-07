@@ -114,7 +114,7 @@ namespace Test
 
             Plugins.Add(new ServerEventsFeature
             {
-                LimitToAuthenticatedUsers = true
+                LimitToAuthenticatedUsers = true,
             });
         }
 

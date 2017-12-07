@@ -69,7 +69,7 @@ namespace Test.ServiceInterface
                 {"alg", jwtProvider.HashAlgorithm}
             };
 
-            var keyId = jwtProvider.GetKeyId();
+            var keyId = jwtProvider.GetKeyId(Request);
             if (keyId != null)
                 jwtHeader["kid"] = keyId;
 
