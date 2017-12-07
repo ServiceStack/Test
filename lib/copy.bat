@@ -1,5 +1,5 @@
-SET BUILD=Release
-REM SET BUILD=DEBUG
+REM SET BUILD=Release
+SET BUILD=DEBUG
 
 COPY C:\src\ServiceStack.OrmLite\src\ServiceStack.OrmLite.MySql\bin\%BUILD%\net45\ServiceStack.OrmLite.MySql.* .
 
