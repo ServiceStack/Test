@@ -26,6 +26,8 @@
     <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <Use64BitIISExpress />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,70 +48,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
+    <Reference Include="MySql.Data, Version=6.9.10.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MySql.Data.6.9.10\lib\net45\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Npgsql, Version=3.2.5.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Npgsql.3.2.5\lib\net45\Npgsql.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Api.OpenApi">
-      <HintPath>..\..\..\lib\ServiceStack.Api.OpenApi.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Client, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Common, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Interfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Logging.Log4Net">
-      <HintPath>..\..\..\lib\ServiceStack.Logging.Log4Net.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.NetFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.NetFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.OrmLite, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.OrmLite.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.OrmLite.PostgreSQL, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.OrmLite.PostgreSQL.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Razor, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Redis, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.Redis.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Server, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.Server.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Text, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.Text.dll</HintPath>
+    <Reference Include="Npgsql, Version=3.2.6.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Npgsql.3.2.6\lib\net45\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
+    <Reference Include="System.Data.SQLite, Version=1.0.106.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Data.SQLite.Core.1.0.106.0\lib\net45\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net" />
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.4.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -124,6 +79,62 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\ServiceStack.OrmLite\src\ServiceStack.OrmLite.PostgreSQL\ServiceStack.OrmLite.PostgreSQL.csproj">
+      <Project>{8fbf007c-ee79-464a-b8f1-f8582bb19bea}</Project>
+      <Name>ServiceStack.OrmLite.PostgreSQL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack.OrmLite\src\ServiceStack.OrmLite.Sqlite\ServiceStack.OrmLite.Sqlite.csproj">
+      <Project>{4650e14c-6faf-4157-8f50-804c203f14d0}</Project>
+      <Name>ServiceStack.OrmLite.Sqlite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack.OrmLite\src\ServiceStack.OrmLite\ServiceStack.OrmLite.csproj">
+      <Project>{f500dab8-9718-4678-930c-29a0e2ad9372}</Project>
+      <Name>ServiceStack.OrmLite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack.Redis\src\ServiceStack.Redis\ServiceStack.Redis.csproj">
+      <Project>{c827d66b-5d84-4935-b2b1-5d6599cd2f79}</Project>
+      <Name>ServiceStack.Redis</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack.Text\src\ServiceStack.Text\ServiceStack.Text.csproj">
+      <Project>{f3371f63-b229-495a-a42d-da078c221693}</Project>
+      <Name>ServiceStack.Text</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack\src\ServiceStack.Api.OpenApi\ServiceStack.Api.OpenApi.csproj">
+      <Project>{841e00c0-43ae-43fc-bba1-b345e4952204}</Project>
+      <Name>ServiceStack.Api.OpenApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack\src\ServiceStack.Client\ServiceStack.Client.csproj">
+      <Project>{f698d500-65cb-469c-ba5d-8c478d09a030}</Project>
+      <Name>ServiceStack.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack\src\ServiceStack.Common\ServiceStack.Common.csproj">
+      <Project>{23d34c74-beb9-43ef-be67-30d8918a8c03}</Project>
+      <Name>ServiceStack.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack\src\ServiceStack.Interfaces\ServiceStack.Interfaces.csproj">
+      <Project>{2faceaf5-ab03-4277-96e4-b2c276483066}</Project>
+      <Name>ServiceStack.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack\src\ServiceStack.Logging.Log4Net\ServiceStack.Logging.Log4Net.csproj">
+      <Project>{b8784278-57dd-4ff4-a7f1-e760385ddb23}</Project>
+      <Name>ServiceStack.Logging.Log4Net</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack\src\ServiceStack.NetFramework\ServiceStack.NetFramework.csproj">
+      <Project>{d7fe2ce9-bdd7-4d18-82aa-62de2083b1da}</Project>
+      <Name>ServiceStack.NetFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack\src\ServiceStack.Razor\ServiceStack.Razor.csproj">
+      <Project>{33d07b60-3d20-4953-96e6-961f8bbaedea}</Project>
+      <Name>ServiceStack.Razor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack\src\ServiceStack.Server\ServiceStack.Server.csproj">
+      <Project>{e58817fa-7928-41c2-878c-d9e09adca813}</Project>
+      <Name>ServiceStack.Server</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack\src\ServiceStack\ServiceStack.csproj">
+      <Project>{f4df6edd-41df-4fe1-b412-871d9b5fc284}</Project>
+      <Name>ServiceStack</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Test.ServiceInterface\Test.ServiceInterface.csproj">
       <Project>{801a0f89-d5f6-49a6-bcea-6624388c98a4}</Project>
       <Name>Test.ServiceInterface</Name>
@@ -145,6 +156,7 @@
     <Content Include="test-typescript.cshtml" />
     <Content Include="package.json" />
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\WebDeploy.pubxml" />
     <Content Include="textfile.txt" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -201,6 +213,13 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="..\..\packages\System.Data.SQLite.Core.1.0.106.0\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\..\packages\System.Data.SQLite.Core.1.0.106.0\build\net45\System.Data.SQLite.Core.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\System.Data.SQLite.Core.1.0.106.0\build\net45\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\System.Data.SQLite.Core.1.0.106.0\build\net45\System.Data.SQLite.Core.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -9,6 +9,7 @@ using ServiceStack.Caching;
 using ServiceStack.Configuration;
 using ServiceStack.Data;
 using ServiceStack.Host;
+using ServiceStack.Logging;
 using ServiceStack.NativeTypes.Java;
 using ServiceStack.OrmLite;
 using ServiceStack.Razor;
@@ -33,6 +34,8 @@ namespace Test
             AppSettings = customSettings.Exists
                 ? (IAppSettings)new TextFileSettings(customSettings.FullName)
                 : new AppSettings();
+
+            LogManager.LogFactory = new StringBuilderLogFactory(debugEnabled:true);
         }
 
         /// <summary>
@@ -56,8 +59,11 @@ namespace Test
                 new RedisManagerPool("localhost:6379"));
             container.Register(c => c.Resolve<IRedisClientsManager>().GetCacheClient());
 
+            //container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(
+            //    AppSettings.GetString("AppDb"), PostgreSqlDialect.Provider));
+
             container.Register<IDbConnectionFactory>(c => new OrmLiteConnectionFactory(
-                AppSettings.GetString("AppDb"), PostgreSqlDialect.Provider));
+                ":memory:", SqliteDialect.Provider));
 
             using (var db = container.Resolve<IDbConnectionFactory>().Open())
             {
@@ -92,7 +98,10 @@ namespace Test
             Plugins.Add(new AuthFeature(() => new CustomUserSession(),
                 new IAuthProvider[]
                 {
-                    new JwtAuthProvider(AppSettings),
+                    new JwtAuthProvider(AppSettings)
+                    {
+                        AllowInQueryString = true
+                    },
                     new BasicAuthProvider(AppSettings),
                     new CredentialsAuthProvider(AppSettings),
                 }));
@@ -121,9 +130,7 @@ namespace Test
         private void CreateUser(OrmLiteAuthRepository authRepo,
             int id, string username, string password, List<string> roles = null, List<string> permissions = null)
         {
-            string hash;
-            string salt;
-            new SaltedHash().GetHashAndSaltString(password, out hash, out salt);
+            new SaltedHash().GetHashAndSaltString(password, out var hash, out var salt);
 
             authRepo.CreateUserAuth(new UserAuth
             {

@@ -30,41 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ServiceStack, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Client, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Common, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Interfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.OrmLite, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.OrmLite.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Razor">
-      <HintPath>..\..\..\lib\ServiceStack.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Redis, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.Redis.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Server, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.Server.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Text, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ServiceStack.Text.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net" />
@@ -81,6 +46,7 @@
     <Compile Include="GitHubServices.cs" />
     <Compile Include="ImageService.cs" />
     <Compile Include="JwtServices.cs" />
+    <Compile Include="LogServices.cs" />
     <Compile Include="MetadataTestService.cs" />
     <Compile Include="MyServices.cs" />
     <Compile Include="NativeTypesTestService.cs" />
@@ -97,6 +63,38 @@
     <Compile Include="TestServices.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\ServiceStack.OrmLite\src\ServiceStack.OrmLite\ServiceStack.OrmLite.csproj">
+      <Project>{f500dab8-9718-4678-930c-29a0e2ad9372}</Project>
+      <Name>ServiceStack.OrmLite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack.Redis\src\ServiceStack.Redis\ServiceStack.Redis.csproj">
+      <Project>{c827d66b-5d84-4935-b2b1-5d6599cd2f79}</Project>
+      <Name>ServiceStack.Redis</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack.Text\src\ServiceStack.Text\ServiceStack.Text.csproj">
+      <Project>{f3371f63-b229-495a-a42d-da078c221693}</Project>
+      <Name>ServiceStack.Text</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack\src\ServiceStack.Client\ServiceStack.Client.csproj">
+      <Project>{f698d500-65cb-469c-ba5d-8c478d09a030}</Project>
+      <Name>ServiceStack.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack\src\ServiceStack.Common\ServiceStack.Common.csproj">
+      <Project>{23d34c74-beb9-43ef-be67-30d8918a8c03}</Project>
+      <Name>ServiceStack.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack\src\ServiceStack.Interfaces\ServiceStack.Interfaces.csproj">
+      <Project>{2faceaf5-ab03-4277-96e4-b2c276483066}</Project>
+      <Name>ServiceStack.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack\src\ServiceStack.Server\ServiceStack.Server.csproj">
+      <Project>{e58817fa-7928-41c2-878c-d9e09adca813}</Project>
+      <Name>ServiceStack.Server</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\ServiceStack\src\ServiceStack\ServiceStack.csproj">
+      <Project>{f4df6edd-41df-4fe1-b412-871d9b5fc284}</Project>
+      <Name>ServiceStack</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\External.ServiceModel\External.ServiceModel.csproj">
       <Project>{E813C416-E358-4CC2-A188-6BA11A33091F}</Project>
       <Name>External.ServiceModel</Name>
