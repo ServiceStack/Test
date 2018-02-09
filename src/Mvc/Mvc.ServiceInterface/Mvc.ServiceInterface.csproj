@@ -31,31 +31,28 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ServiceStack, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
-      <HintPath>..\..\packages\ServiceStack.5.0.2\lib\net45\ServiceStack.dll</HintPath>
+      <HintPath>..\..\..\lib\ServiceStack.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Client, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
-      <HintPath>..\..\packages\ServiceStack.Client.5.0.2\lib\net45\ServiceStack.Client.dll</HintPath>
+      <HintPath>..\..\..\lib\ServiceStack.Client.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Common, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
-      <HintPath>..\..\packages\ServiceStack.Common.5.0.2\lib\net45\ServiceStack.Common.dll</HintPath>
+      <HintPath>..\..\..\lib\ServiceStack.Common.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Interfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
-      <HintPath>..\..\packages\ServiceStack.Interfaces.5.0.2\lib\net45\ServiceStack.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Mvc, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
-      <HintPath>..\..\packages\ServiceStack.Mvc.5.0.2\lib\net45\ServiceStack.Mvc.dll</HintPath>
+      <HintPath>..\..\..\lib\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.OrmLite, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
-      <HintPath>..\..\packages\ServiceStack.OrmLite.5.0.2\lib\net45\ServiceStack.OrmLite.dll</HintPath>
+      <HintPath>..\..\..\lib\ServiceStack.OrmLite.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Redis, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
-      <HintPath>..\..\packages\ServiceStack.Redis.5.0.2\lib\net45\ServiceStack.Redis.dll</HintPath>
+      <HintPath>..\..\..\lib\ServiceStack.Redis.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Server, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
-      <HintPath>..\..\packages\ServiceStack.Server.5.0.2\lib\net45\ServiceStack.Server.dll</HintPath>
+      <HintPath>..\..\..\lib\ServiceStack.Server.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
-      <HintPath>..\..\packages\ServiceStack.Text.5.0.2\lib\net45\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\..\..\lib\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Net" />
