@@ -67,9 +67,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Mono.Data.Sqlite">
-      <HintPath>..\..\..\lib\Mono.Data.Sqlite.dll</HintPath>
-    </Reference>
     <Reference Include="MySql.Data">
       <HintPath>..\..\..\lib\MySql.Data.dll</HintPath>
     </Reference>
@@ -77,55 +74,67 @@
       <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ServiceStack, Version=4.0.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ServiceStack, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
       <HintPath>..\..\..\lib\ServiceStack.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Authentication.OAuth2, Version=4.0.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ServiceStack.Api.OpenApi, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
+      <HintPath>..\..\..\lib\ServiceStack.Api.OpenApi.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Authentication.OAuth2, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
       <HintPath>..\..\..\lib\ServiceStack.Authentication.OAuth2.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Authentication.OpenId, Version=4.0.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ServiceStack.Authentication.OpenId, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
       <HintPath>..\..\..\lib\ServiceStack.Authentication.OpenId.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Client, Version=4.0.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ServiceStack.Client, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
       <HintPath>..\..\..\lib\ServiceStack.Client.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Common, Version=4.0.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ServiceStack.Common, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
       <HintPath>..\..\..\lib\ServiceStack.Common.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Interfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ServiceStack.Interfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
       <HintPath>..\..\..\lib\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Mvc, Version=4.0.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ServiceStack.Logging.Log4Net, Version=1.0.10.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\lib\ServiceStack.Logging.Log4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Logging.Log4Net, Version=4.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
+      <HintPath>..\..\..\lib\ServiceStack.Logging.Log4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Mvc, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
       <HintPath>..\..\..\lib\ServiceStack.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.OrmLite, Version=4.0.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ServiceStack.NetFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
+      <HintPath>..\..\..\lib\ServiceStack.NetFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.OrmLite, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
       <HintPath>..\..\..\lib\ServiceStack.OrmLite.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.OrmLite.Sqlite">
+    <Reference Include="ServiceStack.OrmLite.PostgreSQL, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
+      <HintPath>..\..\..\lib\ServiceStack.OrmLite.PostgreSQL.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.OrmLite.Sqlite, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
       <HintPath>..\..\..\lib\ServiceStack.OrmLite.Sqlite.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Redis, Version=4.0.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ServiceStack.OrmLite.SqlServer, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
+      <HintPath>..\..\..\lib\ServiceStack.OrmLite.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Razor, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
+      <HintPath>..\..\..\lib\ServiceStack.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Redis, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
       <HintPath>..\..\..\lib\ServiceStack.Redis.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Server, Version=4.0.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ServiceStack.Server, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
       <HintPath>..\..\..\lib\ServiceStack.Server.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text, Version=4.0.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ServiceStack.Text, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587">
       <HintPath>..\..\..\lib\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Data.SQLite, Version=1.0.106.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139">
+      <HintPath>..\..\packages\System.Data.SQLite.Core.1.0.106.0\lib\net45\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Net" />
     <Reference Include="System.Data" />
@@ -177,7 +186,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
-    <Reference Include="System.EnterpriseServices" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -210,10 +218,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\lib\sqlite3.dll">
-      <Link>sqlite3.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="App_Readme\DCCreative.DNOA4Glimpse.Readme.txt" />
     <Content Include="Content\bootstrap-social.css" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -233,6 +237,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\WebDeploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\autogrid.js" />
@@ -326,6 +331,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
   </Target>
+  <Import Project="..\..\packages\System.Data.SQLite.Core.1.0.106.0\build\net45\System.Data.SQLite.Core.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
