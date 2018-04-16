@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using ServiceStack;
+using Test.ServiceModel;
 using Test.ServiceModel.Types;
 
 namespace Test.ServiceInterface
@@ -69,9 +70,14 @@ namespace Test.ServiceInterface
         public Dictionary<int, string> IntStringMap { get; set; }
     }
 
+    [Route("/echo/complex")]
     public class EchoComplexTypes : IReturn<EchoComplexTypes>
     {
         public SubType SubType { get; set; }
+        public List<SubType> SubTypes { get; set; }
+        public Dictionary<string, SubType> SubTypeMap { get; set; }
+        public Dictionary<string, string> StringMap { get; set; }
+        public Dictionary<int, string> IntStringMap { get; set; }
     }
 
     public class TestServices : Service
@@ -80,10 +86,7 @@ namespace Test.ServiceInterface
         {
         }
 
-        public object Any(TestNullResponse response)
-        {
-            return null;
-        }
+        public object Any(TestNullResponse response) => null;
 
         public object Any(Wait request)
         {
@@ -92,19 +95,12 @@ namespace Test.ServiceInterface
             return request;
         }
 
-        public object Any(EchoTypes request)
-        {
-            return request;
-        }
+        public object Any(EchoTypes request) => request;
 
-        public object Any(EchoCollections request)
-        {
-            return request;
-        }
+        public object Any(EchoCollections request) => request;
 
-        public object Any(EchoComplexTypes request)
-        {
-            return request;
-        }
+        public object Any(EchoComplexTypes request) => request;
+
+        public object Post(StoreRockstars request) => request;
     }
 }

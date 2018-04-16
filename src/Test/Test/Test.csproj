@@ -145,6 +145,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\app.bundle.js" />
+    <Content Include="test-client.html" />
     <Content Include="webpack.config.js" />
     <TypeScriptCompile Include="Scripts\app.ts" />
     <None Include="error.cshtml" />
@@ -168,6 +170,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <TypeScriptCompile Include="Scripts\Test.dtos.ts" />
+    <TypeScriptCompile Include="test-client.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />

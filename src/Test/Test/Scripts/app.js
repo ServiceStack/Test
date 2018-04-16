@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var $ = require("jquery");
 require("es6-shim");
 require("ss-utils");
-var servicestack_client_1 = require("servicestack-client");
+var client_1 = require("@servicestack/client");
 //import { JsonServiceClient } from "./JsonServiceClient";
 var Test_dtos_1 = require("./Test.dtos");
 function createUrl(path, params) {
@@ -13,7 +13,7 @@ function createUrl(path, params) {
     }
     return path;
 }
-var client = new servicestack_client_1.JsonServiceClient("/");
+var client = new client_1.JsonServiceClient("/");
 $(document).bindHandlers({
     sayHello: function () {
         var request = new Test_dtos_1.Hello();
@@ -76,7 +76,7 @@ $(document).bindHandlers({
         });
     },
     basicAuth: function () {
-        var testAuth = new servicestack_client_1.JsonServiceClient("/");
+        var testAuth = new client_1.JsonServiceClient("/");
         testAuth.userName = $("#txtBasicAuthUser").val();
         testAuth.password = $("#txtBasicAuthPass").val();
         testAuth.post(new Test_dtos_1.TestAuth())
@@ -94,5 +94,20 @@ $(document).bindHandlers({
 function handleError(e, id) {
     console.log('error: ', e);
     $(id).html("Error: " + JSON.stringify(e.responseStatus));
+}
+var $results = document.getElementById("results");
+function show(r) {
+    console.log(r);
+    $results.innerHTML += "<h3>" + JSON.stringify(r) + "</h3>";
+}
+function testClient() {
+    client.get(Object.assign(new Test_dtos_1.Hello(), { name: "GET" })).then(show);
+    client.post(Object.assign(new Test_dtos_1.Hello(), { name: "POST" })).then(show);
+    client.put(Object.assign(new Test_dtos_1.Hello(), { name: "PUT" })).then(show);
+}
+;
+if ($results) {
+    console.log('testClient()');
+    testClient();
 }
 //# sourceMappingURL=app.js.map

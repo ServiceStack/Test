@@ -1,6 +1,6 @@
 /* Options:
-Date: 2017-02-10 11:04:42
-Version: 4.00
+Date: 2018-04-13 15:53:43
+Version: 5.00
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: http://localhost:56500
 
@@ -16,19 +16,31 @@ BaseUrl: http://localhost:56500
 */
 
 
-export interface IReturnVoid
-{
-    createResponse() : void;
+export interface IReturn<T> {
+    createResponse(): T;
 }
 
-export interface IReturn<T>
-{
-    createResponse() : T;
+export interface IReturnVoid {
+    createResponse(): void;
+}
+
+export interface IGet {
+}
+
+export interface IPost {
+}
+
+export interface IPut {
+}
+
+export interface IDelete {
+}
+
+export interface IPatch {
 }
 
 // @DataContract
-export class ResponseError
-{
+export class ResponseError {
     // @DataMember(Order=1, EmitDefaultValue=false)
     errorCode: string;
 
@@ -39,12 +51,11 @@ export class ResponseError
     message: string;
 
     // @DataMember(Order=4, EmitDefaultValue=false)
-    meta: { [index:string]: string; };
+    meta: { [index: string]: string; };
 }
 
 // @DataContract
-export class ResponseStatus
-{
+export class ResponseStatus {
     // @DataMember(Order=1)
     errorCode: string;
 
@@ -58,177 +69,20 @@ export class ResponseStatus
     errors: ResponseError[];
 
     // @DataMember(Order=5)
-    meta: { [index:string]: string; };
+    meta: { [index: string]: string; };
 }
 
 export type ExternalEnum = "Foo" | "Bar" | "Baz";
 
 export type ExternalEnum2 = "Uno" | "Due" | "Tre";
 
-export class ExternalType
-{
+export class ExternalType {
     externalEnum2: ExternalEnum2;
 }
 
 export type ExternalEnum3 = "Un" | "Deux" | "Trois";
 
-export class MetadataTestNestedChild
-{
-    name: string;
-}
-
-export class MetadataTestChild
-{
-    name: string;
-    results: MetadataTestNestedChild[];
-}
-
-export class MenuItemExampleItem
-{
-    // @DataMember(Order=1)
-    // @ApiMember()
-    name1: string;
-}
-
-export class MenuItemExample
-{
-    // @DataMember(Order=1)
-    // @ApiMember()
-    name1: string;
-
-    menuItemExampleItem: MenuItemExampleItem;
-}
-
-// @DataContract
-export class MenuExample
-{
-    // @DataMember(Order=1)
-    // @ApiMember()
-    menuItemExample1: MenuItemExample;
-}
-
-export class NestedClass
-{
-    value: string;
-}
-
-export class ListResult
-{
-    result: string;
-}
-
-export class ArrayResult
-{
-    result: string;
-}
-
-export type EnumType = "Value1" | "Value2";
-
-// @Flags()
-export enum EnumFlags
-{
-    Value1 = 1,
-    Value2 = 2,
-    Value3 = 4,
-}
-
-export class Poco
-{
-    name: string;
-}
-
-export class AllCollectionTypes
-{
-    intArray: number[];
-    intList: number[];
-    stringArray: string[];
-    stringList: string[];
-    pocoArray: Poco[];
-    pocoList: Poco[];
-    pocoLookup: { [index:string]: Poco[]; };
-    pocoLookupMap: { [index:string]: { [index:string]: Poco; }[]; };
-}
-
-export class KeyValuePair<TKey, TValue>
-{
-    key: TKey;
-    value: TValue;
-}
-
-export class SubType
-{
-    id: number;
-    name: string;
-}
-
-export class HelloBase
-{
-    id: number;
-}
-
-export class HelloResponseBase
-{
-    refId: number;
-}
-
-export class HelloBase_1<T>
-{
-    items: T[];
-    counts: number[];
-}
-
-export class Item
-{
-    value: string;
-}
-
-export class HelloWithReturnResponse
-{
-    result: string;
-}
-
-export class HelloType
-{
-    result: string;
-}
-
-export interface IPoco
-{
-    name?: string;
-}
-
-export interface IEmptyInterface
-{
-}
-
-export class EmptyClass
-{
-}
-
-export class InnerType
-{
-    id: number;
-    name: string;
-}
-
-export type InnerEnum = "Foo" | "Bar" | "Baz";
-
-export type DayOfWeek = "Sunday" | "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday";
-
-// @DataContract
-export type ScopeType = "Global" | "Sale";
-
-export class PingService
-{
-}
-
-export class ReturnedDto
-{
-    id: number;
-}
-
-export interface IAuthTokens
-{
+export interface IAuthTokens {
     provider?: string;
     userId?: string;
     accessToken?: string;
@@ -237,12 +91,11 @@ export interface IAuthTokens
     refreshTokenExpiry?: string;
     requestToken?: string;
     requestTokenSecret?: string;
-    items?: { [index:string]: string; };
+    items?: { [index: string]: string; };
 }
 
 // @DataContract
-export class AuthUserSession
-{
+export class AuthUserSession {
     // @DataMember(Order=1)
     referrerUrl: string;
 
@@ -367,11 +220,137 @@ export class AuthUserSession
     tag: number;
 
     // @DataMember(Order=42)
+    authProvider: string;
+
+    // @DataMember(Order=43)
     providerOAuthAccess: IAuthTokens[];
+
+    // @DataMember(Order=44)
+    meta: { [index: string]: string; };
 }
 
-export class CustomUserSession extends AuthUserSession
+export class MetadataTestNestedChild {
+    name: string;
+}
+
+export class MetadataTestChild {
+    name: string;
+    results: MetadataTestNestedChild[];
+}
+
+export class MenuItemExampleItem {
+    // @DataMember(Order=1)
+    // @ApiMember()
+    name1: string;
+}
+
+export class MenuItemExample {
+    // @DataMember(Order=1)
+    // @ApiMember()
+    name1: string;
+
+    menuItemExampleItem: MenuItemExampleItem;
+}
+
+// @DataContract
+export class MenuExample {
+    // @DataMember(Order=1)
+    // @ApiMember()
+    menuItemExample1: MenuItemExample;
+}
+
+export class NestedClass {
+    value: string;
+}
+
+export class ListResult {
+    result: string;
+}
+
+export class ArrayResult {
+    result: string;
+}
+
+export type EnumType = "Value1" | "Value2";
+
+// @Flags()
+export enum EnumFlags {
+    Value1 = 1,
+    Value2 = 2,
+    Value3 = 4,
+}
+
+export class KeyValuePair<TKey, TValue>
 {
+    key: TKey;
+    value: TValue;
+}
+
+export class SubType {
+    id: number;
+    name: string;
+}
+
+export class HelloBase {
+    id: number;
+}
+
+export class HelloResponseBase {
+    refId: number;
+}
+
+export class Poco {
+    name: string;
+}
+
+export class HelloBase_1<T>
+{
+    items: T[];
+    counts: number[];
+}
+
+export class Item {
+    value: string;
+}
+
+export class HelloWithReturnResponse {
+    result: string;
+}
+
+export class HelloType {
+    result: string;
+}
+
+export interface IPoco {
+    name?: string;
+}
+
+export interface IEmptyInterface {
+}
+
+export class EmptyClass {
+}
+
+export class InnerType {
+    id: number;
+    name: string;
+}
+
+export type InnerEnum = "Foo" | "Bar" | "Baz";
+
+export type DayOfWeek = "Sunday" | "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday";
+
+// @DataContract
+export type ScopeType = "Global" | "Sale";
+
+export class PingService {
+}
+
+export class ReturnedDto {
+    id: number;
+}
+
+export class CustomUserSession extends AuthUserSession {
     // @DataMember
     customName: string;
 
@@ -379,33 +358,35 @@ export class CustomUserSession extends AuthUserSession
     customInfo: string;
 }
 
-export class UnAuthInfo
-{
+export class UnAuthInfo {
     customInfo: string;
 }
 
-export class Channel
-{
+export class Channel {
     name: string;
     value: string;
 }
 
-export class Device
-{
+export class Device {
     id: number;
     type: string;
     timeStamp: number;
     channels: Channel[];
 }
 
-export class Logger
-{
+export class Logger {
     id: number;
     devices: Device[];
 }
 
-export class QueryBase
-{
+export class Rockstar {
+    id: number;
+    firstName: string;
+    lastName: string;
+    age: number;
+}
+
+export class QueryBase {
     // @DataMember(Order=1)
     skip: number;
 
@@ -425,106 +406,91 @@ export class QueryBase
     fields: string;
 
     // @DataMember(Order=7)
-    meta: { [index:string]: string; };
+    meta: { [index: string]: string; };
 }
 
-export class QueryBase_1<T> extends QueryBase
-{
+export class QueryDb_1<T> extends QueryBase {
 }
 
-export class OnlyDefinedInGenericType
-{
+export class OnlyDefinedInGenericType {
     id: number;
     name: string;
 }
 
-export class QueryBase_2<From, Into> extends QueryBase
-{
+export class QueryDb_2<From, Into> extends QueryBase {
 }
 
-export class OnlyDefinedInGenericTypeFrom
-{
+export class OnlyDefinedInGenericTypeFrom {
     id: number;
     name: string;
 }
 
-export class OnlyDefinedInGenericTypeInto
-{
+export class OnlyDefinedInGenericTypeInto {
     id: number;
     name: string;
 }
 
-export class Rockstar
-{
-    id: number;
-    firstName: string;
-    lastName: string;
-    age: number;
+export class TypesGroup {
 }
 
-export class TypesGroup
-{
-}
-
-export class CustomHttpErrorResponse
-{
+export class CustomHttpErrorResponse {
     custom: string;
     responseStatus: ResponseStatus;
 }
 
-export class ThrowTypeResponse
-{
+export class ThrowTypeResponse {
     responseStatus: ResponseStatus;
 }
 
-export class ThrowValidationResponse
-{
+export class ThrowValidationResponse {
     age: number;
     required: string;
     email: string;
     responseStatus: ResponseStatus;
 }
 
-export class ThrowBusinessErrorResponse
-{
+export class ThrowBusinessErrorResponse {
     responseStatus: ResponseStatus;
 }
 
-export class ExternalOperationResponse
-{
+export class ExternalOperationResponse {
     result: string;
 }
 
-export class ExternalOperation2Response
-{
+export class ExternalOperation2Response {
     externalType: ExternalType;
 }
 
-export class ExternalReturnTypeResponse
-{
+export class ExternalReturnTypeResponse {
     externalEnum3: ExternalEnum3;
 }
 
-export class Account
-{
+export class Account {
     name: string;
 }
 
-export class Project
-{
+export class Project {
     account: string;
     name: string;
 }
 
-export class MetadataTestResponse
-{
+export class CreateJwtResponse {
+    token: string;
+    responseStatus: ResponseStatus;
+}
+
+export class CreateRefreshJwtResponse {
+    token: string;
+    responseStatus: ResponseStatus;
+}
+
+export class MetadataTestResponse {
     id: number;
     results: MetadataTestChild[];
 }
 
 // @DataContract
-export class GetExampleResponse
-{
+export class GetExampleResponse {
     // @DataMember(Order=1)
     responseStatus: ResponseStatus;
 
@@ -533,13 +499,11 @@ export class GetExampleResponse
     menuExample1: MenuExample;
 }
 
-export class GetRandomIdsResponse
-{
+export class GetRandomIdsResponse {
     results: string[];
 }
 
-export class HelloResponse
-{
+export class HelloResponse {
     result: string;
 }
 
@@ -547,14 +511,12 @@ export class HelloResponse
 * Description on HelloAllResponse type
 */
 // @DataContract
-export class HelloAnnotatedResponse
-{
+export class HelloAnnotatedResponse {
     // @DataMember
     result: string;
 }
 
-export class AllTypes
-{
+export class AllTypes {
     id: number;
     nullableId: number;
     byte: number;
@@ -578,13 +540,23 @@ export class AllTypes
     nullableTimeSpan: string;
     stringList: string[];
     stringArray: string[];
-    stringMap: { [index:string]: string; };
-    intStringMap: { [index:number]: string; };
+    stringMap: { [index: string]: string; };
+    intStringMap: { [index: number]: string; };
     subType: SubType;
 }
 
-export class HelloAllTypesResponse
-{
+export class AllCollectionTypes {
+    intArray: number[];
+    intList: number[];
+    stringArray: string[];
+    stringList: string[];
+    pocoArray: Poco[];
+    pocoList: Poco[];
+    pocoLookup: { [index: string]: Poco[]; };
+    pocoLookupMap: { [index: string]: { [index: string]: Poco; }[]; };
+}
+
+export class HelloAllTypesResponse {
     result: string;
     allTypes: AllTypes;
     allCollectionTypes: AllCollectionTypes;
@@ -598,8 +570,7 @@ export class HelloDateTime implements IReturn<HelloDateTime>
 }
 
 // @DataContract
-export class HelloWithDataContractResponse
-{
+export class HelloWithDataContractResponse {
     // @DataMember(Name="result", Order=1, IsRequired=true, EmitDefaultValue=false)
     result: string;
 }
@@ -607,44 +578,36 @@ export class HelloWithDataContractResponse
 /**
 * Description on HelloWithDescriptionResponse type
 */
-export class HelloWithDescriptionResponse
-{
+export class HelloWithDescriptionResponse {
     result: string;
 }
 
-export class HelloWithInheritanceResponse extends HelloResponseBase
-{
+export class HelloWithInheritanceResponse extends HelloResponseBase {
     result: string;
 }
 
-export class HelloWithAlternateReturnResponse extends HelloWithReturnResponse
-{
+export class HelloWithAlternateReturnResponse extends HelloWithReturnResponse {
     altResult: string;
 }
 
-export class HelloWithRouteResponse
-{
+export class HelloWithRouteResponse {
     result: string;
 }
 
-export class HelloWithTypeResponse
-{
+export class HelloWithTypeResponse {
     result: HelloType;
 }
 
-export class HelloInnerTypesResponse
-{
+export class HelloInnerTypesResponse {
     innerType: InnerType;
     innerEnum: InnerEnum;
 }
 
-export class HelloVerbResponse
-{
+export class HelloVerbResponse {
     result: string;
 }
 
-export class EnumResponse
-{
+export class EnumResponse {
     operator: ScopeType;
 }
 
@@ -659,51 +622,51 @@ export class HelloTypes implements IReturn<HelloTypes>
 }
 
 // @DataContract
-export class HelloZipResponse
-{
+export class HelloZipResponse {
     // @DataMember
     result: string;
 }
 
-export class PingResponse
-{
-    responses: { [index:string]: ResponseStatus; };
+export class PingResponse {
+    responses: { [index: string]: ResponseStatus; };
     responseStatus: ResponseStatus;
 }
 
-export class RequiresRoleResponse
-{
+export class RequiresRoleResponse {
     result: string;
     responseStatus: ResponseStatus;
 }
 
-export class SendVerbResponse
-{
+export class SendVerbResponse {
     id: number;
     pathInfo: string;
     requestMethod: string;
 }
 
-export class GetSessionResponse
-{
+export class GetSessionResponse {
     result: CustomUserSession;
     unAuthInfo: UnAuthInfo;
     responseStatus: ResponseStatus;
 }
 
-export class StoreLogsResponse
-{
+export class StoreLogsResponse {
     existingLogs: Logger[];
     responseStatus: ResponseStatus;
 }
 
-export class TestAuthResponse
-{
+export class TestAuthResponse {
     userId: string;
     sessionId: string;
     userName: string;
     displayName: string;
     responseStatus: ResponseStatus;
+}
+
+export class RequiresAdmin implements IReturn<RequiresAdmin>
+{
+    id: number;
+    createResponse() { return new RequiresAdmin(); }
+    getTypeName() { return "RequiresAdmin"; }
 }
 
 // @Route("/wait/{ForMs}")
@@ -742,8 +705,8 @@ export class EchoCollections implements IReturn<EchoCollections>
 {
     stringList: string[];
     stringArray: string[];
-    stringMap: { [index:string]: string; };
-    intStringMap: { [index:number]: string; };
+    stringMap: { [index: string]: string; };
+    intStringMap: { [index: number]: string; };
     createResponse() { return new EchoCollections(); }
     getTypeName() { return "EchoCollections"; }
 }
@@ -755,9 +718,15 @@ export class EchoComplexTypes implements IReturn<EchoComplexTypes>
     getTypeName() { return "EchoComplexTypes"; }
 }
 
-// @DataContract
-export class AuthenticateResponse
+// @Route("/rockstars", "POST")
+export class StoreRockstars extends Array<Rockstar> implements IReturn<StoreRockstars>
 {
+    createResponse() { return new StoreRockstars(); }
+    getTypeName() { return "StoreRockstars"; }
+}
+
+// @DataContract
+export class AuthenticateResponse {
     // @DataMember(Order=1)
     userId: string;
 
@@ -777,15 +746,17 @@ export class AuthenticateResponse
     bearerToken: string;
 
     // @DataMember(Order=7)
-    responseStatus: ResponseStatus;
+    refreshToken: string;
 
     // @DataMember(Order=8)
-    meta: { [index:string]: string; };
+    responseStatus: ResponseStatus;
+
+    // @DataMember(Order=9)
+    meta: { [index: string]: string; };
 }
 
 // @DataContract
-export class AssignRolesResponse
-{
+export class AssignRolesResponse {
     // @DataMember(Order=1)
     allRoles: string[];
 
@@ -797,8 +768,7 @@ export class AssignRolesResponse
 }
 
 // @DataContract
-export class UnAssignRolesResponse
-{
+export class UnAssignRolesResponse {
     // @DataMember(Order=1)
     allRoles: string[];
 
@@ -806,6 +776,27 @@ export class UnAssignRolesResponse
     allPermissions: string[];
 
     // @DataMember(Order=3)
+    responseStatus: ResponseStatus;
+}
+
+// @DataContract
+export class ConvertSessionToTokenResponse {
+    // @DataMember(Order=1)
+    meta: { [index: string]: string; };
+
+    // @DataMember(Order=2)
+    accessToken: string;
+
+    // @DataMember(Order=3)
+    responseStatus: ResponseStatus;
+}
+
+// @DataContract
+export class GetAccessTokenResponse {
+    // @DataMember(Order=1)
+    accessToken: string;
+
+    // @DataMember(Order=2)
     responseStatus: ResponseStatus;
 }
 
@@ -822,7 +813,7 @@ export class QueryResponse<T>
     results: T[];
 
     // @DataMember(Order=4)
-    meta: { [index:string]: string; };
+    meta: { [index: string]: string; };
 
     // @DataMember(Order=5)
     responseStatus: ResponseStatus;
@@ -837,23 +828,20 @@ export class CustomHttpError implements IReturn<CustomHttpErrorResponse>
 }
 
 // @Route("/throwhttperror/{Status}")
-export class ThrowHttpError
-{
+export class ThrowHttpError {
     status: number;
     message: string;
 }
 
 // @Route("/throw404")
 // @Route("/throw404/{Message}")
-export class Throw404
-{
+export class Throw404 {
     message: string;
 }
 
 // @Route("/throwcustom400")
 // @Route("/throwcustom400/{Message}")
-export class ThrowCustom400
-{
+export class ThrowCustom400 {
     message: string;
 }
 
@@ -906,14 +894,11 @@ export class ExternalOperation3 implements IReturn<ExternalReturnTypeResponse>
     getTypeName() { return "ExternalOperation3"; }
 }
 
-export class ExternalOperation4
-{
+export class ExternalOperation4 {
     id: number;
 }
 
-// @Route("/{Path*}")
-export class RootPathRoutes
-{
+export class RootPathRoutes {
     path: string;
 }
 
@@ -933,44 +918,37 @@ export class GetProject implements IReturn<Project>
 }
 
 // @Route("/image-stream")
-export class ImageAsStream
-{
+export class ImageAsStream {
     format: string;
 }
 
 // @Route("/image-bytes")
-export class ImageAsBytes
-{
+export class ImageAsBytes {
     format: string;
 }
 
 // @Route("/image-custom")
-export class ImageAsCustomResult
-{
+export class ImageAsCustomResult {
     format: string;
 }
 
 // @Route("/image-response")
-export class ImageWriteToResponse
-{
+export class ImageWriteToResponse {
     format: string;
 }
 
 // @Route("/image-file")
-export class ImageAsFile
-{
+export class ImageAsFile {
     format: string;
 }
 
 // @Route("/image-redirect")
-export class ImageAsRedirect
-{
+export class ImageAsRedirect {
     format: string;
 }
 
 // @Route("/image-draw/{Name}")
-export class DrawImage
-{
+export class DrawImage {
     name: string;
     format: string;
     width: number;
@@ -978,6 +956,31 @@ export class DrawImage
     fontSize: number;
     foreground: string;
     background: string;
+}
+
+// @Route("/jwt")
+export class CreateJwt extends AuthUserSession implements IReturn<CreateJwtResponse>
+{
+    jwtExpiry: string;
+    createResponse() { return new CreateJwtResponse(); }
+    getTypeName() { return "CreateJwt"; }
+}
+
+// @Route("/jwt-refresh")
+export class CreateRefreshJwt implements IReturn<CreateRefreshJwtResponse>
+{
+    userAuthId: string;
+    jwtExpiry: string;
+    createResponse() { return new CreateRefreshJwtResponse(); }
+    getTypeName() { return "CreateRefreshJwt"; }
+}
+
+// @Route("/logs")
+export class ViewLogs implements IReturn<string>
+{
+    clear: boolean;
+    createResponse() { return ""; }
+    getTypeName() { return "ViewLogs"; }
 }
 
 // @Route("/metadatatest")
@@ -1013,9 +1016,18 @@ export class GetRandomIds implements IReturn<GetRandomIdsResponse>
 }
 
 // @Route("/textfile-test")
-export class TextFileTest
-{
+export class TextFileTest {
     asAttachment: boolean;
+}
+
+// @Route("/return/text")
+export class ReturnText {
+    text: string;
+}
+
+// @Route("/return/html")
+export class ReturnHtml {
+    text: string;
 }
 
 // @Route("/hello")
@@ -1064,15 +1076,13 @@ export class HelloArray implements IReturn<Array<ArrayResult>>
     getTypeName() { return "HelloArray"; }
 }
 
-export class HelloWithEnum
-{
+export class HelloWithEnum {
     enumProp: EnumType;
     nullableEnumProp: EnumType;
     enumFlags: EnumFlags;
 }
 
-export class RestrictedAttributes
-{
+export class RestrictedAttributes {
     id: number;
     name: string;
     hello: Hello;
@@ -1082,16 +1092,15 @@ export class RestrictedAttributes
 * AllowedAttributes Description
 */
 // @Route("/allowed-attributes", "GET")
-// @Api("AllowedAttributes Description")
-// @ApiResponse(400, "Your request was not understood")
+// @Api(Description="AllowedAttributes Description")
+// @ApiResponse(Description="Your request was not understood", StatusCode=400)
 // @DataContract
-export class AllowedAttributes
-{
+export class AllowedAttributes {
     /**
     * Range Description
     */
     // @DataMember(Name="Aliased")
-    // @ApiMember(Description="Range Description", ParameterType="path", DataType="double", IsRequired=true)
+    // @ApiMember(DataType="double", Description="Range Description", IsRequired=true, ParameterType="path")
     range: number;
 }
 
@@ -1112,8 +1121,7 @@ export class HelloString implements IReturn<string>
     getTypeName() { return "HelloString"; }
 }
 
-export class HelloVoid
-{
+export class HelloVoid {
     name: string;
 }
 
@@ -1182,8 +1190,7 @@ export class HelloWithType implements IReturn<HelloWithTypeResponse>
     getTypeName() { return "HelloWithType"; }
 }
 
-export class HelloInterface
-{
+export class HelloInterface {
     poco: IPoco;
     emptyInterface: IEmptyInterface;
     emptyClass: EmptyClass;
@@ -1195,54 +1202,46 @@ export class HelloInnerTypes implements IReturn<HelloInnerTypesResponse>
     getTypeName() { return "HelloInnerTypes"; }
 }
 
-export class HelloBuiltin
-{
+export class HelloBuiltin {
     dayOfWeek: DayOfWeek;
 }
 
-export class HelloGet implements IReturn<HelloVerbResponse>
-{
+export class HelloGet implements IReturn<HelloVerbResponse>, IGet {
     id: number;
     createResponse() { return new HelloVerbResponse(); }
     getTypeName() { return "HelloGet"; }
 }
 
-export class HelloPost extends HelloBase implements IReturn<HelloVerbResponse>
-{
+export class HelloPost extends HelloBase implements IReturn<HelloVerbResponse>, IPost {
     createResponse() { return new HelloVerbResponse(); }
     getTypeName() { return "HelloPost"; }
 }
 
-export class HelloPut implements IReturn<HelloVerbResponse>
-{
+export class HelloPut implements IReturn<HelloVerbResponse>, IPut {
     id: number;
     createResponse() { return new HelloVerbResponse(); }
     getTypeName() { return "HelloPut"; }
 }
 
-export class HelloDelete implements IReturn<HelloVerbResponse>
-{
+export class HelloDelete implements IReturn<HelloVerbResponse>, IDelete {
     id: number;
     createResponse() { return new HelloVerbResponse(); }
     getTypeName() { return "HelloDelete"; }
 }
 
-export class HelloPatch implements IReturn<HelloVerbResponse>
-{
+export class HelloPatch implements IReturn<HelloVerbResponse>, IPatch {
     id: number;
     createResponse() { return new HelloVerbResponse(); }
     getTypeName() { return "HelloPatch"; }
 }
 
-export class HelloReturnVoid implements IReturnVoid
-{
+export class HelloReturnVoid implements IReturnVoid {
     id: number;
-    createResponse() {}
+    createResponse() { }
     getTypeName() { return "HelloReturnVoid"; }
 }
 
-export class EnumRequest implements IReturn<EnumResponse>
-{
+export class EnumRequest implements IReturn<EnumResponse>, IPut {
     operator: ScopeType;
     createResponse() { return new EnumResponse(); }
     getTypeName() { return "EnumRequest"; }
@@ -1269,8 +1268,7 @@ export class Ping implements IReturn<PingResponse>
 }
 
 // @Route("/reset-connections")
-export class ResetConnections
-{
+export class ResetConnections {
 }
 
 // @Route("/requires-role")
@@ -1305,17 +1303,44 @@ export class ReturnStream implements IReturn<Blob>
 }
 
 // @Route("/Request1", "GET")
-export class GetRequest1 implements IReturn<Array<ReturnedDto>>
-{
+export class GetRequest1 implements IReturn<Array<ReturnedDto>>, IGet {
     createResponse() { return new Array<ReturnedDto>(); }
     getTypeName() { return "GetRequest1"; }
 }
 
 // @Route("/Request2", "GET")
-export class GetRequest2 implements IReturn<Array<ReturnedDto>>
-{
+export class GetRequest2 implements IReturn<Array<ReturnedDto>>, IGet {
     createResponse() { return new Array<ReturnedDto>(); }
     getTypeName() { return "GetRequest2"; }
+}
+
+// @Route("/sendjson")
+export class SendJson implements IReturn<string>
+{
+    id: number;
+    name: string;
+    createResponse() { return ""; }
+    getTypeName() { return "SendJson"; }
+}
+
+// @Route("/sendtext")
+export class SendText implements IReturn<string>
+{
+    id: number;
+    name: string;
+    contentType: string;
+    createResponse() { return ""; }
+    getTypeName() { return "SendText"; }
+}
+
+// @Route("/sendraw")
+export class SendRaw implements IReturn<Uint8Array>
+{
+    id: number;
+    name: string;
+    contentType: string;
+    createResponse() { return new Uint8Array(0); }
+    getTypeName() { return "SendRaw"; }
 }
 
 export class SendDefault implements IReturn<SendVerbResponse>
@@ -1326,32 +1351,34 @@ export class SendDefault implements IReturn<SendVerbResponse>
 }
 
 // @Route("/sendrestget/{Id}", "GET")
-export class SendRestGet implements IReturn<SendVerbResponse>
-{
+export class SendRestGet implements IReturn<SendVerbResponse>, IGet {
     id: number;
     createResponse() { return new SendVerbResponse(); }
     getTypeName() { return "SendRestGet"; }
 }
 
-export class SendGet implements IReturn<SendVerbResponse>
-{
+export class SendGet implements IReturn<SendVerbResponse>, IGet {
     id: number;
     createResponse() { return new SendVerbResponse(); }
     getTypeName() { return "SendGet"; }
 }
 
-export class SendPost implements IReturn<SendVerbResponse>
-{
+export class SendPost implements IReturn<SendVerbResponse>, IPost {
     id: number;
     createResponse() { return new SendVerbResponse(); }
     getTypeName() { return "SendPost"; }
 }
 
-export class SendPut implements IReturn<SendVerbResponse>
-{
+export class SendPut implements IReturn<SendVerbResponse>, IPut {
     id: number;
     createResponse() { return new SendVerbResponse(); }
     getTypeName() { return "SendPut"; }
+}
+
+export class SendReturnVoid implements IReturnVoid {
+    id: number;
+    createResponse() { }
+    getTypeName() { return "SendReturnVoid"; }
 }
 
 // @Route("/session")
@@ -1383,14 +1410,26 @@ export class TestAuth implements IReturn<TestAuthResponse>
     getTypeName() { return "TestAuth"; }
 }
 
-// @Route("/void-response")
-export class TestVoidResponse
+// @Route("/testdata/AllTypes")
+export class TestDataAllTypes implements IReturn<AllTypes>
 {
+    createResponse() { return new AllTypes(); }
+    getTypeName() { return "TestDataAllTypes"; }
+}
+
+// @Route("/testdata/AllCollectionTypes")
+export class TestDataAllCollectionTypes implements IReturn<AllCollectionTypes>
+{
+    createResponse() { return new AllCollectionTypes(); }
+    getTypeName() { return "TestDataAllCollectionTypes"; }
+}
+
+// @Route("/void-response")
+export class TestVoidResponse {
 }
 
 // @Route("/null-response")
-export class TestNullResponse
-{
+export class TestNullResponse {
 }
 
 // @Route("/auth")
@@ -1398,8 +1437,7 @@ export class TestNullResponse
 // @Route("/authenticate")
 // @Route("/authenticate/{provider}")
 // @DataContract
-export class Authenticate implements IReturn<AuthenticateResponse>
-{
+export class Authenticate implements IReturn<AuthenticateResponse>, IPost {
     // @DataMember(Order=1)
     provider: string;
 
@@ -1446,15 +1484,20 @@ export class Authenticate implements IReturn<AuthenticateResponse>
     useTokenCookie: boolean;
 
     // @DataMember(Order=16)
-    meta: { [index:string]: string; };
+    accessToken: string;
+
+    // @DataMember(Order=17)
+    accessTokenSecret: string;
+
+    // @DataMember(Order=18)
+    meta: { [index: string]: string; };
     createResponse() { return new AuthenticateResponse(); }
     getTypeName() { return "Authenticate"; }
 }
 
 // @Route("/assignroles")
 // @DataContract
-export class AssignRoles implements IReturn<AssignRolesResponse>
-{
+export class AssignRoles implements IReturn<AssignRolesResponse>, IPost {
     // @DataMember(Order=1)
     userName: string;
 
@@ -1469,8 +1512,7 @@ export class AssignRoles implements IReturn<AssignRolesResponse>
 
 // @Route("/unassignroles")
 // @DataContract
-export class UnAssignRoles implements IReturn<UnAssignRolesResponse>
-{
+export class UnAssignRoles implements IReturn<UnAssignRolesResponse>, IPost {
     // @DataMember(Order=1)
     userName: string;
 
@@ -1483,22 +1525,40 @@ export class UnAssignRoles implements IReturn<UnAssignRolesResponse>
     getTypeName() { return "UnAssignRoles"; }
 }
 
-export class QueryPocoBase extends QueryBase_1<OnlyDefinedInGenericType> implements IReturn<QueryResponse<OnlyDefinedInGenericType>>
+// @Route("/session-to-token")
+// @DataContract
+export class ConvertSessionToToken implements IReturn<ConvertSessionToTokenResponse>, IPost {
+    // @DataMember(Order=1)
+    preserveSession: boolean;
+    createResponse() { return new ConvertSessionToTokenResponse(); }
+    getTypeName() { return "ConvertSessionToToken"; }
+}
+
+// @Route("/access-token")
+// @DataContract
+export class GetAccessToken implements IReturn<GetAccessTokenResponse>, IPost {
+    // @DataMember(Order=1)
+    refreshToken: string;
+    createResponse() { return new GetAccessTokenResponse(); }
+    getTypeName() { return "GetAccessToken"; }
+}
+
+export class QueryPocoBase extends QueryDb_1<OnlyDefinedInGenericType> implements IReturn<QueryResponse<OnlyDefinedInGenericType>>
 {
     id: number;
     createResponse() { return new QueryResponse<OnlyDefinedInGenericType>(); }
     getTypeName() { return "QueryPocoBase"; }
 }
 
-export class QueryPocoIntoBase extends QueryBase_2<OnlyDefinedInGenericTypeFrom, OnlyDefinedInGenericTypeInto> implements IReturn<QueryResponse<OnlyDefinedInGenericTypeInto>>
+export class QueryPocoIntoBase extends QueryDb_2<OnlyDefinedInGenericTypeFrom, OnlyDefinedInGenericTypeInto> implements IReturn<QueryResponse<OnlyDefinedInGenericTypeInto>>
 {
     id: number;
     createResponse() { return new QueryResponse<OnlyDefinedInGenericTypeInto>(); }
     getTypeName() { return "QueryPocoIntoBase"; }
 }
 
-// @Route("/rockstars")
-export class QueryRockstars extends QueryBase_1<Rockstar> implements IReturn<QueryResponse<Rockstar>>
+// @Route("/rockstars", "GET")
+export class QueryRockstars extends QueryDb_1<Rockstar> implements IReturn<QueryResponse<Rockstar>>
 {
     createResponse() { return new QueryResponse<Rockstar>(); }
     getTypeName() { return "QueryRockstars"; }

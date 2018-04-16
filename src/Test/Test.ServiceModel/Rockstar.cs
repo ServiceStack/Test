@@ -1,9 +1,13 @@
-﻿using ServiceStack;
+﻿using System.Collections.Generic;
+using ServiceStack;
 
 namespace Test.ServiceModel
 {
-    [Route("/rockstars")]
+    [Route("/rockstars", "GET")]
     public class QueryRockstars : QueryDb<Rockstar> {}
+
+    [Route("/rockstars", "POST")]
+    public class StoreRockstars : List<Rockstar>, IReturn<StoreRockstars> {}
 
     public class Rockstar
     {

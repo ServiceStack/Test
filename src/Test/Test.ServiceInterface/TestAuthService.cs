@@ -32,4 +32,15 @@ namespace Test.ServiceInterface
             };
         }
     }
+
+    public class RequiresAdmin : IReturn<RequiresAdmin>
+    {
+        public int Id { get; set; }
+    }
+
+    [RequiredRole("Admin")]
+    public class AdminServices : Service
+    {
+        public object Any(RequiresAdmin request) => request;
+    }
 }

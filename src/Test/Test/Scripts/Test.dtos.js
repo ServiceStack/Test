@@ -1,6 +1,7 @@
+"use strict";
 /* Options:
-Date: 2017-02-10 11:04:42
-Version: 4.00
+Date: 2018-04-13 15:53:43
+Version: 5.00
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: http://localhost:56500
 
@@ -14,7 +15,6 @@ BaseUrl: http://localhost:56500
 //ExcludeTypes:
 //DefaultImports:
 */
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -27,69 +27,76 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 // @DataContract
-var ResponseError = (function () {
+var ResponseError = /** @class */ (function () {
     function ResponseError() {
     }
     return ResponseError;
 }());
 exports.ResponseError = ResponseError;
 // @DataContract
-var ResponseStatus = (function () {
+var ResponseStatus = /** @class */ (function () {
     function ResponseStatus() {
     }
     return ResponseStatus;
 }());
 exports.ResponseStatus = ResponseStatus;
-var ExternalType = (function () {
+var ExternalType = /** @class */ (function () {
     function ExternalType() {
     }
     return ExternalType;
 }());
 exports.ExternalType = ExternalType;
-var MetadataTestNestedChild = (function () {
+// @DataContract
+var AuthUserSession = /** @class */ (function () {
+    function AuthUserSession() {
+    }
+    return AuthUserSession;
+}());
+exports.AuthUserSession = AuthUserSession;
+var MetadataTestNestedChild = /** @class */ (function () {
     function MetadataTestNestedChild() {
     }
     return MetadataTestNestedChild;
 }());
 exports.MetadataTestNestedChild = MetadataTestNestedChild;
-var MetadataTestChild = (function () {
+var MetadataTestChild = /** @class */ (function () {
     function MetadataTestChild() {
     }
     return MetadataTestChild;
 }());
 exports.MetadataTestChild = MetadataTestChild;
-var MenuItemExampleItem = (function () {
+var MenuItemExampleItem = /** @class */ (function () {
     function MenuItemExampleItem() {
     }
     return MenuItemExampleItem;
 }());
 exports.MenuItemExampleItem = MenuItemExampleItem;
-var MenuItemExample = (function () {
+var MenuItemExample = /** @class */ (function () {
     function MenuItemExample() {
     }
     return MenuItemExample;
 }());
 exports.MenuItemExample = MenuItemExample;
 // @DataContract
-var MenuExample = (function () {
+var MenuExample = /** @class */ (function () {
     function MenuExample() {
     }
     return MenuExample;
 }());
 exports.MenuExample = MenuExample;
-var NestedClass = (function () {
+var NestedClass = /** @class */ (function () {
     function NestedClass() {
     }
     return NestedClass;
 }());
 exports.NestedClass = NestedClass;
-var ListResult = (function () {
+var ListResult = /** @class */ (function () {
     function ListResult() {
     }
     return ListResult;
 }());
 exports.ListResult = ListResult;
-var ArrayResult = (function () {
+var ArrayResult = /** @class */ (function () {
     function ArrayResult() {
     }
     return ArrayResult;
@@ -102,98 +109,85 @@ var EnumFlags;
     EnumFlags[EnumFlags["Value2"] = 2] = "Value2";
     EnumFlags[EnumFlags["Value3"] = 4] = "Value3";
 })(EnumFlags = exports.EnumFlags || (exports.EnumFlags = {}));
-var Poco = (function () {
-    function Poco() {
-    }
-    return Poco;
-}());
-exports.Poco = Poco;
-var AllCollectionTypes = (function () {
-    function AllCollectionTypes() {
-    }
-    return AllCollectionTypes;
-}());
-exports.AllCollectionTypes = AllCollectionTypes;
-var KeyValuePair = (function () {
+var KeyValuePair = /** @class */ (function () {
     function KeyValuePair() {
     }
     return KeyValuePair;
 }());
 exports.KeyValuePair = KeyValuePair;
-var SubType = (function () {
+var SubType = /** @class */ (function () {
     function SubType() {
     }
     return SubType;
 }());
 exports.SubType = SubType;
-var HelloBase = (function () {
+var HelloBase = /** @class */ (function () {
     function HelloBase() {
     }
     return HelloBase;
 }());
 exports.HelloBase = HelloBase;
-var HelloResponseBase = (function () {
+var HelloResponseBase = /** @class */ (function () {
     function HelloResponseBase() {
     }
     return HelloResponseBase;
 }());
 exports.HelloResponseBase = HelloResponseBase;
-var HelloBase_1 = (function () {
+var Poco = /** @class */ (function () {
+    function Poco() {
+    }
+    return Poco;
+}());
+exports.Poco = Poco;
+var HelloBase_1 = /** @class */ (function () {
     function HelloBase_1() {
     }
     return HelloBase_1;
 }());
 exports.HelloBase_1 = HelloBase_1;
-var Item = (function () {
+var Item = /** @class */ (function () {
     function Item() {
     }
     return Item;
 }());
 exports.Item = Item;
-var HelloWithReturnResponse = (function () {
+var HelloWithReturnResponse = /** @class */ (function () {
     function HelloWithReturnResponse() {
     }
     return HelloWithReturnResponse;
 }());
 exports.HelloWithReturnResponse = HelloWithReturnResponse;
-var HelloType = (function () {
+var HelloType = /** @class */ (function () {
     function HelloType() {
     }
     return HelloType;
 }());
 exports.HelloType = HelloType;
-var EmptyClass = (function () {
+var EmptyClass = /** @class */ (function () {
     function EmptyClass() {
     }
     return EmptyClass;
 }());
 exports.EmptyClass = EmptyClass;
-var InnerType = (function () {
+var InnerType = /** @class */ (function () {
     function InnerType() {
     }
     return InnerType;
 }());
 exports.InnerType = InnerType;
-var PingService = (function () {
+var PingService = /** @class */ (function () {
     function PingService() {
     }
     return PingService;
 }());
 exports.PingService = PingService;
-var ReturnedDto = (function () {
+var ReturnedDto = /** @class */ (function () {
     function ReturnedDto() {
     }
     return ReturnedDto;
 }());
 exports.ReturnedDto = ReturnedDto;
-// @DataContract
-var AuthUserSession = (function () {
-    function AuthUserSession() {
-    }
-    return AuthUserSession;
-}());
-exports.AuthUserSession = AuthUserSession;
-var CustomUserSession = (function (_super) {
+var CustomUserSession = /** @class */ (function (_super) {
     __extends(CustomUserSession, _super);
     function CustomUserSession() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -201,156 +195,168 @@ var CustomUserSession = (function (_super) {
     return CustomUserSession;
 }(AuthUserSession));
 exports.CustomUserSession = CustomUserSession;
-var UnAuthInfo = (function () {
+var UnAuthInfo = /** @class */ (function () {
     function UnAuthInfo() {
     }
     return UnAuthInfo;
 }());
 exports.UnAuthInfo = UnAuthInfo;
-var Channel = (function () {
+var Channel = /** @class */ (function () {
     function Channel() {
     }
     return Channel;
 }());
 exports.Channel = Channel;
-var Device = (function () {
+var Device = /** @class */ (function () {
     function Device() {
     }
     return Device;
 }());
 exports.Device = Device;
-var Logger = (function () {
+var Logger = /** @class */ (function () {
     function Logger() {
     }
     return Logger;
 }());
 exports.Logger = Logger;
-var QueryBase = (function () {
-    function QueryBase() {
-    }
-    return QueryBase;
-}());
-exports.QueryBase = QueryBase;
-var QueryBase_1 = (function (_super) {
-    __extends(QueryBase_1, _super);
-    function QueryBase_1() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return QueryBase_1;
-}(QueryBase));
-exports.QueryBase_1 = QueryBase_1;
-var OnlyDefinedInGenericType = (function () {
-    function OnlyDefinedInGenericType() {
-    }
-    return OnlyDefinedInGenericType;
-}());
-exports.OnlyDefinedInGenericType = OnlyDefinedInGenericType;
-var QueryBase_2 = (function (_super) {
-    __extends(QueryBase_2, _super);
-    function QueryBase_2() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return QueryBase_2;
-}(QueryBase));
-exports.QueryBase_2 = QueryBase_2;
-var OnlyDefinedInGenericTypeFrom = (function () {
-    function OnlyDefinedInGenericTypeFrom() {
-    }
-    return OnlyDefinedInGenericTypeFrom;
-}());
-exports.OnlyDefinedInGenericTypeFrom = OnlyDefinedInGenericTypeFrom;
-var OnlyDefinedInGenericTypeInto = (function () {
-    function OnlyDefinedInGenericTypeInto() {
-    }
-    return OnlyDefinedInGenericTypeInto;
-}());
-exports.OnlyDefinedInGenericTypeInto = OnlyDefinedInGenericTypeInto;
-var Rockstar = (function () {
+var Rockstar = /** @class */ (function () {
     function Rockstar() {
     }
     return Rockstar;
 }());
 exports.Rockstar = Rockstar;
-var TypesGroup = (function () {
+var QueryBase = /** @class */ (function () {
+    function QueryBase() {
+    }
+    return QueryBase;
+}());
+exports.QueryBase = QueryBase;
+var QueryDb_1 = /** @class */ (function (_super) {
+    __extends(QueryDb_1, _super);
+    function QueryDb_1() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return QueryDb_1;
+}(QueryBase));
+exports.QueryDb_1 = QueryDb_1;
+var OnlyDefinedInGenericType = /** @class */ (function () {
+    function OnlyDefinedInGenericType() {
+    }
+    return OnlyDefinedInGenericType;
+}());
+exports.OnlyDefinedInGenericType = OnlyDefinedInGenericType;
+var QueryDb_2 = /** @class */ (function (_super) {
+    __extends(QueryDb_2, _super);
+    function QueryDb_2() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return QueryDb_2;
+}(QueryBase));
+exports.QueryDb_2 = QueryDb_2;
+var OnlyDefinedInGenericTypeFrom = /** @class */ (function () {
+    function OnlyDefinedInGenericTypeFrom() {
+    }
+    return OnlyDefinedInGenericTypeFrom;
+}());
+exports.OnlyDefinedInGenericTypeFrom = OnlyDefinedInGenericTypeFrom;
+var OnlyDefinedInGenericTypeInto = /** @class */ (function () {
+    function OnlyDefinedInGenericTypeInto() {
+    }
+    return OnlyDefinedInGenericTypeInto;
+}());
+exports.OnlyDefinedInGenericTypeInto = OnlyDefinedInGenericTypeInto;
+var TypesGroup = /** @class */ (function () {
     function TypesGroup() {
     }
     return TypesGroup;
 }());
 exports.TypesGroup = TypesGroup;
-var CustomHttpErrorResponse = (function () {
+var CustomHttpErrorResponse = /** @class */ (function () {
     function CustomHttpErrorResponse() {
     }
     return CustomHttpErrorResponse;
 }());
 exports.CustomHttpErrorResponse = CustomHttpErrorResponse;
-var ThrowTypeResponse = (function () {
+var ThrowTypeResponse = /** @class */ (function () {
     function ThrowTypeResponse() {
     }
     return ThrowTypeResponse;
 }());
 exports.ThrowTypeResponse = ThrowTypeResponse;
-var ThrowValidationResponse = (function () {
+var ThrowValidationResponse = /** @class */ (function () {
     function ThrowValidationResponse() {
     }
     return ThrowValidationResponse;
 }());
 exports.ThrowValidationResponse = ThrowValidationResponse;
-var ThrowBusinessErrorResponse = (function () {
+var ThrowBusinessErrorResponse = /** @class */ (function () {
     function ThrowBusinessErrorResponse() {
     }
     return ThrowBusinessErrorResponse;
 }());
 exports.ThrowBusinessErrorResponse = ThrowBusinessErrorResponse;
-var ExternalOperationResponse = (function () {
+var ExternalOperationResponse = /** @class */ (function () {
     function ExternalOperationResponse() {
     }
     return ExternalOperationResponse;
 }());
 exports.ExternalOperationResponse = ExternalOperationResponse;
-var ExternalOperation2Response = (function () {
+var ExternalOperation2Response = /** @class */ (function () {
     function ExternalOperation2Response() {
     }
     return ExternalOperation2Response;
 }());
 exports.ExternalOperation2Response = ExternalOperation2Response;
-var ExternalReturnTypeResponse = (function () {
+var ExternalReturnTypeResponse = /** @class */ (function () {
     function ExternalReturnTypeResponse() {
     }
     return ExternalReturnTypeResponse;
 }());
 exports.ExternalReturnTypeResponse = ExternalReturnTypeResponse;
-var Account = (function () {
+var Account = /** @class */ (function () {
     function Account() {
     }
     return Account;
 }());
 exports.Account = Account;
-var Project = (function () {
+var Project = /** @class */ (function () {
     function Project() {
     }
     return Project;
 }());
 exports.Project = Project;
-var MetadataTestResponse = (function () {
+var CreateJwtResponse = /** @class */ (function () {
+    function CreateJwtResponse() {
+    }
+    return CreateJwtResponse;
+}());
+exports.CreateJwtResponse = CreateJwtResponse;
+var CreateRefreshJwtResponse = /** @class */ (function () {
+    function CreateRefreshJwtResponse() {
+    }
+    return CreateRefreshJwtResponse;
+}());
+exports.CreateRefreshJwtResponse = CreateRefreshJwtResponse;
+var MetadataTestResponse = /** @class */ (function () {
     function MetadataTestResponse() {
     }
     return MetadataTestResponse;
 }());
 exports.MetadataTestResponse = MetadataTestResponse;
 // @DataContract
-var GetExampleResponse = (function () {
+var GetExampleResponse = /** @class */ (function () {
     function GetExampleResponse() {
     }
     return GetExampleResponse;
 }());
 exports.GetExampleResponse = GetExampleResponse;
-var GetRandomIdsResponse = (function () {
+var GetRandomIdsResponse = /** @class */ (function () {
     function GetRandomIdsResponse() {
     }
     return GetRandomIdsResponse;
 }());
 exports.GetRandomIdsResponse = GetRandomIdsResponse;
-var HelloResponse = (function () {
+var HelloResponse = /** @class */ (function () {
     function HelloResponse() {
     }
     return HelloResponse;
@@ -360,25 +366,31 @@ exports.HelloResponse = HelloResponse;
 * Description on HelloAllResponse type
 */
 // @DataContract
-var HelloAnnotatedResponse = (function () {
+var HelloAnnotatedResponse = /** @class */ (function () {
     function HelloAnnotatedResponse() {
     }
     return HelloAnnotatedResponse;
 }());
 exports.HelloAnnotatedResponse = HelloAnnotatedResponse;
-var AllTypes = (function () {
+var AllTypes = /** @class */ (function () {
     function AllTypes() {
     }
     return AllTypes;
 }());
 exports.AllTypes = AllTypes;
-var HelloAllTypesResponse = (function () {
+var AllCollectionTypes = /** @class */ (function () {
+    function AllCollectionTypes() {
+    }
+    return AllCollectionTypes;
+}());
+exports.AllCollectionTypes = AllCollectionTypes;
+var HelloAllTypesResponse = /** @class */ (function () {
     function HelloAllTypesResponse() {
     }
     return HelloAllTypesResponse;
 }());
 exports.HelloAllTypesResponse = HelloAllTypesResponse;
-var HelloDateTime = (function () {
+var HelloDateTime = /** @class */ (function () {
     function HelloDateTime() {
     }
     HelloDateTime.prototype.createResponse = function () { return new HelloDateTime(); };
@@ -387,7 +399,7 @@ var HelloDateTime = (function () {
 }());
 exports.HelloDateTime = HelloDateTime;
 // @DataContract
-var HelloWithDataContractResponse = (function () {
+var HelloWithDataContractResponse = /** @class */ (function () {
     function HelloWithDataContractResponse() {
     }
     return HelloWithDataContractResponse;
@@ -396,13 +408,13 @@ exports.HelloWithDataContractResponse = HelloWithDataContractResponse;
 /**
 * Description on HelloWithDescriptionResponse type
 */
-var HelloWithDescriptionResponse = (function () {
+var HelloWithDescriptionResponse = /** @class */ (function () {
     function HelloWithDescriptionResponse() {
     }
     return HelloWithDescriptionResponse;
 }());
 exports.HelloWithDescriptionResponse = HelloWithDescriptionResponse;
-var HelloWithInheritanceResponse = (function (_super) {
+var HelloWithInheritanceResponse = /** @class */ (function (_super) {
     __extends(HelloWithInheritanceResponse, _super);
     function HelloWithInheritanceResponse() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -410,7 +422,7 @@ var HelloWithInheritanceResponse = (function (_super) {
     return HelloWithInheritanceResponse;
 }(HelloResponseBase));
 exports.HelloWithInheritanceResponse = HelloWithInheritanceResponse;
-var HelloWithAlternateReturnResponse = (function (_super) {
+var HelloWithAlternateReturnResponse = /** @class */ (function (_super) {
     __extends(HelloWithAlternateReturnResponse, _super);
     function HelloWithAlternateReturnResponse() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -418,38 +430,38 @@ var HelloWithAlternateReturnResponse = (function (_super) {
     return HelloWithAlternateReturnResponse;
 }(HelloWithReturnResponse));
 exports.HelloWithAlternateReturnResponse = HelloWithAlternateReturnResponse;
-var HelloWithRouteResponse = (function () {
+var HelloWithRouteResponse = /** @class */ (function () {
     function HelloWithRouteResponse() {
     }
     return HelloWithRouteResponse;
 }());
 exports.HelloWithRouteResponse = HelloWithRouteResponse;
-var HelloWithTypeResponse = (function () {
+var HelloWithTypeResponse = /** @class */ (function () {
     function HelloWithTypeResponse() {
     }
     return HelloWithTypeResponse;
 }());
 exports.HelloWithTypeResponse = HelloWithTypeResponse;
-var HelloInnerTypesResponse = (function () {
+var HelloInnerTypesResponse = /** @class */ (function () {
     function HelloInnerTypesResponse() {
     }
     return HelloInnerTypesResponse;
 }());
 exports.HelloInnerTypesResponse = HelloInnerTypesResponse;
-var HelloVerbResponse = (function () {
+var HelloVerbResponse = /** @class */ (function () {
     function HelloVerbResponse() {
     }
     return HelloVerbResponse;
 }());
 exports.HelloVerbResponse = HelloVerbResponse;
-var EnumResponse = (function () {
+var EnumResponse = /** @class */ (function () {
     function EnumResponse() {
     }
     return EnumResponse;
 }());
 exports.EnumResponse = EnumResponse;
 // @Route("/hellotypes/{Name}")
-var HelloTypes = (function () {
+var HelloTypes = /** @class */ (function () {
     function HelloTypes() {
     }
     HelloTypes.prototype.createResponse = function () { return new HelloTypes(); };
@@ -458,50 +470,58 @@ var HelloTypes = (function () {
 }());
 exports.HelloTypes = HelloTypes;
 // @DataContract
-var HelloZipResponse = (function () {
+var HelloZipResponse = /** @class */ (function () {
     function HelloZipResponse() {
     }
     return HelloZipResponse;
 }());
 exports.HelloZipResponse = HelloZipResponse;
-var PingResponse = (function () {
+var PingResponse = /** @class */ (function () {
     function PingResponse() {
     }
     return PingResponse;
 }());
 exports.PingResponse = PingResponse;
-var RequiresRoleResponse = (function () {
+var RequiresRoleResponse = /** @class */ (function () {
     function RequiresRoleResponse() {
     }
     return RequiresRoleResponse;
 }());
 exports.RequiresRoleResponse = RequiresRoleResponse;
-var SendVerbResponse = (function () {
+var SendVerbResponse = /** @class */ (function () {
     function SendVerbResponse() {
     }
     return SendVerbResponse;
 }());
 exports.SendVerbResponse = SendVerbResponse;
-var GetSessionResponse = (function () {
+var GetSessionResponse = /** @class */ (function () {
     function GetSessionResponse() {
     }
     return GetSessionResponse;
 }());
 exports.GetSessionResponse = GetSessionResponse;
-var StoreLogsResponse = (function () {
+var StoreLogsResponse = /** @class */ (function () {
     function StoreLogsResponse() {
     }
     return StoreLogsResponse;
 }());
 exports.StoreLogsResponse = StoreLogsResponse;
-var TestAuthResponse = (function () {
+var TestAuthResponse = /** @class */ (function () {
     function TestAuthResponse() {
     }
     return TestAuthResponse;
 }());
 exports.TestAuthResponse = TestAuthResponse;
+var RequiresAdmin = /** @class */ (function () {
+    function RequiresAdmin() {
+    }
+    RequiresAdmin.prototype.createResponse = function () { return new RequiresAdmin(); };
+    RequiresAdmin.prototype.getTypeName = function () { return "RequiresAdmin"; };
+    return RequiresAdmin;
+}());
+exports.RequiresAdmin = RequiresAdmin;
 // @Route("/wait/{ForMs}")
-var Wait = (function () {
+var Wait = /** @class */ (function () {
     function Wait() {
     }
     Wait.prototype.createResponse = function () { return new Wait(); };
@@ -510,7 +530,7 @@ var Wait = (function () {
 }());
 exports.Wait = Wait;
 // @Route("/echo/types")
-var EchoTypes = (function () {
+var EchoTypes = /** @class */ (function () {
     function EchoTypes() {
     }
     EchoTypes.prototype.createResponse = function () { return new EchoTypes(); };
@@ -519,7 +539,7 @@ var EchoTypes = (function () {
 }());
 exports.EchoTypes = EchoTypes;
 // @Route("/echo/collections")
-var EchoCollections = (function () {
+var EchoCollections = /** @class */ (function () {
     function EchoCollections() {
     }
     EchoCollections.prototype.createResponse = function () { return new EchoCollections(); };
@@ -527,7 +547,7 @@ var EchoCollections = (function () {
     return EchoCollections;
 }());
 exports.EchoCollections = EchoCollections;
-var EchoComplexTypes = (function () {
+var EchoComplexTypes = /** @class */ (function () {
     function EchoComplexTypes() {
     }
     EchoComplexTypes.prototype.createResponse = function () { return new EchoComplexTypes(); };
@@ -535,35 +555,60 @@ var EchoComplexTypes = (function () {
     return EchoComplexTypes;
 }());
 exports.EchoComplexTypes = EchoComplexTypes;
+// @Route("/rockstars", "POST")
+var StoreRockstars = /** @class */ (function (_super) {
+    __extends(StoreRockstars, _super);
+    function StoreRockstars() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    StoreRockstars.prototype.createResponse = function () { return new StoreRockstars(); };
+    StoreRockstars.prototype.getTypeName = function () { return "StoreRockstars"; };
+    return StoreRockstars;
+}(Array));
+exports.StoreRockstars = StoreRockstars;
 // @DataContract
-var AuthenticateResponse = (function () {
+var AuthenticateResponse = /** @class */ (function () {
     function AuthenticateResponse() {
     }
     return AuthenticateResponse;
 }());
 exports.AuthenticateResponse = AuthenticateResponse;
 // @DataContract
-var AssignRolesResponse = (function () {
+var AssignRolesResponse = /** @class */ (function () {
     function AssignRolesResponse() {
     }
     return AssignRolesResponse;
 }());
 exports.AssignRolesResponse = AssignRolesResponse;
 // @DataContract
-var UnAssignRolesResponse = (function () {
+var UnAssignRolesResponse = /** @class */ (function () {
     function UnAssignRolesResponse() {
     }
     return UnAssignRolesResponse;
 }());
 exports.UnAssignRolesResponse = UnAssignRolesResponse;
 // @DataContract
-var QueryResponse = (function () {
+var ConvertSessionToTokenResponse = /** @class */ (function () {
+    function ConvertSessionToTokenResponse() {
+    }
+    return ConvertSessionToTokenResponse;
+}());
+exports.ConvertSessionToTokenResponse = ConvertSessionToTokenResponse;
+// @DataContract
+var GetAccessTokenResponse = /** @class */ (function () {
+    function GetAccessTokenResponse() {
+    }
+    return GetAccessTokenResponse;
+}());
+exports.GetAccessTokenResponse = GetAccessTokenResponse;
+// @DataContract
+var QueryResponse = /** @class */ (function () {
     function QueryResponse() {
     }
     return QueryResponse;
 }());
 exports.QueryResponse = QueryResponse;
-var CustomHttpError = (function () {
+var CustomHttpError = /** @class */ (function () {
     function CustomHttpError() {
     }
     CustomHttpError.prototype.createResponse = function () { return new CustomHttpErrorResponse(); };
@@ -572,7 +617,7 @@ var CustomHttpError = (function () {
 }());
 exports.CustomHttpError = CustomHttpError;
 // @Route("/throwhttperror/{Status}")
-var ThrowHttpError = (function () {
+var ThrowHttpError = /** @class */ (function () {
     function ThrowHttpError() {
     }
     return ThrowHttpError;
@@ -580,7 +625,7 @@ var ThrowHttpError = (function () {
 exports.ThrowHttpError = ThrowHttpError;
 // @Route("/throw404")
 // @Route("/throw404/{Message}")
-var Throw404 = (function () {
+var Throw404 = /** @class */ (function () {
     function Throw404() {
     }
     return Throw404;
@@ -588,14 +633,14 @@ var Throw404 = (function () {
 exports.Throw404 = Throw404;
 // @Route("/throwcustom400")
 // @Route("/throwcustom400/{Message}")
-var ThrowCustom400 = (function () {
+var ThrowCustom400 = /** @class */ (function () {
     function ThrowCustom400() {
     }
     return ThrowCustom400;
 }());
 exports.ThrowCustom400 = ThrowCustom400;
 // @Route("/throw/{Type}")
-var ThrowType = (function () {
+var ThrowType = /** @class */ (function () {
     function ThrowType() {
     }
     ThrowType.prototype.createResponse = function () { return new ThrowTypeResponse(); };
@@ -604,7 +649,7 @@ var ThrowType = (function () {
 }());
 exports.ThrowType = ThrowType;
 // @Route("/throwvalidation")
-var ThrowValidation = (function () {
+var ThrowValidation = /** @class */ (function () {
     function ThrowValidation() {
     }
     ThrowValidation.prototype.createResponse = function () { return new ThrowValidationResponse(); };
@@ -613,7 +658,7 @@ var ThrowValidation = (function () {
 }());
 exports.ThrowValidation = ThrowValidation;
 // @Route("/throwbusinesserror")
-var ThrowBusinessError = (function () {
+var ThrowBusinessError = /** @class */ (function () {
     function ThrowBusinessError() {
     }
     ThrowBusinessError.prototype.createResponse = function () { return new ThrowBusinessErrorResponse(); };
@@ -621,7 +666,7 @@ var ThrowBusinessError = (function () {
     return ThrowBusinessError;
 }());
 exports.ThrowBusinessError = ThrowBusinessError;
-var ExternalOperation = (function () {
+var ExternalOperation = /** @class */ (function () {
     function ExternalOperation() {
     }
     ExternalOperation.prototype.createResponse = function () { return new ExternalOperationResponse(); };
@@ -629,7 +674,7 @@ var ExternalOperation = (function () {
     return ExternalOperation;
 }());
 exports.ExternalOperation = ExternalOperation;
-var ExternalOperation2 = (function () {
+var ExternalOperation2 = /** @class */ (function () {
     function ExternalOperation2() {
     }
     ExternalOperation2.prototype.createResponse = function () { return new ExternalOperation2Response(); };
@@ -637,7 +682,7 @@ var ExternalOperation2 = (function () {
     return ExternalOperation2;
 }());
 exports.ExternalOperation2 = ExternalOperation2;
-var ExternalOperation3 = (function () {
+var ExternalOperation3 = /** @class */ (function () {
     function ExternalOperation3() {
     }
     ExternalOperation3.prototype.createResponse = function () { return new ExternalReturnTypeResponse(); };
@@ -645,20 +690,19 @@ var ExternalOperation3 = (function () {
     return ExternalOperation3;
 }());
 exports.ExternalOperation3 = ExternalOperation3;
-var ExternalOperation4 = (function () {
+var ExternalOperation4 = /** @class */ (function () {
     function ExternalOperation4() {
     }
     return ExternalOperation4;
 }());
 exports.ExternalOperation4 = ExternalOperation4;
-// @Route("/{Path*}")
-var RootPathRoutes = (function () {
+var RootPathRoutes = /** @class */ (function () {
     function RootPathRoutes() {
     }
     return RootPathRoutes;
 }());
 exports.RootPathRoutes = RootPathRoutes;
-var GetAccount = (function () {
+var GetAccount = /** @class */ (function () {
     function GetAccount() {
     }
     GetAccount.prototype.createResponse = function () { return new Account(); };
@@ -666,7 +710,7 @@ var GetAccount = (function () {
     return GetAccount;
 }());
 exports.GetAccount = GetAccount;
-var GetProject = (function () {
+var GetProject = /** @class */ (function () {
     function GetProject() {
     }
     GetProject.prototype.createResponse = function () { return new Project(); };
@@ -675,56 +719,85 @@ var GetProject = (function () {
 }());
 exports.GetProject = GetProject;
 // @Route("/image-stream")
-var ImageAsStream = (function () {
+var ImageAsStream = /** @class */ (function () {
     function ImageAsStream() {
     }
     return ImageAsStream;
 }());
 exports.ImageAsStream = ImageAsStream;
 // @Route("/image-bytes")
-var ImageAsBytes = (function () {
+var ImageAsBytes = /** @class */ (function () {
     function ImageAsBytes() {
     }
     return ImageAsBytes;
 }());
 exports.ImageAsBytes = ImageAsBytes;
 // @Route("/image-custom")
-var ImageAsCustomResult = (function () {
+var ImageAsCustomResult = /** @class */ (function () {
     function ImageAsCustomResult() {
     }
     return ImageAsCustomResult;
 }());
 exports.ImageAsCustomResult = ImageAsCustomResult;
 // @Route("/image-response")
-var ImageWriteToResponse = (function () {
+var ImageWriteToResponse = /** @class */ (function () {
     function ImageWriteToResponse() {
     }
     return ImageWriteToResponse;
 }());
 exports.ImageWriteToResponse = ImageWriteToResponse;
 // @Route("/image-file")
-var ImageAsFile = (function () {
+var ImageAsFile = /** @class */ (function () {
     function ImageAsFile() {
     }
     return ImageAsFile;
 }());
 exports.ImageAsFile = ImageAsFile;
 // @Route("/image-redirect")
-var ImageAsRedirect = (function () {
+var ImageAsRedirect = /** @class */ (function () {
     function ImageAsRedirect() {
     }
     return ImageAsRedirect;
 }());
 exports.ImageAsRedirect = ImageAsRedirect;
 // @Route("/image-draw/{Name}")
-var DrawImage = (function () {
+var DrawImage = /** @class */ (function () {
     function DrawImage() {
     }
     return DrawImage;
 }());
 exports.DrawImage = DrawImage;
+// @Route("/jwt")
+var CreateJwt = /** @class */ (function (_super) {
+    __extends(CreateJwt, _super);
+    function CreateJwt() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    CreateJwt.prototype.createResponse = function () { return new CreateJwtResponse(); };
+    CreateJwt.prototype.getTypeName = function () { return "CreateJwt"; };
+    return CreateJwt;
+}(AuthUserSession));
+exports.CreateJwt = CreateJwt;
+// @Route("/jwt-refresh")
+var CreateRefreshJwt = /** @class */ (function () {
+    function CreateRefreshJwt() {
+    }
+    CreateRefreshJwt.prototype.createResponse = function () { return new CreateRefreshJwtResponse(); };
+    CreateRefreshJwt.prototype.getTypeName = function () { return "CreateRefreshJwt"; };
+    return CreateRefreshJwt;
+}());
+exports.CreateRefreshJwt = CreateRefreshJwt;
+// @Route("/logs")
+var ViewLogs = /** @class */ (function () {
+    function ViewLogs() {
+    }
+    ViewLogs.prototype.createResponse = function () { return ""; };
+    ViewLogs.prototype.getTypeName = function () { return "ViewLogs"; };
+    return ViewLogs;
+}());
+exports.ViewLogs = ViewLogs;
 // @Route("/metadatatest")
-var MetadataTest = (function () {
+var MetadataTest = /** @class */ (function () {
     function MetadataTest() {
     }
     MetadataTest.prototype.createResponse = function () { return new MetadataTestResponse(); };
@@ -733,7 +806,7 @@ var MetadataTest = (function () {
 }());
 exports.MetadataTest = MetadataTest;
 // @Route("/metadatatest-array")
-var MetadataTestArray = (function () {
+var MetadataTestArray = /** @class */ (function () {
     function MetadataTestArray() {
     }
     MetadataTestArray.prototype.createResponse = function () { return new Array(); };
@@ -743,7 +816,7 @@ var MetadataTestArray = (function () {
 exports.MetadataTestArray = MetadataTestArray;
 // @Route("/example", "GET")
 // @DataContract
-var GetExample = (function () {
+var GetExample = /** @class */ (function () {
     function GetExample() {
     }
     GetExample.prototype.createResponse = function () { return new GetExampleResponse(); };
@@ -752,7 +825,7 @@ var GetExample = (function () {
 }());
 exports.GetExample = GetExample;
 // @Route("/randomids")
-var GetRandomIds = (function () {
+var GetRandomIds = /** @class */ (function () {
     function GetRandomIds() {
     }
     GetRandomIds.prototype.createResponse = function () { return new GetRandomIdsResponse(); };
@@ -761,15 +834,29 @@ var GetRandomIds = (function () {
 }());
 exports.GetRandomIds = GetRandomIds;
 // @Route("/textfile-test")
-var TextFileTest = (function () {
+var TextFileTest = /** @class */ (function () {
     function TextFileTest() {
     }
     return TextFileTest;
 }());
 exports.TextFileTest = TextFileTest;
+// @Route("/return/text")
+var ReturnText = /** @class */ (function () {
+    function ReturnText() {
+    }
+    return ReturnText;
+}());
+exports.ReturnText = ReturnText;
+// @Route("/return/html")
+var ReturnHtml = /** @class */ (function () {
+    function ReturnHtml() {
+    }
+    return ReturnHtml;
+}());
+exports.ReturnHtml = ReturnHtml;
 // @Route("/hello")
 // @Route("/hello/{Name}")
-var Hello = (function () {
+var Hello = /** @class */ (function () {
     function Hello() {
     }
     Hello.prototype.createResponse = function () { return new HelloResponse(); };
@@ -781,7 +868,7 @@ exports.Hello = Hello;
 * Description on HelloAll type
 */
 // @DataContract
-var HelloAnnotated = (function () {
+var HelloAnnotated = /** @class */ (function () {
     function HelloAnnotated() {
     }
     HelloAnnotated.prototype.createResponse = function () { return new HelloAnnotatedResponse(); };
@@ -789,7 +876,7 @@ var HelloAnnotated = (function () {
     return HelloAnnotated;
 }());
 exports.HelloAnnotated = HelloAnnotated;
-var HelloWithNestedClass = (function () {
+var HelloWithNestedClass = /** @class */ (function () {
     function HelloWithNestedClass() {
     }
     HelloWithNestedClass.prototype.createResponse = function () { return new HelloResponse(); };
@@ -797,7 +884,7 @@ var HelloWithNestedClass = (function () {
     return HelloWithNestedClass;
 }());
 exports.HelloWithNestedClass = HelloWithNestedClass;
-var HelloList = (function () {
+var HelloList = /** @class */ (function () {
     function HelloList() {
     }
     HelloList.prototype.createResponse = function () { return new Array(); };
@@ -805,7 +892,7 @@ var HelloList = (function () {
     return HelloList;
 }());
 exports.HelloList = HelloList;
-var HelloArray = (function () {
+var HelloArray = /** @class */ (function () {
     function HelloArray() {
     }
     HelloArray.prototype.createResponse = function () { return new Array(); };
@@ -813,13 +900,13 @@ var HelloArray = (function () {
     return HelloArray;
 }());
 exports.HelloArray = HelloArray;
-var HelloWithEnum = (function () {
+var HelloWithEnum = /** @class */ (function () {
     function HelloWithEnum() {
     }
     return HelloWithEnum;
 }());
 exports.HelloWithEnum = HelloWithEnum;
-var RestrictedAttributes = (function () {
+var RestrictedAttributes = /** @class */ (function () {
     function RestrictedAttributes() {
     }
     return RestrictedAttributes;
@@ -829,17 +916,17 @@ exports.RestrictedAttributes = RestrictedAttributes;
 * AllowedAttributes Description
 */
 // @Route("/allowed-attributes", "GET")
-// @Api("AllowedAttributes Description")
-// @ApiResponse(400, "Your request was not understood")
+// @Api(Description="AllowedAttributes Description")
+// @ApiResponse(Description="Your request was not understood", StatusCode=400)
 // @DataContract
-var AllowedAttributes = (function () {
+var AllowedAttributes = /** @class */ (function () {
     function AllowedAttributes() {
     }
     return AllowedAttributes;
 }());
 exports.AllowedAttributes = AllowedAttributes;
 // @Route("/all-types")
-var HelloAllTypes = (function () {
+var HelloAllTypes = /** @class */ (function () {
     function HelloAllTypes() {
     }
     HelloAllTypes.prototype.createResponse = function () { return new HelloAllTypesResponse(); };
@@ -847,7 +934,7 @@ var HelloAllTypes = (function () {
     return HelloAllTypes;
 }());
 exports.HelloAllTypes = HelloAllTypes;
-var HelloString = (function () {
+var HelloString = /** @class */ (function () {
     function HelloString() {
     }
     HelloString.prototype.createResponse = function () { return ""; };
@@ -855,14 +942,14 @@ var HelloString = (function () {
     return HelloString;
 }());
 exports.HelloString = HelloString;
-var HelloVoid = (function () {
+var HelloVoid = /** @class */ (function () {
     function HelloVoid() {
     }
     return HelloVoid;
 }());
 exports.HelloVoid = HelloVoid;
 // @DataContract
-var HelloWithDataContract = (function () {
+var HelloWithDataContract = /** @class */ (function () {
     function HelloWithDataContract() {
     }
     HelloWithDataContract.prototype.createResponse = function () { return new HelloWithDataContractResponse(); };
@@ -873,7 +960,7 @@ exports.HelloWithDataContract = HelloWithDataContract;
 /**
 * Description on HelloWithDescription type
 */
-var HelloWithDescription = (function () {
+var HelloWithDescription = /** @class */ (function () {
     function HelloWithDescription() {
     }
     HelloWithDescription.prototype.createResponse = function () { return new HelloWithDescriptionResponse(); };
@@ -881,7 +968,7 @@ var HelloWithDescription = (function () {
     return HelloWithDescription;
 }());
 exports.HelloWithDescription = HelloWithDescription;
-var HelloWithInheritance = (function (_super) {
+var HelloWithInheritance = /** @class */ (function (_super) {
     __extends(HelloWithInheritance, _super);
     function HelloWithInheritance() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -891,7 +978,7 @@ var HelloWithInheritance = (function (_super) {
     return HelloWithInheritance;
 }(HelloBase));
 exports.HelloWithInheritance = HelloWithInheritance;
-var HelloWithGenericInheritance = (function (_super) {
+var HelloWithGenericInheritance = /** @class */ (function (_super) {
     __extends(HelloWithGenericInheritance, _super);
     function HelloWithGenericInheritance() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -899,7 +986,7 @@ var HelloWithGenericInheritance = (function (_super) {
     return HelloWithGenericInheritance;
 }(HelloBase_1));
 exports.HelloWithGenericInheritance = HelloWithGenericInheritance;
-var HelloWithGenericInheritance2 = (function (_super) {
+var HelloWithGenericInheritance2 = /** @class */ (function (_super) {
     __extends(HelloWithGenericInheritance2, _super);
     function HelloWithGenericInheritance2() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -907,7 +994,7 @@ var HelloWithGenericInheritance2 = (function (_super) {
     return HelloWithGenericInheritance2;
 }(HelloBase_1));
 exports.HelloWithGenericInheritance2 = HelloWithGenericInheritance2;
-var HelloWithNestedInheritance = (function (_super) {
+var HelloWithNestedInheritance = /** @class */ (function (_super) {
     __extends(HelloWithNestedInheritance, _super);
     function HelloWithNestedInheritance() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -915,7 +1002,7 @@ var HelloWithNestedInheritance = (function (_super) {
     return HelloWithNestedInheritance;
 }(HelloBase_1));
 exports.HelloWithNestedInheritance = HelloWithNestedInheritance;
-var HelloWithReturn = (function () {
+var HelloWithReturn = /** @class */ (function () {
     function HelloWithReturn() {
     }
     HelloWithReturn.prototype.createResponse = function () { return new HelloWithAlternateReturnResponse(); };
@@ -924,7 +1011,7 @@ var HelloWithReturn = (function () {
 }());
 exports.HelloWithReturn = HelloWithReturn;
 // @Route("/helloroute")
-var HelloWithRoute = (function () {
+var HelloWithRoute = /** @class */ (function () {
     function HelloWithRoute() {
     }
     HelloWithRoute.prototype.createResponse = function () { return new HelloWithRouteResponse(); };
@@ -932,7 +1019,7 @@ var HelloWithRoute = (function () {
     return HelloWithRoute;
 }());
 exports.HelloWithRoute = HelloWithRoute;
-var HelloWithType = (function () {
+var HelloWithType = /** @class */ (function () {
     function HelloWithType() {
     }
     HelloWithType.prototype.createResponse = function () { return new HelloWithTypeResponse(); };
@@ -940,13 +1027,13 @@ var HelloWithType = (function () {
     return HelloWithType;
 }());
 exports.HelloWithType = HelloWithType;
-var HelloInterface = (function () {
+var HelloInterface = /** @class */ (function () {
     function HelloInterface() {
     }
     return HelloInterface;
 }());
 exports.HelloInterface = HelloInterface;
-var HelloInnerTypes = (function () {
+var HelloInnerTypes = /** @class */ (function () {
     function HelloInnerTypes() {
     }
     HelloInnerTypes.prototype.createResponse = function () { return new HelloInnerTypesResponse(); };
@@ -954,13 +1041,13 @@ var HelloInnerTypes = (function () {
     return HelloInnerTypes;
 }());
 exports.HelloInnerTypes = HelloInnerTypes;
-var HelloBuiltin = (function () {
+var HelloBuiltin = /** @class */ (function () {
     function HelloBuiltin() {
     }
     return HelloBuiltin;
 }());
 exports.HelloBuiltin = HelloBuiltin;
-var HelloGet = (function () {
+var HelloGet = /** @class */ (function () {
     function HelloGet() {
     }
     HelloGet.prototype.createResponse = function () { return new HelloVerbResponse(); };
@@ -968,7 +1055,7 @@ var HelloGet = (function () {
     return HelloGet;
 }());
 exports.HelloGet = HelloGet;
-var HelloPost = (function (_super) {
+var HelloPost = /** @class */ (function (_super) {
     __extends(HelloPost, _super);
     function HelloPost() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -978,7 +1065,7 @@ var HelloPost = (function (_super) {
     return HelloPost;
 }(HelloBase));
 exports.HelloPost = HelloPost;
-var HelloPut = (function () {
+var HelloPut = /** @class */ (function () {
     function HelloPut() {
     }
     HelloPut.prototype.createResponse = function () { return new HelloVerbResponse(); };
@@ -986,7 +1073,7 @@ var HelloPut = (function () {
     return HelloPut;
 }());
 exports.HelloPut = HelloPut;
-var HelloDelete = (function () {
+var HelloDelete = /** @class */ (function () {
     function HelloDelete() {
     }
     HelloDelete.prototype.createResponse = function () { return new HelloVerbResponse(); };
@@ -994,7 +1081,7 @@ var HelloDelete = (function () {
     return HelloDelete;
 }());
 exports.HelloDelete = HelloDelete;
-var HelloPatch = (function () {
+var HelloPatch = /** @class */ (function () {
     function HelloPatch() {
     }
     HelloPatch.prototype.createResponse = function () { return new HelloVerbResponse(); };
@@ -1002,7 +1089,7 @@ var HelloPatch = (function () {
     return HelloPatch;
 }());
 exports.HelloPatch = HelloPatch;
-var HelloReturnVoid = (function () {
+var HelloReturnVoid = /** @class */ (function () {
     function HelloReturnVoid() {
     }
     HelloReturnVoid.prototype.createResponse = function () { };
@@ -1010,7 +1097,7 @@ var HelloReturnVoid = (function () {
     return HelloReturnVoid;
 }());
 exports.HelloReturnVoid = HelloReturnVoid;
-var EnumRequest = (function () {
+var EnumRequest = /** @class */ (function () {
     function EnumRequest() {
     }
     EnumRequest.prototype.createResponse = function () { return new EnumResponse(); };
@@ -1020,7 +1107,7 @@ var EnumRequest = (function () {
 exports.EnumRequest = EnumRequest;
 // @Route("/hellozip")
 // @DataContract
-var HelloZip = (function () {
+var HelloZip = /** @class */ (function () {
     function HelloZip() {
     }
     HelloZip.prototype.createResponse = function () { return new HelloZipResponse(); };
@@ -1029,7 +1116,7 @@ var HelloZip = (function () {
 }());
 exports.HelloZip = HelloZip;
 // @Route("/ping")
-var Ping = (function () {
+var Ping = /** @class */ (function () {
     function Ping() {
     }
     Ping.prototype.createResponse = function () { return new PingResponse(); };
@@ -1038,14 +1125,14 @@ var Ping = (function () {
 }());
 exports.Ping = Ping;
 // @Route("/reset-connections")
-var ResetConnections = (function () {
+var ResetConnections = /** @class */ (function () {
     function ResetConnections() {
     }
     return ResetConnections;
 }());
 exports.ResetConnections = ResetConnections;
 // @Route("/requires-role")
-var RequiresRole = (function () {
+var RequiresRole = /** @class */ (function () {
     function RequiresRole() {
     }
     RequiresRole.prototype.createResponse = function () { return new RequiresRoleResponse(); };
@@ -1054,7 +1141,7 @@ var RequiresRole = (function () {
 }());
 exports.RequiresRole = RequiresRole;
 // @Route("/return/string")
-var ReturnString = (function () {
+var ReturnString = /** @class */ (function () {
     function ReturnString() {
     }
     ReturnString.prototype.createResponse = function () { return ""; };
@@ -1063,7 +1150,7 @@ var ReturnString = (function () {
 }());
 exports.ReturnString = ReturnString;
 // @Route("/return/bytes")
-var ReturnBytes = (function () {
+var ReturnBytes = /** @class */ (function () {
     function ReturnBytes() {
     }
     ReturnBytes.prototype.createResponse = function () { return new Uint8Array(0); };
@@ -1072,7 +1159,7 @@ var ReturnBytes = (function () {
 }());
 exports.ReturnBytes = ReturnBytes;
 // @Route("/return/stream")
-var ReturnStream = (function () {
+var ReturnStream = /** @class */ (function () {
     function ReturnStream() {
     }
     ReturnStream.prototype.createResponse = function () { return new Blob(); };
@@ -1081,7 +1168,7 @@ var ReturnStream = (function () {
 }());
 exports.ReturnStream = ReturnStream;
 // @Route("/Request1", "GET")
-var GetRequest1 = (function () {
+var GetRequest1 = /** @class */ (function () {
     function GetRequest1() {
     }
     GetRequest1.prototype.createResponse = function () { return new Array(); };
@@ -1090,7 +1177,7 @@ var GetRequest1 = (function () {
 }());
 exports.GetRequest1 = GetRequest1;
 // @Route("/Request2", "GET")
-var GetRequest2 = (function () {
+var GetRequest2 = /** @class */ (function () {
     function GetRequest2() {
     }
     GetRequest2.prototype.createResponse = function () { return new Array(); };
@@ -1098,7 +1185,34 @@ var GetRequest2 = (function () {
     return GetRequest2;
 }());
 exports.GetRequest2 = GetRequest2;
-var SendDefault = (function () {
+// @Route("/sendjson")
+var SendJson = /** @class */ (function () {
+    function SendJson() {
+    }
+    SendJson.prototype.createResponse = function () { return ""; };
+    SendJson.prototype.getTypeName = function () { return "SendJson"; };
+    return SendJson;
+}());
+exports.SendJson = SendJson;
+// @Route("/sendtext")
+var SendText = /** @class */ (function () {
+    function SendText() {
+    }
+    SendText.prototype.createResponse = function () { return ""; };
+    SendText.prototype.getTypeName = function () { return "SendText"; };
+    return SendText;
+}());
+exports.SendText = SendText;
+// @Route("/sendraw")
+var SendRaw = /** @class */ (function () {
+    function SendRaw() {
+    }
+    SendRaw.prototype.createResponse = function () { return new Uint8Array(0); };
+    SendRaw.prototype.getTypeName = function () { return "SendRaw"; };
+    return SendRaw;
+}());
+exports.SendRaw = SendRaw;
+var SendDefault = /** @class */ (function () {
     function SendDefault() {
     }
     SendDefault.prototype.createResponse = function () { return new SendVerbResponse(); };
@@ -1107,7 +1221,7 @@ var SendDefault = (function () {
 }());
 exports.SendDefault = SendDefault;
 // @Route("/sendrestget/{Id}", "GET")
-var SendRestGet = (function () {
+var SendRestGet = /** @class */ (function () {
     function SendRestGet() {
     }
     SendRestGet.prototype.createResponse = function () { return new SendVerbResponse(); };
@@ -1115,7 +1229,7 @@ var SendRestGet = (function () {
     return SendRestGet;
 }());
 exports.SendRestGet = SendRestGet;
-var SendGet = (function () {
+var SendGet = /** @class */ (function () {
     function SendGet() {
     }
     SendGet.prototype.createResponse = function () { return new SendVerbResponse(); };
@@ -1123,7 +1237,7 @@ var SendGet = (function () {
     return SendGet;
 }());
 exports.SendGet = SendGet;
-var SendPost = (function () {
+var SendPost = /** @class */ (function () {
     function SendPost() {
     }
     SendPost.prototype.createResponse = function () { return new SendVerbResponse(); };
@@ -1131,7 +1245,7 @@ var SendPost = (function () {
     return SendPost;
 }());
 exports.SendPost = SendPost;
-var SendPut = (function () {
+var SendPut = /** @class */ (function () {
     function SendPut() {
     }
     SendPut.prototype.createResponse = function () { return new SendVerbResponse(); };
@@ -1139,8 +1253,16 @@ var SendPut = (function () {
     return SendPut;
 }());
 exports.SendPut = SendPut;
+var SendReturnVoid = /** @class */ (function () {
+    function SendReturnVoid() {
+    }
+    SendReturnVoid.prototype.createResponse = function () { };
+    SendReturnVoid.prototype.getTypeName = function () { return "SendReturnVoid"; };
+    return SendReturnVoid;
+}());
+exports.SendReturnVoid = SendReturnVoid;
 // @Route("/session")
-var GetSession = (function () {
+var GetSession = /** @class */ (function () {
     function GetSession() {
     }
     GetSession.prototype.createResponse = function () { return new GetSessionResponse(); };
@@ -1149,7 +1271,7 @@ var GetSession = (function () {
 }());
 exports.GetSession = GetSession;
 // @Route("/session/edit/{CustomName}")
-var UpdateSession = (function () {
+var UpdateSession = /** @class */ (function () {
     function UpdateSession() {
     }
     UpdateSession.prototype.createResponse = function () { return new GetSessionResponse(); };
@@ -1157,7 +1279,7 @@ var UpdateSession = (function () {
     return UpdateSession;
 }());
 exports.UpdateSession = UpdateSession;
-var StoreLogs = (function () {
+var StoreLogs = /** @class */ (function () {
     function StoreLogs() {
     }
     StoreLogs.prototype.createResponse = function () { return new StoreLogsResponse(); };
@@ -1166,7 +1288,7 @@ var StoreLogs = (function () {
 }());
 exports.StoreLogs = StoreLogs;
 // @Route("/testauth")
-var TestAuth = (function () {
+var TestAuth = /** @class */ (function () {
     function TestAuth() {
     }
     TestAuth.prototype.createResponse = function () { return new TestAuthResponse(); };
@@ -1174,15 +1296,33 @@ var TestAuth = (function () {
     return TestAuth;
 }());
 exports.TestAuth = TestAuth;
+// @Route("/testdata/AllTypes")
+var TestDataAllTypes = /** @class */ (function () {
+    function TestDataAllTypes() {
+    }
+    TestDataAllTypes.prototype.createResponse = function () { return new AllTypes(); };
+    TestDataAllTypes.prototype.getTypeName = function () { return "TestDataAllTypes"; };
+    return TestDataAllTypes;
+}());
+exports.TestDataAllTypes = TestDataAllTypes;
+// @Route("/testdata/AllCollectionTypes")
+var TestDataAllCollectionTypes = /** @class */ (function () {
+    function TestDataAllCollectionTypes() {
+    }
+    TestDataAllCollectionTypes.prototype.createResponse = function () { return new AllCollectionTypes(); };
+    TestDataAllCollectionTypes.prototype.getTypeName = function () { return "TestDataAllCollectionTypes"; };
+    return TestDataAllCollectionTypes;
+}());
+exports.TestDataAllCollectionTypes = TestDataAllCollectionTypes;
 // @Route("/void-response")
-var TestVoidResponse = (function () {
+var TestVoidResponse = /** @class */ (function () {
     function TestVoidResponse() {
     }
     return TestVoidResponse;
 }());
 exports.TestVoidResponse = TestVoidResponse;
 // @Route("/null-response")
-var TestNullResponse = (function () {
+var TestNullResponse = /** @class */ (function () {
     function TestNullResponse() {
     }
     return TestNullResponse;
@@ -1193,7 +1333,7 @@ exports.TestNullResponse = TestNullResponse;
 // @Route("/authenticate")
 // @Route("/authenticate/{provider}")
 // @DataContract
-var Authenticate = (function () {
+var Authenticate = /** @class */ (function () {
     function Authenticate() {
     }
     Authenticate.prototype.createResponse = function () { return new AuthenticateResponse(); };
@@ -1203,7 +1343,7 @@ var Authenticate = (function () {
 exports.Authenticate = Authenticate;
 // @Route("/assignroles")
 // @DataContract
-var AssignRoles = (function () {
+var AssignRoles = /** @class */ (function () {
     function AssignRoles() {
     }
     AssignRoles.prototype.createResponse = function () { return new AssignRolesResponse(); };
@@ -1213,7 +1353,7 @@ var AssignRoles = (function () {
 exports.AssignRoles = AssignRoles;
 // @Route("/unassignroles")
 // @DataContract
-var UnAssignRoles = (function () {
+var UnAssignRoles = /** @class */ (function () {
     function UnAssignRoles() {
     }
     UnAssignRoles.prototype.createResponse = function () { return new UnAssignRolesResponse(); };
@@ -1221,7 +1361,27 @@ var UnAssignRoles = (function () {
     return UnAssignRoles;
 }());
 exports.UnAssignRoles = UnAssignRoles;
-var QueryPocoBase = (function (_super) {
+// @Route("/session-to-token")
+// @DataContract
+var ConvertSessionToToken = /** @class */ (function () {
+    function ConvertSessionToToken() {
+    }
+    ConvertSessionToToken.prototype.createResponse = function () { return new ConvertSessionToTokenResponse(); };
+    ConvertSessionToToken.prototype.getTypeName = function () { return "ConvertSessionToToken"; };
+    return ConvertSessionToToken;
+}());
+exports.ConvertSessionToToken = ConvertSessionToToken;
+// @Route("/access-token")
+// @DataContract
+var GetAccessToken = /** @class */ (function () {
+    function GetAccessToken() {
+    }
+    GetAccessToken.prototype.createResponse = function () { return new GetAccessTokenResponse(); };
+    GetAccessToken.prototype.getTypeName = function () { return "GetAccessToken"; };
+    return GetAccessToken;
+}());
+exports.GetAccessToken = GetAccessToken;
+var QueryPocoBase = /** @class */ (function (_super) {
     __extends(QueryPocoBase, _super);
     function QueryPocoBase() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -1229,9 +1389,9 @@ var QueryPocoBase = (function (_super) {
     QueryPocoBase.prototype.createResponse = function () { return new QueryResponse(); };
     QueryPocoBase.prototype.getTypeName = function () { return "QueryPocoBase"; };
     return QueryPocoBase;
-}(QueryBase_1));
+}(QueryDb_1));
 exports.QueryPocoBase = QueryPocoBase;
-var QueryPocoIntoBase = (function (_super) {
+var QueryPocoIntoBase = /** @class */ (function (_super) {
     __extends(QueryPocoIntoBase, _super);
     function QueryPocoIntoBase() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -1239,10 +1399,10 @@ var QueryPocoIntoBase = (function (_super) {
     QueryPocoIntoBase.prototype.createResponse = function () { return new QueryResponse(); };
     QueryPocoIntoBase.prototype.getTypeName = function () { return "QueryPocoIntoBase"; };
     return QueryPocoIntoBase;
-}(QueryBase_2));
+}(QueryDb_2));
 exports.QueryPocoIntoBase = QueryPocoIntoBase;
-// @Route("/rockstars")
-var QueryRockstars = (function (_super) {
+// @Route("/rockstars", "GET")
+var QueryRockstars = /** @class */ (function (_super) {
     __extends(QueryRockstars, _super);
     function QueryRockstars() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -1250,6 +1410,6 @@ var QueryRockstars = (function (_super) {
     QueryRockstars.prototype.createResponse = function () { return new QueryResponse(); };
     QueryRockstars.prototype.getTypeName = function () { return "QueryRockstars"; };
     return QueryRockstars;
-}(QueryBase_1));
+}(QueryDb_1));
 exports.QueryRockstars = QueryRockstars;
 //# sourceMappingURL=Test.dtos.js.map

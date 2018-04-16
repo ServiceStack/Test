@@ -5,20 +5,20 @@
   "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
     "watch": "webpack --watch"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@servicestack/client": "^1.0.12",
     "es6-shim": "^0.35.3",
-    "jquery": "^3.2.1",
-    "servicestack-client": "0.0.33",
-    "ss-utils": "^0.1.5"
+    "jquery": "^3.3.1"
   },
   "devDependencies": {
-    "ss-utils": "^0.1.6",
-    "ts-loader": "^2.0.3",
-    "typescript": "^2.2.2",
-    "webpack": "^2.2.1"
+    "ss-utils": "^0.2.1",
+    "ts-loader": "^2.3.7",
+    "typescript": "^2.8.1",
+    "webpack": "^2.7.0"
   }
 }

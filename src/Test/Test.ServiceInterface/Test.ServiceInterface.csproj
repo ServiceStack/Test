@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DummyTypesService.cs" />
     <Compile Include="CustomHttpErrorService.cs" />
     <Compile Include="ErrorServices.cs" />
     <Compile Include="ExternalServices.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="SessionService.cs" />
     <Compile Include="StoreLogsService.cs" />
     <Compile Include="TestAuthService.cs" />
+    <Compile Include="TestDataService.cs" />
     <Compile Include="TestServices.cs" />
   </ItemGroup>
   <ItemGroup>

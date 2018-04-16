@@ -35,6 +35,11 @@ namespace Test.ServiceInterface
         public int Id { get; set; }
     }
 
+    public class SendReturnVoid : IReturnVoid
+    {
+        public int Id { get; set; }
+    }
+
     public class SendVerbService : Service
     {
         public object Any(SendDefault request)
@@ -71,5 +76,7 @@ namespace Test.ServiceInterface
                 RequestMethod = base.Request.Verb
             };
         }
+
+        public void Any(SendReturnVoid request) { }
     }
 }

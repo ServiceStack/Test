@@ -6,9 +6,9 @@
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -71,7 +71,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * jQuery JavaScript Library v3.2.1
+ * jQuery JavaScript Library v3.3.1
  * https://jquery.com/
  *
  * Includes Sizzle.js
@@ -81,7 +81,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2017-03-20T18:59Z
+ * Date: 2018-01-20T17:24Z
  */
 ( function( global, factory ) {
 
@@ -143,16 +143,57 @@ var ObjectFunctionString = fnToString.call( Object );
 
 var support = {};
 
+var isFunction = function isFunction( obj ) {
+
+      // Support: Chrome <=57, Firefox <=52
+      // In some browsers, typeof returns "function" for HTML <object> elements
+      // (i.e., `typeof document.createElement( "object" ) === "function"`).
+      // We don't want to classify *any* DOM node as a function.
+      return typeof obj === "function" && typeof obj.nodeType !== "number";
+  };
 
 
-	function DOMEval( code, doc ) {
+var isWindow = function isWindow( obj ) {
+		return obj != null && obj === obj.window;
+	};
+
+
+
+
+	var preservedScriptAttributes = {
+		type: true,
+		src: true,
+		noModule: true
+	};
+
+	function DOMEval( code, doc, node ) {
 		doc = doc || document;
 
-		var script = doc.createElement( "script" );
+		var i,
+			script = doc.createElement( "script" );
 
 		script.text = code;
+		if ( node ) {
+			for ( i in preservedScriptAttributes ) {
+				if ( node[ i ] ) {
+					script[ i ] = node[ i ];
+				}
+			}
+		}
 		doc.head.appendChild( script ).parentNode.removeChild( script );
 	}
+
+
+function toType( obj ) {
+	if ( obj == null ) {
+		return obj + "";
+	}
+
+	// Support: Android <=2.3 only (functionish RegExp)
+	return typeof obj === "object" || typeof obj === "function" ?
+		class2type[ toString.call( obj ) ] || "object" :
+		typeof obj;
+}
 /* global Symbol */
 // Defining this global in .eslintrc.json would create a danger of using the global
 // unguarded in another place, it seems safer to define global only for this module
@@ -160,7 +201,7 @@ var support = {};
 
 
 var
-	version = "3.2.1",
+	version = "3.3.1",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -172,16 +213,7 @@ var
 
 	// Support: Android <=4.0 only
 	// Make sure we trim BOM and NBSP
-	rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,
-
-	// Matches dashed string for camelizing
-	rmsPrefix = /^-ms-/,
-	rdashAlpha = /-([a-z])/g,
-
-	// Used by jQuery.camelCase as callback to replace()
-	fcamelCase = function( all, letter ) {
-		return letter.toUpperCase();
-	};
+	rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
 
 jQuery.fn = jQuery.prototype = {
 
@@ -281,7 +313,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 	}
 
 	// Handle case when target is a string or something (possible in deep copy)
-	if ( typeof target !== "object" && !jQuery.isFunction( target ) ) {
+	if ( typeof target !== "object" && !isFunction( target ) ) {
 		target = {};
 	}
 
@@ -347,28 +379,6 @@ jQuery.extend( {
 
 	noop: function() {},
 
-	isFunction: function( obj ) {
-		return jQuery.type( obj ) === "function";
-	},
-
-	isWindow: function( obj ) {
-		return obj != null && obj === obj.window;
-	},
-
-	isNumeric: function( obj ) {
-
-		// As of jQuery 3.0, isNumeric is limited to
-		// strings and numbers (primitives or objects)
-		// that can be coerced to finite numbers (gh-2662)
-		var type = jQuery.type( obj );
-		return ( type === "number" || type === "string" ) &&
-
-			// parseFloat NaNs numeric-cast false positives ("")
-			// ...but misinterprets leading-number strings, particularly hex literals ("0x...")
-			// subtraction forces infinities to NaN
-			!isNaN( obj - parseFloat( obj ) );
-	},
-
 	isPlainObject: function( obj ) {
 		var proto, Ctor;
 
@@ -402,27 +412,9 @@ jQuery.extend( {
 		return true;
 	},
 
-	type: function( obj ) {
-		if ( obj == null ) {
-			return obj + "";
-		}
-
-		// Support: Android <=2.3 only (functionish RegExp)
-		return typeof obj === "object" || typeof obj === "function" ?
-			class2type[ toString.call( obj ) ] || "object" :
-			typeof obj;
-	},
-
 	// Evaluates a script in a global context
 	globalEval: function( code ) {
 		DOMEval( code );
-	},
-
-	// Convert dashed to camelCase; used by the css and data modules
-	// Support: IE <=9 - 11, Edge 12 - 13
-	// Microsoft forgot to hump their vendor prefix (#9572)
-	camelCase: function( string ) {
-		return string.replace( rmsPrefix, "ms-" ).replace( rdashAlpha, fcamelCase );
 	},
 
 	each: function( obj, callback ) {
@@ -545,37 +537,6 @@ jQuery.extend( {
 	// A global GUID counter for objects
 	guid: 1,
 
-	// Bind a function to a context, optionally partially applying any
-	// arguments.
-	proxy: function( fn, context ) {
-		var tmp, args, proxy;
-
-		if ( typeof context === "string" ) {
-			tmp = fn[ context ];
-			context = fn;
-			fn = tmp;
-		}
-
-		// Quick check to determine if target is callable, in the spec
-		// this throws a TypeError, but we will just return undefined.
-		if ( !jQuery.isFunction( fn ) ) {
-			return undefined;
-		}
-
-		// Simulated bind
-		args = slice.call( arguments, 2 );
-		proxy = function() {
-			return fn.apply( context || this, args.concat( slice.call( arguments ) ) );
-		};
-
-		// Set the guid of unique handler to the same of original handler, so it can be removed
-		proxy.guid = fn.guid = fn.guid || jQuery.guid++;
-
-		return proxy;
-	},
-
-	now: Date.now,
-
 	// jQuery.support is not used in Core but other projects attach their
 	// properties to it so it needs to exist.
 	support: support
@@ -598,9 +559,9 @@ function isArrayLike( obj ) {
 	// hasOwn isn't used here due to false negatives
 	// regarding Nodelist length in IE
 	var length = !!obj && "length" in obj && obj.length,
-		type = jQuery.type( obj );
+		type = toType( obj );
 
-	if ( type === "function" || jQuery.isWindow( obj ) ) {
+	if ( isFunction( obj ) || isWindow( obj ) ) {
 		return false;
 	}
 
@@ -2920,11 +2881,9 @@ var rsingleTag = ( /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|
 
 
 
-var risSimple = /^.[^:#\[\.,]*$/;
-
 // Implement the identical functionality for filter and not
 function winnow( elements, qualifier, not ) {
-	if ( jQuery.isFunction( qualifier ) ) {
+	if ( isFunction( qualifier ) ) {
 		return jQuery.grep( elements, function( elem, i ) {
 			return !!qualifier.call( elem, i, elem ) !== not;
 		} );
@@ -2944,16 +2903,8 @@ function winnow( elements, qualifier, not ) {
 		} );
 	}
 
-	// Simple selector that can be filtered directly, removing non-Elements
-	if ( risSimple.test( qualifier ) ) {
-		return jQuery.filter( qualifier, elements, not );
-	}
-
-	// Complex selector, compare the two sets, removing non-Elements
-	qualifier = jQuery.filter( qualifier, elements );
-	return jQuery.grep( elements, function( elem ) {
-		return ( indexOf.call( qualifier, elem ) > -1 ) !== not && elem.nodeType === 1;
-	} );
+	// Filtered directly for both simple and complex selectors
+	return jQuery.filter( qualifier, elements, not );
 }
 
 jQuery.filter = function( expr, elems, not ) {
@@ -3074,7 +3025,7 @@ var rootjQuery,
 						for ( match in context ) {
 
 							// Properties of context are called as methods if possible
-							if ( jQuery.isFunction( this[ match ] ) ) {
+							if ( isFunction( this[ match ] ) ) {
 								this[ match ]( context[ match ] );
 
 							// ...and otherwise set as attributes
@@ -3117,7 +3068,7 @@ var rootjQuery,
 
 		// HANDLE: $(function)
 		// Shortcut for document ready
-		} else if ( jQuery.isFunction( selector ) ) {
+		} else if ( isFunction( selector ) ) {
 			return root.ready !== undefined ?
 				root.ready( selector ) :
 
@@ -3432,11 +3383,11 @@ jQuery.Callbacks = function( options ) {
 
 					( function add( args ) {
 						jQuery.each( args, function( _, arg ) {
-							if ( jQuery.isFunction( arg ) ) {
+							if ( isFunction( arg ) ) {
 								if ( !options.unique || !self.has( arg ) ) {
 									list.push( arg );
 								}
-							} else if ( arg && arg.length && jQuery.type( arg ) !== "string" ) {
+							} else if ( arg && arg.length && toType( arg ) !== "string" ) {
 
 								// Inspect recursively
 								add( arg );
@@ -3551,11 +3502,11 @@ function adoptValue( value, resolve, reject, noValue ) {
 	try {
 
 		// Check for promise aspect first to privilege synchronous behavior
-		if ( value && jQuery.isFunction( ( method = value.promise ) ) ) {
+		if ( value && isFunction( ( method = value.promise ) ) ) {
 			method.call( value ).done( resolve ).fail( reject );
 
 		// Other thenables
-		} else if ( value && jQuery.isFunction( ( method = value.then ) ) ) {
+		} else if ( value && isFunction( ( method = value.then ) ) ) {
 			method.call( value, resolve, reject );
 
 		// Other non-thenables
@@ -3613,14 +3564,14 @@ jQuery.extend( {
 						jQuery.each( tuples, function( i, tuple ) {
 
 							// Map tuples (progress, done, fail) to arguments (done, fail, progress)
-							var fn = jQuery.isFunction( fns[ tuple[ 4 ] ] ) && fns[ tuple[ 4 ] ];
+							var fn = isFunction( fns[ tuple[ 4 ] ] ) && fns[ tuple[ 4 ] ];
 
 							// deferred.progress(function() { bind to newDefer or newDefer.notify })
 							// deferred.done(function() { bind to newDefer or newDefer.resolve })
 							// deferred.fail(function() { bind to newDefer or newDefer.reject })
 							deferred[ tuple[ 1 ] ]( function() {
 								var returned = fn && fn.apply( this, arguments );
-								if ( returned && jQuery.isFunction( returned.promise ) ) {
+								if ( returned && isFunction( returned.promise ) ) {
 									returned.promise()
 										.progress( newDefer.notify )
 										.done( newDefer.resolve )
@@ -3674,7 +3625,7 @@ jQuery.extend( {
 										returned.then;
 
 									// Handle a returned thenable
-									if ( jQuery.isFunction( then ) ) {
+									if ( isFunction( then ) ) {
 
 										// Special processors (notify) just wait for resolution
 										if ( special ) {
@@ -3770,7 +3721,7 @@ jQuery.extend( {
 							resolve(
 								0,
 								newDefer,
-								jQuery.isFunction( onProgress ) ?
+								isFunction( onProgress ) ?
 									onProgress :
 									Identity,
 								newDefer.notifyWith
@@ -3782,7 +3733,7 @@ jQuery.extend( {
 							resolve(
 								0,
 								newDefer,
-								jQuery.isFunction( onFulfilled ) ?
+								isFunction( onFulfilled ) ?
 									onFulfilled :
 									Identity
 							)
@@ -3793,7 +3744,7 @@ jQuery.extend( {
 							resolve(
 								0,
 								newDefer,
-								jQuery.isFunction( onRejected ) ?
+								isFunction( onRejected ) ?
 									onRejected :
 									Thrower
 							)
@@ -3833,8 +3784,15 @@ jQuery.extend( {
 					// fulfilled_callbacks.disable
 					tuples[ 3 - i ][ 2 ].disable,
 
+					// rejected_handlers.disable
+					// fulfilled_handlers.disable
+					tuples[ 3 - i ][ 3 ].disable,
+
 					// progress_callbacks.lock
-					tuples[ 0 ][ 2 ].lock
+					tuples[ 0 ][ 2 ].lock,
+
+					// progress_handlers.lock
+					tuples[ 0 ][ 3 ].lock
 				);
 			}
 
@@ -3904,7 +3862,7 @@ jQuery.extend( {
 
 			// Use .then() to unwrap secondary thenables (cf. gh-3000)
 			if ( master.state() === "pending" ||
-				jQuery.isFunction( resolveValues[ i ] && resolveValues[ i ].then ) ) {
+				isFunction( resolveValues[ i ] && resolveValues[ i ].then ) ) {
 
 				return master.then();
 			}
@@ -4032,7 +3990,7 @@ var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 		bulk = key == null;
 
 	// Sets many values
-	if ( jQuery.type( key ) === "object" ) {
+	if ( toType( key ) === "object" ) {
 		chainable = true;
 		for ( i in key ) {
 			access( elems, fn, i, key[ i ], true, emptyGet, raw );
@@ -4042,7 +4000,7 @@ var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 	} else if ( value !== undefined ) {
 		chainable = true;
 
-		if ( !jQuery.isFunction( value ) ) {
+		if ( !isFunction( value ) ) {
 			raw = true;
 		}
 
@@ -4084,6 +4042,23 @@ var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 
 	return len ? fn( elems[ 0 ], key ) : emptyGet;
 };
+
+
+// Matches dashed string for camelizing
+var rmsPrefix = /^-ms-/,
+	rdashAlpha = /-([a-z])/g;
+
+// Used by camelCase as callback to replace()
+function fcamelCase( all, letter ) {
+	return letter.toUpperCase();
+}
+
+// Convert dashed to camelCase; used by the css and data modules
+// Support: IE <=9 - 11, Edge 12 - 15
+// Microsoft forgot to hump their vendor prefix (#9572)
+function camelCase( string ) {
+	return string.replace( rmsPrefix, "ms-" ).replace( rdashAlpha, fcamelCase );
+}
 var acceptData = function( owner ) {
 
 	// Accepts only:
@@ -4146,14 +4121,14 @@ Data.prototype = {
 		// Handle: [ owner, key, value ] args
 		// Always use camelCase key (gh-2257)
 		if ( typeof data === "string" ) {
-			cache[ jQuery.camelCase( data ) ] = value;
+			cache[ camelCase( data ) ] = value;
 
 		// Handle: [ owner, { properties } ] args
 		} else {
 
 			// Copy the properties one-by-one to the cache object
 			for ( prop in data ) {
-				cache[ jQuery.camelCase( prop ) ] = data[ prop ];
+				cache[ camelCase( prop ) ] = data[ prop ];
 			}
 		}
 		return cache;
@@ -4163,7 +4138,7 @@ Data.prototype = {
 			this.cache( owner ) :
 
 			// Always use camelCase key (gh-2257)
-			owner[ this.expando ] && owner[ this.expando ][ jQuery.camelCase( key ) ];
+			owner[ this.expando ] && owner[ this.expando ][ camelCase( key ) ];
 	},
 	access: function( owner, key, value ) {
 
@@ -4211,9 +4186,9 @@ Data.prototype = {
 
 				// If key is an array of keys...
 				// We always set camelCase keys, so remove that.
-				key = key.map( jQuery.camelCase );
+				key = key.map( camelCase );
 			} else {
-				key = jQuery.camelCase( key );
+				key = camelCase( key );
 
 				// If a key with the spaces exists, use it.
 				// Otherwise, create an array by matching non-whitespace
@@ -4359,7 +4334,7 @@ jQuery.fn.extend( {
 						if ( attrs[ i ] ) {
 							name = attrs[ i ].name;
 							if ( name.indexOf( "data-" ) === 0 ) {
-								name = jQuery.camelCase( name.slice( 5 ) );
+								name = camelCase( name.slice( 5 ) );
 								dataAttr( elem, name, data[ name ] );
 							}
 						}
@@ -4606,8 +4581,7 @@ var swap = function( elem, options, callback, args ) {
 
 
 function adjustCSS( elem, prop, valueParts, tween ) {
-	var adjusted,
-		scale = 1,
+	var adjusted, scale,
 		maxIterations = 20,
 		currentValue = tween ?
 			function() {
@@ -4625,30 +4599,33 @@ function adjustCSS( elem, prop, valueParts, tween ) {
 
 	if ( initialInUnit && initialInUnit[ 3 ] !== unit ) {
 
+		// Support: Firefox <=54
+		// Halve the iteration target value to prevent interference from CSS upper bounds (gh-2144)
+		initial = initial / 2;
+
 		// Trust units reported by jQuery.css
 		unit = unit || initialInUnit[ 3 ];
-
-		// Make sure we update the tween properties later on
-		valueParts = valueParts || [];
 
 		// Iteratively approximate from a nonzero starting point
 		initialInUnit = +initial || 1;
 
-		do {
+		while ( maxIterations-- ) {
 
-			// If previous iteration zeroed out, double until we get *something*.
-			// Use string for doubling so we don't accidentally see scale as unchanged below
-			scale = scale || ".5";
-
-			// Adjust and apply
-			initialInUnit = initialInUnit / scale;
+			// Evaluate and update our best guess (doubling guesses that zero out).
+			// Finish if the scale equals or crosses 1 (making the old*new product non-positive).
 			jQuery.style( elem, prop, initialInUnit + unit );
+			if ( ( 1 - scale ) * ( 1 - ( scale = currentValue() / initial || 0.5 ) ) <= 0 ) {
+				maxIterations = 0;
+			}
+			initialInUnit = initialInUnit / scale;
 
-		// Update scale, tolerating zero or NaN from tween.cur()
-		// Break the loop if scale is unchanged or perfect, or if we've just had enough.
-		} while (
-			scale !== ( scale = currentValue() / initial ) && scale !== 1 && --maxIterations
-		);
+		}
+
+		initialInUnit = initialInUnit * 2;
+		jQuery.style( elem, prop, initialInUnit + unit );
+
+		// Make sure we update the tween properties later on
+		valueParts = valueParts || [];
 	}
 
 	if ( valueParts ) {
@@ -4766,7 +4743,7 @@ var rcheckableType = ( /^(?:checkbox|radio)$/i );
 
 var rtagName = ( /<([a-z][^\/\0>\x20\t\r\n\f]+)/i );
 
-var rscriptType = ( /^$|\/(?:java|ecma)script/i );
+var rscriptType = ( /^$|^module$|\/(?:java|ecma)script/i );
 
 
 
@@ -4848,7 +4825,7 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 		if ( elem || elem === 0 ) {
 
 			// Add nodes directly
-			if ( jQuery.type( elem ) === "object" ) {
+			if ( toType( elem ) === "object" ) {
 
 				// Support: Android <=4.0 only, PhantomJS 1 only
 				// push.apply(_, arraylike) throws on ancient WebKit
@@ -5358,7 +5335,7 @@ jQuery.event = {
 			enumerable: true,
 			configurable: true,
 
-			get: jQuery.isFunction( hook ) ?
+			get: isFunction( hook ) ?
 				function() {
 					if ( this.originalEvent ) {
 							return hook( this.originalEvent );
@@ -5493,7 +5470,7 @@ jQuery.Event = function( src, props ) {
 	}
 
 	// Create a timestamp if incoming event doesn't have one
-	this.timeStamp = src && src.timeStamp || jQuery.now();
+	this.timeStamp = src && src.timeStamp || Date.now();
 
 	// Mark it as fixed
 	this[ jQuery.expando ] = true;
@@ -5692,14 +5669,13 @@ var
 
 	/* eslint-enable */
 
-	// Support: IE <=10 - 11, Edge 12 - 13
+	// Support: IE <=10 - 11, Edge 12 - 13 only
 	// In IE/Edge using regex groups here causes severe slowdowns.
 	// See https://connect.microsoft.com/IE/feedback/details/1736512/
 	rnoInnerhtml = /<script|<style|<link/i,
 
 	// checked="checked" or checked
 	rchecked = /checked\s*(?:[^=]|=\s*.checked.)/i,
-	rscriptTypeMasked = /^true\/(.*)/,
 	rcleanScript = /^\s*<!(?:\[CDATA\[|--)|(?:\]\]|--)>\s*$/g;
 
 // Prefer a tbody over its parent table for containing new rows
@@ -5707,7 +5683,7 @@ function manipulationTarget( elem, content ) {
 	if ( nodeName( elem, "table" ) &&
 		nodeName( content.nodeType !== 11 ? content : content.firstChild, "tr" ) ) {
 
-		return jQuery( ">tbody", elem )[ 0 ] || elem;
+		return jQuery( elem ).children( "tbody" )[ 0 ] || elem;
 	}
 
 	return elem;
@@ -5719,10 +5695,8 @@ function disableScript( elem ) {
 	return elem;
 }
 function restoreScript( elem ) {
-	var match = rscriptTypeMasked.exec( elem.type );
-
-	if ( match ) {
-		elem.type = match[ 1 ];
+	if ( ( elem.type || "" ).slice( 0, 5 ) === "true/" ) {
+		elem.type = elem.type.slice( 5 );
 	} else {
 		elem.removeAttribute( "type" );
 	}
@@ -5788,15 +5762,15 @@ function domManip( collection, args, callback, ignored ) {
 		l = collection.length,
 		iNoClone = l - 1,
 		value = args[ 0 ],
-		isFunction = jQuery.isFunction( value );
+		valueIsFunction = isFunction( value );
 
 	// We can't cloneNode fragments that contain checked, in WebKit
-	if ( isFunction ||
+	if ( valueIsFunction ||
 			( l > 1 && typeof value === "string" &&
 				!support.checkClone && rchecked.test( value ) ) ) {
 		return collection.each( function( index ) {
 			var self = collection.eq( index );
-			if ( isFunction ) {
+			if ( valueIsFunction ) {
 				args[ 0 ] = value.call( this, index, self.html() );
 			}
 			domManip( self, args, callback, ignored );
@@ -5850,14 +5824,14 @@ function domManip( collection, args, callback, ignored ) {
 						!dataPriv.access( node, "globalEval" ) &&
 						jQuery.contains( doc, node ) ) {
 
-						if ( node.src ) {
+						if ( node.src && ( node.type || "" ).toLowerCase()  !== "module" ) {
 
 							// Optional AJAX dependency, but won't run scripts if not present
 							if ( jQuery._evalUrl ) {
 								jQuery._evalUrl( node.src );
 							}
 						} else {
-							DOMEval( node.textContent.replace( rcleanScript, "" ), doc );
+							DOMEval( node.textContent.replace( rcleanScript, "" ), doc, node );
 						}
 					}
 				}
@@ -6137,8 +6111,6 @@ jQuery.each( {
 		return this.pushStack( ret );
 	};
 } );
-var rmargin = ( /^margin/ );
-
 var rnumnonpx = new RegExp( "^(" + pnum + ")(?!px)[a-z%]+$", "i" );
 
 var getStyles = function( elem ) {
@@ -6155,6 +6127,8 @@ var getStyles = function( elem ) {
 		return view.getComputedStyle( elem );
 	};
 
+var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
+
 
 
 ( function() {
@@ -6168,25 +6142,33 @@ var getStyles = function( elem ) {
 			return;
 		}
 
+		container.style.cssText = "position:absolute;left:-11111px;width:60px;" +
+			"margin-top:1px;padding:0;border:0";
 		div.style.cssText =
-			"box-sizing:border-box;" +
-			"position:relative;display:block;" +
+			"position:relative;display:block;box-sizing:border-box;overflow:scroll;" +
 			"margin:auto;border:1px;padding:1px;" +
-			"top:1%;width:50%";
-		div.innerHTML = "";
-		documentElement.appendChild( container );
+			"width:60%;top:1%";
+		documentElement.appendChild( container ).appendChild( div );
 
 		var divStyle = window.getComputedStyle( div );
 		pixelPositionVal = divStyle.top !== "1%";
 
 		// Support: Android 4.0 - 4.3 only, Firefox <=3 - 44
-		reliableMarginLeftVal = divStyle.marginLeft === "2px";
-		boxSizingReliableVal = divStyle.width === "4px";
+		reliableMarginLeftVal = roundPixelMeasures( divStyle.marginLeft ) === 12;
 
-		// Support: Android 4.0 - 4.3 only
+		// Support: Android 4.0 - 4.3 only, Safari <=9.1 - 10.1, iOS <=7.0 - 9.3
 		// Some styles come back with percentage values, even though they shouldn't
-		div.style.marginRight = "50%";
-		pixelMarginRightVal = divStyle.marginRight === "4px";
+		div.style.right = "60%";
+		pixelBoxStylesVal = roundPixelMeasures( divStyle.right ) === 36;
+
+		// Support: IE 9 - 11 only
+		// Detect misreporting of content dimensions for box-sizing:border-box elements
+		boxSizingReliableVal = roundPixelMeasures( divStyle.width ) === 36;
+
+		// Support: IE 9 only
+		// Detect overflow:scroll screwiness (gh-3699)
+		div.style.position = "absolute";
+		scrollboxSizeVal = div.offsetWidth === 36 || "absolute";
 
 		documentElement.removeChild( container );
 
@@ -6195,7 +6177,12 @@ var getStyles = function( elem ) {
 		div = null;
 	}
 
-	var pixelPositionVal, boxSizingReliableVal, pixelMarginRightVal, reliableMarginLeftVal,
+	function roundPixelMeasures( measure ) {
+		return Math.round( parseFloat( measure ) );
+	}
+
+	var pixelPositionVal, boxSizingReliableVal, scrollboxSizeVal, pixelBoxStylesVal,
+		reliableMarginLeftVal,
 		container = document.createElement( "div" ),
 		div = document.createElement( "div" );
 
@@ -6210,26 +6197,26 @@ var getStyles = function( elem ) {
 	div.cloneNode( true ).style.backgroundClip = "";
 	support.clearCloneStyle = div.style.backgroundClip === "content-box";
 
-	container.style.cssText = "border:0;width:8px;height:0;top:0;left:-9999px;" +
-		"padding:0;margin-top:1px;position:absolute";
-	container.appendChild( div );
-
 	jQuery.extend( support, {
-		pixelPosition: function() {
-			computeStyleTests();
-			return pixelPositionVal;
-		},
 		boxSizingReliable: function() {
 			computeStyleTests();
 			return boxSizingReliableVal;
 		},
-		pixelMarginRight: function() {
+		pixelBoxStyles: function() {
 			computeStyleTests();
-			return pixelMarginRightVal;
+			return pixelBoxStylesVal;
+		},
+		pixelPosition: function() {
+			computeStyleTests();
+			return pixelPositionVal;
 		},
 		reliableMarginLeft: function() {
 			computeStyleTests();
 			return reliableMarginLeftVal;
+		},
+		scrollboxSize: function() {
+			computeStyleTests();
+			return scrollboxSizeVal;
 		}
 	} );
 } )();
@@ -6261,7 +6248,7 @@ function curCSS( elem, name, computed ) {
 		// but width seems to be reliably pixels.
 		// This is against the CSSOM draft spec:
 		// https://drafts.csswg.org/cssom/#resolved-values
-		if ( !support.pixelMarginRight() && rnumnonpx.test( ret ) && rmargin.test( name ) ) {
+		if ( !support.pixelBoxStyles() && rnumnonpx.test( ret ) && rboxStyle.test( name ) ) {
 
 			// Remember the original values
 			width = style.width;
@@ -6366,87 +6353,120 @@ function setPositiveNumber( elem, value, subtract ) {
 		value;
 }
 
-function augmentWidthOrHeight( elem, name, extra, isBorderBox, styles ) {
-	var i,
-		val = 0;
+function boxModelAdjustment( elem, dimension, box, isBorderBox, styles, computedVal ) {
+	var i = dimension === "width" ? 1 : 0,
+		extra = 0,
+		delta = 0;
 
-	// If we already have the right measurement, avoid augmentation
-	if ( extra === ( isBorderBox ? "border" : "content" ) ) {
-		i = 4;
-
-	// Otherwise initialize for horizontal or vertical properties
-	} else {
-		i = name === "width" ? 1 : 0;
+	// Adjustment may not be necessary
+	if ( box === ( isBorderBox ? "border" : "content" ) ) {
+		return 0;
 	}
 
 	for ( ; i < 4; i += 2 ) {
 
-		// Both box models exclude margin, so add it if we want it
-		if ( extra === "margin" ) {
-			val += jQuery.css( elem, extra + cssExpand[ i ], true, styles );
+		// Both box models exclude margin
+		if ( box === "margin" ) {
+			delta += jQuery.css( elem, box + cssExpand[ i ], true, styles );
 		}
 
-		if ( isBorderBox ) {
+		// If we get here with a content-box, we're seeking "padding" or "border" or "margin"
+		if ( !isBorderBox ) {
 
-			// border-box includes padding, so remove it if we want content
-			if ( extra === "content" ) {
-				val -= jQuery.css( elem, "padding" + cssExpand[ i ], true, styles );
+			// Add padding
+			delta += jQuery.css( elem, "padding" + cssExpand[ i ], true, styles );
+
+			// For "border" or "margin", add border
+			if ( box !== "padding" ) {
+				delta += jQuery.css( elem, "border" + cssExpand[ i ] + "Width", true, styles );
+
+			// But still keep track of it otherwise
+			} else {
+				extra += jQuery.css( elem, "border" + cssExpand[ i ] + "Width", true, styles );
 			}
 
-			// At this point, extra isn't border nor margin, so remove border
-			if ( extra !== "margin" ) {
-				val -= jQuery.css( elem, "border" + cssExpand[ i ] + "Width", true, styles );
-			}
+		// If we get here with a border-box (content + padding + border), we're seeking "content" or
+		// "padding" or "margin"
 		} else {
 
-			// At this point, extra isn't content, so add padding
-			val += jQuery.css( elem, "padding" + cssExpand[ i ], true, styles );
+			// For "content", subtract padding
+			if ( box === "content" ) {
+				delta -= jQuery.css( elem, "padding" + cssExpand[ i ], true, styles );
+			}
 
-			// At this point, extra isn't content nor padding, so add border
-			if ( extra !== "padding" ) {
-				val += jQuery.css( elem, "border" + cssExpand[ i ] + "Width", true, styles );
+			// For "content" or "padding", subtract border
+			if ( box !== "margin" ) {
+				delta -= jQuery.css( elem, "border" + cssExpand[ i ] + "Width", true, styles );
 			}
 		}
 	}
 
-	return val;
+	// Account for positive content-box scroll gutter when requested by providing computedVal
+	if ( !isBorderBox && computedVal >= 0 ) {
+
+		// offsetWidth/offsetHeight is a rounded sum of content, padding, scroll gutter, and border
+		// Assuming integer scroll gutter, subtract the rest and round down
+		delta += Math.max( 0, Math.ceil(
+			elem[ "offset" + dimension[ 0 ].toUpperCase() + dimension.slice( 1 ) ] -
+			computedVal -
+			delta -
+			extra -
+			0.5
+		) );
+	}
+
+	return delta;
 }
 
-function getWidthOrHeight( elem, name, extra ) {
+function getWidthOrHeight( elem, dimension, extra ) {
 
 	// Start with computed style
-	var valueIsBorderBox,
-		styles = getStyles( elem ),
-		val = curCSS( elem, name, styles ),
-		isBorderBox = jQuery.css( elem, "boxSizing", false, styles ) === "border-box";
+	var styles = getStyles( elem ),
+		val = curCSS( elem, dimension, styles ),
+		isBorderBox = jQuery.css( elem, "boxSizing", false, styles ) === "border-box",
+		valueIsBorderBox = isBorderBox;
 
-	// Computed unit is not pixels. Stop here and return.
+	// Support: Firefox <=54
+	// Return a confounding non-pixel value or feign ignorance, as appropriate.
 	if ( rnumnonpx.test( val ) ) {
-		return val;
+		if ( !extra ) {
+			return val;
+		}
+		val = "auto";
 	}
 
 	// Check for style in case a browser which returns unreliable values
 	// for getComputedStyle silently falls back to the reliable elem.style
-	valueIsBorderBox = isBorderBox &&
-		( support.boxSizingReliable() || val === elem.style[ name ] );
+	valueIsBorderBox = valueIsBorderBox &&
+		( support.boxSizingReliable() || val === elem.style[ dimension ] );
 
-	// Fall back to offsetWidth/Height when value is "auto"
+	// Fall back to offsetWidth/offsetHeight when value is "auto"
 	// This happens for inline elements with no explicit setting (gh-3571)
-	if ( val === "auto" ) {
-		val = elem[ "offset" + name[ 0 ].toUpperCase() + name.slice( 1 ) ];
+	// Support: Android <=4.1 - 4.3 only
+	// Also use offsetWidth/offsetHeight for misreported inline dimensions (gh-3602)
+	if ( val === "auto" ||
+		!parseFloat( val ) && jQuery.css( elem, "display", false, styles ) === "inline" ) {
+
+		val = elem[ "offset" + dimension[ 0 ].toUpperCase() + dimension.slice( 1 ) ];
+
+		// offsetWidth/offsetHeight provide border-box values
+		valueIsBorderBox = true;
 	}
 
-	// Normalize "", auto, and prepare for extra
+	// Normalize "" and auto
 	val = parseFloat( val ) || 0;
 
-	// Use the active box-sizing model to add/subtract irrelevant styles
+	// Adjust for the element's box model
 	return ( val +
-		augmentWidthOrHeight(
+		boxModelAdjustment(
 			elem,
-			name,
+			dimension,
 			extra || ( isBorderBox ? "border" : "content" ),
 			valueIsBorderBox,
-			styles
+			styles,
+
+			// Provide the current computed size to request scroll gutter calculation (gh-3589)
+			val
 		)
 	) + "px";
 }
@@ -6487,9 +6507,7 @@ jQuery.extend( {
 
 	// Add in properties whose names you wish to fix before
 	// setting or getting the value
-	cssProps: {
-		"float": "cssFloat"
-	},
+	cssProps: {},
 
 	// Get and set the style property on a DOM Node
 	style: function( elem, name, value, extra ) {
@@ -6501,7 +6519,7 @@ jQuery.extend( {
 
 		// Make sure that we're working with the right name
 		var ret, type, hooks,
-			origName = jQuery.camelCase( name ),
+			origName = camelCase( name ),
 			isCustomProp = rcustomProp.test( name ),
 			style = elem.style;
 
@@ -6569,7 +6587,7 @@ jQuery.extend( {
 
 	css: function( elem, name, extra, styles ) {
 		var val, num, hooks,
-			origName = jQuery.camelCase( name ),
+			origName = camelCase( name ),
 			isCustomProp = rcustomProp.test( name );
 
 		// Make sure that we're working with the right name. We don't
@@ -6607,8 +6625,8 @@ jQuery.extend( {
 	}
 } );
 
-jQuery.each( [ "height", "width" ], function( i, name ) {
-	jQuery.cssHooks[ name ] = {
+jQuery.each( [ "height", "width" ], function( i, dimension ) {
+	jQuery.cssHooks[ dimension ] = {
 		get: function( elem, computed, extra ) {
 			if ( computed ) {
 
@@ -6624,29 +6642,41 @@ jQuery.each( [ "height", "width" ], function( i, name ) {
 					// in IE throws an error.
 					( !elem.getClientRects().length || !elem.getBoundingClientRect().width ) ?
 						swap( elem, cssShow, function() {
-							return getWidthOrHeight( elem, name, extra );
+							return getWidthOrHeight( elem, dimension, extra );
 						} ) :
-						getWidthOrHeight( elem, name, extra );
+						getWidthOrHeight( elem, dimension, extra );
 			}
 		},
 
 		set: function( elem, value, extra ) {
 			var matches,
-				styles = extra && getStyles( elem ),
-				subtract = extra && augmentWidthOrHeight(
+				styles = getStyles( elem ),
+				isBorderBox = jQuery.css( elem, "boxSizing", false, styles ) === "border-box",
+				subtract = extra && boxModelAdjustment(
 					elem,
-					name,
+					dimension,
 					extra,
-					jQuery.css( elem, "boxSizing", false, styles ) === "border-box",
+					isBorderBox,
 					styles
 				);
+
+			// Account for unreliable border-box dimensions by comparing offset* to computed and
+			// faking a content-box to get border and padding (gh-3699)
+			if ( isBorderBox && support.scrollboxSize() === styles.position ) {
+				subtract -= Math.ceil(
+					elem[ "offset" + dimension[ 0 ].toUpperCase() + dimension.slice( 1 ) ] -
+					parseFloat( styles[ dimension ] ) -
+					boxModelAdjustment( elem, dimension, "border", false, styles ) -
+					0.5
+				);
+			}
 
 			// Convert to pixels if value adjustment is needed
 			if ( subtract && ( matches = rcssNum.exec( value ) ) &&
 				( matches[ 3 ] || "px" ) !== "px" ) {
 
-				elem.style[ name ] = value;
-				value = jQuery.css( elem, name );
+				elem.style[ dimension ] = value;
+				value = jQuery.css( elem, dimension );
 			}
 
 			return setPositiveNumber( elem, value, subtract );
@@ -6690,7 +6720,7 @@ jQuery.each( {
 		}
 	};
 
-	if ( !rmargin.test( prefix ) ) {
+	if ( prefix !== "margin" ) {
 		jQuery.cssHooks[ prefix + suffix ].set = setPositiveNumber;
 	}
 } );
@@ -6861,7 +6891,7 @@ function createFxNow() {
 	window.setTimeout( function() {
 		fxNow = undefined;
 	} );
-	return ( fxNow = jQuery.now() );
+	return ( fxNow = Date.now() );
 }
 
 // Generate parameters to create a standard animation
@@ -6965,9 +6995,10 @@ function defaultPrefilter( elem, props, opts ) {
 	// Restrict "overflow" and "display" styles during box animations
 	if ( isBox && elem.nodeType === 1 ) {
 
-		// Support: IE <=9 - 11, Edge 12 - 13
+		// Support: IE <=9 - 11, Edge 12 - 15
 		// Record all 3 overflow attributes because IE does not infer the shorthand
-		// from identically-valued overflowX and overflowY
+		// from identically-valued overflowX and overflowY and Edge just mirrors
+		// the overflowX value there.
 		opts.overflow = [ style.overflow, style.overflowX, style.overflowY ];
 
 		// Identify a display type, preferring old show/hide data over the CSS cascade
@@ -7075,7 +7106,7 @@ function propFilter( props, specialEasing ) {
 
 	// camelCase, specialEasing and expand cssHook pass
 	for ( index in props ) {
-		name = jQuery.camelCase( index );
+		name = camelCase( index );
 		easing = specialEasing[ name ];
 		value = props[ index ];
 		if ( Array.isArray( value ) ) {
@@ -7200,9 +7231,9 @@ function Animation( elem, properties, options ) {
 	for ( ; index < length; index++ ) {
 		result = Animation.prefilters[ index ].call( animation, elem, props, animation.opts );
 		if ( result ) {
-			if ( jQuery.isFunction( result.stop ) ) {
+			if ( isFunction( result.stop ) ) {
 				jQuery._queueHooks( animation.elem, animation.opts.queue ).stop =
-					jQuery.proxy( result.stop, result );
+					result.stop.bind( result );
 			}
 			return result;
 		}
@@ -7210,7 +7241,7 @@ function Animation( elem, properties, options ) {
 
 	jQuery.map( props, createTween, animation );
 
-	if ( jQuery.isFunction( animation.opts.start ) ) {
+	if ( isFunction( animation.opts.start ) ) {
 		animation.opts.start.call( elem, animation );
 	}
 
@@ -7243,7 +7274,7 @@ jQuery.Animation = jQuery.extend( Animation, {
 	},
 
 	tweener: function( props, callback ) {
-		if ( jQuery.isFunction( props ) ) {
+		if ( isFunction( props ) ) {
 			callback = props;
 			props = [ "*" ];
 		} else {
@@ -7275,9 +7306,9 @@ jQuery.Animation = jQuery.extend( Animation, {
 jQuery.speed = function( speed, easing, fn ) {
 	var opt = speed && typeof speed === "object" ? jQuery.extend( {}, speed ) : {
 		complete: fn || !fn && easing ||
-			jQuery.isFunction( speed ) && speed,
+			isFunction( speed ) && speed,
 		duration: speed,
-		easing: fn && easing || easing && !jQuery.isFunction( easing ) && easing
+		easing: fn && easing || easing && !isFunction( easing ) && easing
 	};
 
 	// Go to the end state if fx are off
@@ -7304,7 +7335,7 @@ jQuery.speed = function( speed, easing, fn ) {
 	opt.old = opt.complete;
 
 	opt.complete = function() {
-		if ( jQuery.isFunction( opt.old ) ) {
+		if ( isFunction( opt.old ) ) {
 			opt.old.call( this );
 		}
 
@@ -7468,7 +7499,7 @@ jQuery.fx.tick = function() {
 		i = 0,
 		timers = jQuery.timers;
 
-	fxNow = jQuery.now();
+	fxNow = Date.now();
 
 	for ( ; i < timers.length; i++ ) {
 		timer = timers[ i ];
@@ -7821,7 +7852,7 @@ jQuery.each( [
 
 
 	// Strip and collapse whitespace according to HTML spec
-	// https://html.spec.whatwg.org/multipage/infrastructure.html#strip-and-collapse-whitespace
+	// https://infra.spec.whatwg.org/#strip-and-collapse-ascii-whitespace
 	function stripAndCollapse( value ) {
 		var tokens = value.match( rnothtmlwhite ) || [];
 		return tokens.join( " " );
@@ -7832,20 +7863,30 @@ function getClass( elem ) {
 	return elem.getAttribute && elem.getAttribute( "class" ) || "";
 }
 
+function classesToArray( value ) {
+	if ( Array.isArray( value ) ) {
+		return value;
+	}
+	if ( typeof value === "string" ) {
+		return value.match( rnothtmlwhite ) || [];
+	}
+	return [];
+}
+
 jQuery.fn.extend( {
 	addClass: function( value ) {
 		var classes, elem, cur, curValue, clazz, j, finalValue,
 			i = 0;
 
-		if ( jQuery.isFunction( value ) ) {
+		if ( isFunction( value ) ) {
 			return this.each( function( j ) {
 				jQuery( this ).addClass( value.call( this, j, getClass( this ) ) );
 			} );
 		}
 
-		if ( typeof value === "string" && value ) {
-			classes = value.match( rnothtmlwhite ) || [];
+		classes = classesToArray( value );
 
+		if ( classes.length ) {
 			while ( ( elem = this[ i++ ] ) ) {
 				curValue = getClass( elem );
 				cur = elem.nodeType === 1 && ( " " + stripAndCollapse( curValue ) + " " );
@@ -7874,7 +7915,7 @@ jQuery.fn.extend( {
 		var classes, elem, cur, curValue, clazz, j, finalValue,
 			i = 0;
 
-		if ( jQuery.isFunction( value ) ) {
+		if ( isFunction( value ) ) {
 			return this.each( function( j ) {
 				jQuery( this ).removeClass( value.call( this, j, getClass( this ) ) );
 			} );
@@ -7884,9 +7925,9 @@ jQuery.fn.extend( {
 			return this.attr( "class", "" );
 		}
 
-		if ( typeof value === "string" && value ) {
-			classes = value.match( rnothtmlwhite ) || [];
+		classes = classesToArray( value );
 
+		if ( classes.length ) {
 			while ( ( elem = this[ i++ ] ) ) {
 				curValue = getClass( elem );
 
@@ -7916,13 +7957,14 @@ jQuery.fn.extend( {
 	},
 
 	toggleClass: function( value, stateVal ) {
-		var type = typeof value;
+		var type = typeof value,
+			isValidValue = type === "string" || Array.isArray( value );
 
-		if ( typeof stateVal === "boolean" && type === "string" ) {
+		if ( typeof stateVal === "boolean" && isValidValue ) {
 			return stateVal ? this.addClass( value ) : this.removeClass( value );
 		}
 
-		if ( jQuery.isFunction( value ) ) {
+		if ( isFunction( value ) ) {
 			return this.each( function( i ) {
 				jQuery( this ).toggleClass(
 					value.call( this, i, getClass( this ), stateVal ),
@@ -7934,12 +7976,12 @@ jQuery.fn.extend( {
 		return this.each( function() {
 			var className, i, self, classNames;
 
-			if ( type === "string" ) {
+			if ( isValidValue ) {
 
 				// Toggle individual class names
 				i = 0;
 				self = jQuery( this );
-				classNames = value.match( rnothtmlwhite ) || [];
+				classNames = classesToArray( value );
 
 				while ( ( className = classNames[ i++ ] ) ) {
 
@@ -7998,7 +8040,7 @@ var rreturn = /\r/g;
 
 jQuery.fn.extend( {
 	val: function( value ) {
-		var hooks, ret, isFunction,
+		var hooks, ret, valueIsFunction,
 			elem = this[ 0 ];
 
 		if ( !arguments.length ) {
@@ -8027,7 +8069,7 @@ jQuery.fn.extend( {
 			return;
 		}
 
-		isFunction = jQuery.isFunction( value );
+		valueIsFunction = isFunction( value );
 
 		return this.each( function( i ) {
 			var val;
@@ -8036,7 +8078,7 @@ jQuery.fn.extend( {
 				return;
 			}
 
-			if ( isFunction ) {
+			if ( valueIsFunction ) {
 				val = value.call( this, i, jQuery( this ).val() );
 			} else {
 				val = value;
@@ -8178,18 +8220,24 @@ jQuery.each( [ "radio", "checkbox" ], function() {
 // Return jQuery for attributes-only inclusion
 
 
-var rfocusMorph = /^(?:focusinfocus|focusoutblur)$/;
+support.focusin = "onfocusin" in window;
+
+
+var rfocusMorph = /^(?:focusinfocus|focusoutblur)$/,
+	stopPropagationCallback = function( e ) {
+		e.stopPropagation();
+	};
 
 jQuery.extend( jQuery.event, {
 
 	trigger: function( event, data, elem, onlyHandlers ) {
 
-		var i, cur, tmp, bubbleType, ontype, handle, special,
+		var i, cur, tmp, bubbleType, ontype, handle, special, lastElement,
 			eventPath = [ elem || document ],
 			type = hasOwn.call( event, "type" ) ? event.type : event,
 			namespaces = hasOwn.call( event, "namespace" ) ? event.namespace.split( "." ) : [];
 
-		cur = tmp = elem = elem || document;
+		cur = lastElement = tmp = elem = elem || document;
 
 		// Don't do events on text and comment nodes
 		if ( elem.nodeType === 3 || elem.nodeType === 8 ) {
@@ -8241,7 +8289,7 @@ jQuery.extend( jQuery.event, {
 
 		// Determine event propagation path in advance, per W3C events spec (#9951)
 		// Bubble up to document, then to window; watch for a global ownerDocument var (#9724)
-		if ( !onlyHandlers && !special.noBubble && !jQuery.isWindow( elem ) ) {
+		if ( !onlyHandlers && !special.noBubble && !isWindow( elem ) ) {
 
 			bubbleType = special.delegateType || type;
 			if ( !rfocusMorph.test( bubbleType + type ) ) {
@@ -8261,7 +8309,7 @@ jQuery.extend( jQuery.event, {
 		// Fire handlers on the event path
 		i = 0;
 		while ( ( cur = eventPath[ i++ ] ) && !event.isPropagationStopped() ) {
-
+			lastElement = cur;
 			event.type = i > 1 ?
 				bubbleType :
 				special.bindType || type;
@@ -8293,7 +8341,7 @@ jQuery.extend( jQuery.event, {
 
 				// Call a native DOM method on the target with the same name as the event.
 				// Don't do default actions on window, that's where global variables be (#6170)
-				if ( ontype && jQuery.isFunction( elem[ type ] ) && !jQuery.isWindow( elem ) ) {
+				if ( ontype && isFunction( elem[ type ] ) && !isWindow( elem ) ) {
 
 					// Don't re-trigger an onFOO event when we call its FOO() method
 					tmp = elem[ ontype ];
@@ -8304,7 +8352,17 @@ jQuery.extend( jQuery.event, {
 
 					// Prevent re-triggering of the same event, since we already bubbled it above
 					jQuery.event.triggered = type;
+
+					if ( event.isPropagationStopped() ) {
+						lastElement.addEventListener( type, stopPropagationCallback );
+					}
+
 					elem[ type ]();
+
+					if ( event.isPropagationStopped() ) {
+						lastElement.removeEventListener( type, stopPropagationCallback );
+					}
+
 					jQuery.event.triggered = undefined;
 
 					if ( tmp ) {
@@ -8350,31 +8408,6 @@ jQuery.fn.extend( {
 } );
 
 
-jQuery.each( ( "blur focus focusin focusout resize scroll click dblclick " +
-	"mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
-	"change select submit keydown keypress keyup contextmenu" ).split( " " ),
-	function( i, name ) {
-
-	// Handle event binding
-	jQuery.fn[ name ] = function( data, fn ) {
-		return arguments.length > 0 ?
-			this.on( name, null, data, fn ) :
-			this.trigger( name );
-	};
-} );
-
-jQuery.fn.extend( {
-	hover: function( fnOver, fnOut ) {
-		return this.mouseenter( fnOver ).mouseleave( fnOut || fnOver );
-	}
-} );
-
-
-
-
-support.focusin = "onfocusin" in window;
-
-
 // Support: Firefox <=44
 // Firefox doesn't have focus(in | out) events
 // Related ticket - https://bugzilla.mozilla.org/show_bug.cgi?id=687787
@@ -8418,7 +8451,7 @@ if ( !support.focusin ) {
 }
 var location = window.location;
 
-var nonce = jQuery.now();
+var nonce = Date.now();
 
 var rquery = ( /\?/ );
 
@@ -8476,7 +8509,7 @@ function buildParams( prefix, obj, traditional, add ) {
 			}
 		} );
 
-	} else if ( !traditional && jQuery.type( obj ) === "object" ) {
+	} else if ( !traditional && toType( obj ) === "object" ) {
 
 		// Serialize object item.
 		for ( name in obj ) {
@@ -8498,7 +8531,7 @@ jQuery.param = function( a, traditional ) {
 		add = function( key, valueOrFunction ) {
 
 			// If value is a function, invoke it and use its return value
-			var value = jQuery.isFunction( valueOrFunction ) ?
+			var value = isFunction( valueOrFunction ) ?
 				valueOrFunction() :
 				valueOrFunction;
 
@@ -8616,7 +8649,7 @@ function addToPrefiltersOrTransports( structure ) {
 			i = 0,
 			dataTypes = dataTypeExpression.toLowerCase().match( rnothtmlwhite ) || [];
 
-		if ( jQuery.isFunction( func ) ) {
+		if ( isFunction( func ) ) {
 
 			// For each dataType in the dataTypeExpression
 			while ( ( dataType = dataTypes[ i++ ] ) ) {
@@ -9088,7 +9121,7 @@ jQuery.extend( {
 		if ( s.crossDomain == null ) {
 			urlAnchor = document.createElement( "a" );
 
-			// Support: IE <=8 - 11, Edge 12 - 13
+			// Support: IE <=8 - 11, Edge 12 - 15
 			// IE throws exception on accessing the href property if url is malformed,
 			// e.g. http://example.com:80x/
 			try {
@@ -9146,8 +9179,8 @@ jQuery.extend( {
 			// Remember the hash so we can put it back
 			uncached = s.url.slice( cacheURL.length );
 
-			// If data is available, append data to url
-			if ( s.data ) {
+			// If data is available and should be processed, append data to url
+			if ( s.data && ( s.processData || typeof s.data === "string" ) ) {
 				cacheURL += ( rquery.test( cacheURL ) ? "&" : "?" ) + s.data;
 
 				// #9682: remove data so that it's not used in an eventual retry
@@ -9384,7 +9417,7 @@ jQuery.each( [ "get", "post" ], function( i, method ) {
 	jQuery[ method ] = function( url, data, callback, type ) {
 
 		// Shift arguments if data argument was omitted
-		if ( jQuery.isFunction( data ) ) {
+		if ( isFunction( data ) ) {
 			type = type || callback;
 			callback = data;
 			data = undefined;
@@ -9422,7 +9455,7 @@ jQuery.fn.extend( {
 		var wrap;
 
 		if ( this[ 0 ] ) {
-			if ( jQuery.isFunction( html ) ) {
+			if ( isFunction( html ) ) {
 				html = html.call( this[ 0 ] );
 			}
 
@@ -9448,7 +9481,7 @@ jQuery.fn.extend( {
 	},
 
 	wrapInner: function( html ) {
-		if ( jQuery.isFunction( html ) ) {
+		if ( isFunction( html ) ) {
 			return this.each( function( i ) {
 				jQuery( this ).wrapInner( html.call( this, i ) );
 			} );
@@ -9468,10 +9501,10 @@ jQuery.fn.extend( {
 	},
 
 	wrap: function( html ) {
-		var isFunction = jQuery.isFunction( html );
+		var htmlIsFunction = isFunction( html );
 
 		return this.each( function( i ) {
-			jQuery( this ).wrapAll( isFunction ? html.call( this, i ) : html );
+			jQuery( this ).wrapAll( htmlIsFunction ? html.call( this, i ) : html );
 		} );
 	},
 
@@ -9563,7 +9596,8 @@ jQuery.ajaxTransport( function( options ) {
 					return function() {
 						if ( callback ) {
 							callback = errorCallback = xhr.onload =
-								xhr.onerror = xhr.onabort = xhr.onreadystatechange = null;
+								xhr.onerror = xhr.onabort = xhr.ontimeout =
+									xhr.onreadystatechange = null;
 
 							if ( type === "abort" ) {
 								xhr.abort();
@@ -9603,7 +9637,7 @@ jQuery.ajaxTransport( function( options ) {
 
 				// Listen to events
 				xhr.onload = callback();
-				errorCallback = xhr.onerror = callback( "error" );
+				errorCallback = xhr.onerror = xhr.ontimeout = callback( "error" );
 
 				// Support: IE 9 only
 				// Use onreadystatechange to replace onabort
@@ -9757,7 +9791,7 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 	if ( jsonProp || s.dataTypes[ 0 ] === "jsonp" ) {
 
 		// Get callback name, remembering preexisting value associated with it
-		callbackName = s.jsonpCallback = jQuery.isFunction( s.jsonpCallback ) ?
+		callbackName = s.jsonpCallback = isFunction( s.jsonpCallback ) ?
 			s.jsonpCallback() :
 			s.jsonpCallback;
 
@@ -9808,7 +9842,7 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 			}
 
 			// Call if it was a function and we have a response
-			if ( responseContainer && jQuery.isFunction( overwritten ) ) {
+			if ( responseContainer && isFunction( overwritten ) ) {
 				overwritten( responseContainer[ 0 ] );
 			}
 
@@ -9900,7 +9934,7 @@ jQuery.fn.load = function( url, params, callback ) {
 	}
 
 	// If it's a function
-	if ( jQuery.isFunction( params ) ) {
+	if ( isFunction( params ) ) {
 
 		// We assume that it's the callback
 		callback = params;
@@ -10008,7 +10042,7 @@ jQuery.offset = {
 			curLeft = parseFloat( curCSSLeft ) || 0;
 		}
 
-		if ( jQuery.isFunction( options ) ) {
+		if ( isFunction( options ) ) {
 
 			// Use jQuery.extend here to allow modification of coordinates argument (gh-1848)
 			options = options.call( elem, i, jQuery.extend( {}, curOffset ) );
@@ -10031,6 +10065,8 @@ jQuery.offset = {
 };
 
 jQuery.fn.extend( {
+
+	// offset() relates an element's border box to the document origin
 	offset: function( options ) {
 
 		// Preserve chaining for setter
@@ -10042,7 +10078,7 @@ jQuery.fn.extend( {
 				} );
 		}
 
-		var doc, docElem, rect, win,
+		var rect, win,
 			elem = this[ 0 ];
 
 		if ( !elem ) {
@@ -10057,50 +10093,52 @@ jQuery.fn.extend( {
 			return { top: 0, left: 0 };
 		}
 
+		// Get document-relative position by adding viewport scroll to viewport-relative gBCR
 		rect = elem.getBoundingClientRect();
-
-		doc = elem.ownerDocument;
-		docElem = doc.documentElement;
-		win = doc.defaultView;
-
+		win = elem.ownerDocument.defaultView;
 		return {
-			top: rect.top + win.pageYOffset - docElem.clientTop,
-			left: rect.left + win.pageXOffset - docElem.clientLeft
+			top: rect.top + win.pageYOffset,
+			left: rect.left + win.pageXOffset
 		};
 	},
 
+	// position() relates an element's margin box to its offset parent's padding box
+	// This corresponds to the behavior of CSS absolute positioning
 	position: function() {
 		if ( !this[ 0 ] ) {
 			return;
 		}
 
-		var offsetParent, offset,
+		var offsetParent, offset, doc,
 			elem = this[ 0 ],
 			parentOffset = { top: 0, left: 0 };
 
-		// Fixed elements are offset from window (parentOffset = {top:0, left: 0},
-		// because it is its only offset parent
+		// position:fixed elements are offset from the viewport, which itself always has zero offset
 		if ( jQuery.css( elem, "position" ) === "fixed" ) {
 
-			// Assume getBoundingClientRect is there when computed position is fixed
+			// Assume position:fixed implies availability of getBoundingClientRect
 			offset = elem.getBoundingClientRect();
 
 		} else {
-
-			// Get *real* offsetParent
-			offsetParent = this.offsetParent();
-
-			// Get correct offsets
 			offset = this.offset();
-			if ( !nodeName( offsetParent[ 0 ], "html" ) ) {
-				parentOffset = offsetParent.offset();
-			}
 
-			// Add offsetParent borders
-			parentOffset = {
-				top: parentOffset.top + jQuery.css( offsetParent[ 0 ], "borderTopWidth", true ),
-				left: parentOffset.left + jQuery.css( offsetParent[ 0 ], "borderLeftWidth", true )
-			};
+			// Account for the *real* offset parent, which can be the document or its root element
+			// when a statically positioned element is identified
+			doc = elem.ownerDocument;
+			offsetParent = elem.offsetParent || doc.documentElement;
+			while ( offsetParent &&
+				( offsetParent === doc.body || offsetParent === doc.documentElement ) &&
+				jQuery.css( offsetParent, "position" ) === "static" ) {
+
+				offsetParent = offsetParent.parentNode;
+			}
+			if ( offsetParent && offsetParent !== elem && offsetParent.nodeType === 1 ) {
+
+				// Incorporate borders into its offset, since they are outside its content origin
+				parentOffset = jQuery( offsetParent ).offset();
+				parentOffset.top += jQuery.css( offsetParent, "borderTopWidth", true );
+				parentOffset.left += jQuery.css( offsetParent, "borderLeftWidth", true );
+			}
 		}
 
 		// Subtract parent offsets and element margins
@@ -10142,7 +10180,7 @@ jQuery.each( { scrollLeft: "pageXOffset", scrollTop: "pageYOffset" }, function( 
 
 			// Coalesce documents and windows
 			var win;
-			if ( jQuery.isWindow( elem ) ) {
+			if ( isWindow( elem ) ) {
 				win = elem;
 			} else if ( elem.nodeType === 9 ) {
 				win = elem.defaultView;
@@ -10200,7 +10238,7 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 			return access( this, function( elem, type, value ) {
 				var doc;
 
-				if ( jQuery.isWindow( elem ) ) {
+				if ( isWindow( elem ) ) {
 
 					// $( window ).outerWidth/Height return w/h including scrollbars (gh-1729)
 					return funcName.indexOf( "outer" ) === 0 ?
@@ -10234,6 +10272,28 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 } );
 
 
+jQuery.each( ( "blur focus focusin focusout resize scroll click dblclick " +
+	"mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
+	"change select submit keydown keypress keyup contextmenu" ).split( " " ),
+	function( i, name ) {
+
+	// Handle event binding
+	jQuery.fn[ name ] = function( data, fn ) {
+		return arguments.length > 0 ?
+			this.on( name, null, data, fn ) :
+			this.trigger( name );
+	};
+} );
+
+jQuery.fn.extend( {
+	hover: function( fnOver, fnOut ) {
+		return this.mouseenter( fnOver ).mouseleave( fnOut || fnOver );
+	}
+} );
+
+
+
+
 jQuery.fn.extend( {
 
 	bind: function( types, data, fn ) {
@@ -10255,6 +10315,37 @@ jQuery.fn.extend( {
 	}
 } );
 
+// Bind a function to a context, optionally partially applying any
+// arguments.
+// jQuery.proxy is deprecated to promote standards (specifically Function#bind)
+// However, it is not slated for removal any time soon
+jQuery.proxy = function( fn, context ) {
+	var tmp, args, proxy;
+
+	if ( typeof context === "string" ) {
+		tmp = fn[ context ];
+		context = fn;
+		fn = tmp;
+	}
+
+	// Quick check to determine if target is callable, in the spec
+	// this throws a TypeError, but we will just return undefined.
+	if ( !isFunction( fn ) ) {
+		return undefined;
+	}
+
+	// Simulated bind
+	args = slice.call( arguments, 2 );
+	proxy = function() {
+		return fn.apply( context || this, args.concat( slice.call( arguments ) ) );
+	};
+
+	// Set the guid of unique handler to the same of original handler, so it can be removed
+	proxy.guid = fn.guid = fn.guid || jQuery.guid++;
+
+	return proxy;
+};
+
 jQuery.holdReady = function( hold ) {
 	if ( hold ) {
 		jQuery.readyWait++;
@@ -10265,6 +10356,26 @@ jQuery.holdReady = function( hold ) {
 jQuery.isArray = Array.isArray;
 jQuery.parseJSON = JSON.parse;
 jQuery.nodeName = nodeName;
+jQuery.isFunction = isFunction;
+jQuery.isWindow = isWindow;
+jQuery.camelCase = camelCase;
+jQuery.type = toType;
+
+jQuery.now = Date.now;
+
+jQuery.isNumeric = function( obj ) {
+
+	// As of jQuery 3.0, isNumeric is limited to
+	// strings and numbers (primitives or objects)
+	// that can be coerced to finite numbers (gh-2662)
+	var type = jQuery.type( obj );
+	return ( type === "number" || type === "string" ) &&
+
+		// parseFloat NaNs numeric-cast false positives ("")
+		// ...but misinterprets leading-number strings, particularly hex literals ("0x...")
+		// subtraction forces infinities to NaN
+		!isNaN( obj - parseFloat( obj ) );
+};
 
 
 
@@ -10355,6 +10466,1206 @@ module.exports = g;
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(Buffer) {
+Object.defineProperty(exports, "__esModule", { value: true });
+__webpack_require__(8);
+var ResponseStatus = /** @class */ (function () {
+    function ResponseStatus() {
+    }
+    return ResponseStatus;
+}());
+exports.ResponseStatus = ResponseStatus;
+var ResponseError = /** @class */ (function () {
+    function ResponseError() {
+    }
+    return ResponseError;
+}());
+exports.ResponseError = ResponseError;
+var ErrorResponse = /** @class */ (function () {
+    function ErrorResponse() {
+    }
+    return ErrorResponse;
+}());
+exports.ErrorResponse = ErrorResponse;
+var NewInstanceResolver = /** @class */ (function () {
+    function NewInstanceResolver() {
+    }
+    NewInstanceResolver.prototype.tryResolve = function (ctor) {
+        return new ctor();
+    };
+    return NewInstanceResolver;
+}());
+exports.NewInstanceResolver = NewInstanceResolver;
+var SingletonInstanceResolver = /** @class */ (function () {
+    function SingletonInstanceResolver() {
+    }
+    SingletonInstanceResolver.prototype.tryResolve = function (ctor) {
+        return ctor.instance
+            || (ctor.instance = new ctor());
+    };
+    return SingletonInstanceResolver;
+}());
+exports.SingletonInstanceResolver = SingletonInstanceResolver;
+var TypeMap = {
+    onConnect: "ServerEventConnect",
+    onHeartbeat: "ServerEventHeartbeat",
+    onJoin: "ServerEventJoin",
+    onLeave: "ServerEventLeave",
+    onUpdate: "ServerEventUpdate"
+};
+/**
+ * EventSource
+ */
+var ReadyState;
+(function (ReadyState) {
+    ReadyState[ReadyState["CONNECTING"] = 0] = "CONNECTING";
+    ReadyState[ReadyState["OPEN"] = 1] = "OPEN";
+    ReadyState[ReadyState["CLOSED"] = 2] = "CLOSED";
+})(ReadyState = exports.ReadyState || (exports.ReadyState = {}));
+var ServerEventsClient = /** @class */ (function () {
+    function ServerEventsClient(baseUrl, channels, options, eventSource) {
+        if (options === void 0) { options = {}; }
+        if (eventSource === void 0) { eventSource = null; }
+        var _this = this;
+        this.channels = channels;
+        this.options = options;
+        this.eventSource = eventSource;
+        this.onMessage = function (e) {
+            if (_this.stopped)
+                return;
+            var opt = _this.options;
+            if (typeof document == "undefined") {
+                var document = {
+                    querySelectorAll: function (sel) { return []; }
+                };
+            }
+            var parts = exports.splitOnFirst(e.data, " ");
+            var channel = null;
+            var selector = parts[0];
+            var selParts = exports.splitOnFirst(selector, "@");
+            if (selParts.length > 1) {
+                channel = selParts[0];
+                selector = selParts[1];
+            }
+            var json = parts[1];
+            var body = null;
+            try {
+                body = json ? JSON.parse(json) : null;
+            }
+            catch (ignore) { }
+            parts = exports.splitOnFirst(selector, ".");
+            if (parts.length <= 1)
+                throw "invalid selector format: " + selector;
+            var op = parts[0], target = parts[1].replace(new RegExp("%20", "g"), " ");
+            var tokens = exports.splitOnFirst(target, "$");
+            var cmd = tokens[0], cssSelector = tokens[1];
+            var els = cssSelector && document.querySelectorAll(cssSelector);
+            var el = els && els[0];
+            var eventId = parseInt(e.lastEventId);
+            var data = e.data;
+            var type = TypeMap[cmd] || "ServerEventMessage";
+            var request = { eventId: eventId, data: data, type: type,
+                channel: channel, selector: selector, json: json, body: body, op: op, target: tokens[0], cssSelector: cssSelector, meta: {} };
+            var mergedBody = typeof body == "object"
+                ? Object.assign({}, request, body)
+                : request;
+            if (opt.validate && opt.validate(request) === false)
+                return;
+            var headers = new Headers();
+            headers.set("Content-Type", "text/plain");
+            if (op === "cmd") {
+                if (cmd === "onConnect") {
+                    _this.connectionInfo = mergedBody;
+                    if (typeof body.heartbeatIntervalMs == "string")
+                        _this.connectionInfo.heartbeatIntervalMs = parseInt(body.heartbeatIntervalMs);
+                    if (typeof body.idleTimeoutMs == "string")
+                        _this.connectionInfo.idleTimeoutMs = parseInt(body.idleTimeoutMs);
+                    Object.assign(opt, body);
+                    var fn = opt.handlers["onConnect"];
+                    if (fn) {
+                        fn.call(el || document.body, _this.connectionInfo, request);
+                        if (_this.stopped)
+                            return;
+                    }
+                    if (opt.heartbeatUrl) {
+                        if (opt.heartbeat) {
+                            clearInterval(opt.heartbeat);
+                        }
+                        opt.heartbeat = setInterval(function () {
+                            if (_this.eventSource.readyState === EventSource.CLOSED) {
+                                clearInterval(opt.heartbeat);
+                                var stopFn = opt.handlers["onStop"];
+                                if (stopFn != null)
+                                    stopFn.apply(_this.eventSource);
+                                _this.reconnectServerEvents({ error: new Error("EventSource is CLOSED") });
+                                return;
+                            }
+                            fetch(new Request(opt.heartbeatUrl, { method: "POST", mode: "cors", headers: headers, credentials: _this.serviceClient.credentials }))
+                                .then(function (res) { if (!res.ok)
+                                throw new Error(res.status + " - " + res.statusText); })
+                                .catch(function (error) { return _this.reconnectServerEvents({ error: error }); });
+                        }, (_this.connectionInfo && _this.connectionInfo.heartbeatIntervalMs) || opt.heartbeatIntervalMs || 10000);
+                    }
+                    if (opt.unRegisterUrl) {
+                        if (typeof window != "undefined") {
+                            window.onunload = function () { return _this.stop(); };
+                        }
+                    }
+                    _this.updateSubscriberUrl = opt.updateSubscriberUrl;
+                    _this.updateChannels((opt.channels || "").split(","));
+                }
+                else {
+                    var isCmdMsg = cmd == "onJoin" || cmd == "onLeave" || cmd == "onUpdate";
+                    var fn = opt.handlers[cmd];
+                    if (fn) {
+                        if (isCmdMsg) {
+                            fn.call(el || document.body, mergedBody);
+                        }
+                        else {
+                            fn.call(el || document.body, body, request);
+                        }
+                    }
+                    else {
+                        if (!isCmdMsg) { //global receiver
+                            var r = opt.receivers && opt.receivers["cmd"];
+                            _this.invokeReceiver(r, cmd, el, request, "cmd");
+                        }
+                    }
+                    if (isCmdMsg) {
+                        fn = opt.handlers["onCommand"];
+                        if (fn) {
+                            fn.call(el || document.body, mergedBody);
+                        }
+                    }
+                }
+            }
+            else if (op === "trigger") {
+                _this.raiseEvent(target, request);
+            }
+            else if (op === "css") {
+                exports.css(els || document.querySelectorAll("body"), cmd, body);
+            }
+            //Named Receiver
+            var r = opt.receivers && opt.receivers[op];
+            _this.invokeReceiver(r, cmd, el, request, op);
+            if (!TypeMap[cmd]) {
+                var fn = opt.handlers["onMessage"];
+                if (fn) {
+                    fn.call(el || document.body, mergedBody);
+                }
+            }
+            if (opt.onTick)
+                opt.onTick();
+        };
+        this.onError = function (error) {
+            if (_this.stopped)
+                return;
+            if (!error)
+                error = event;
+            var fn = _this.options.onException;
+            if (fn != null)
+                fn.call(_this.eventSource, error);
+            if (_this.options.onTick)
+                _this.options.onTick();
+        };
+        if (this.channels.length === 0)
+            throw "at least 1 channel is required";
+        this.resolver = this.options.resolver || new NewInstanceResolver();
+        this.eventStreamUri = exports.combinePaths(baseUrl, "event-stream") + "?";
+        this.updateChannels(channels);
+        this.serviceClient = new JsonServiceClient(baseUrl);
+        this.listeners = {};
+        this.withCredentials = true;
+        if (!this.options.handlers)
+            this.options.handlers = {};
+    }
+    ServerEventsClient.prototype.getEventSourceOptions = function () {
+        return { withCredentials: this.withCredentials };
+    };
+    ServerEventsClient.prototype.reconnectServerEvents = function (opt) {
+        var _this = this;
+        if (opt === void 0) { opt = {}; }
+        if (this.stopped)
+            return;
+        if (opt.error)
+            this.onError(opt.error);
+        var hold = this.eventSource;
+        var url = opt.url || this.eventStreamUri || hold.url;
+        if (this.options.resolveStreamUrl != null) {
+            url = this.options.resolveStreamUrl(url);
+        }
+        var es = this.EventSource
+            ? new this.EventSource(url, this.getEventSourceOptions())
+            : new EventSource(url, this.getEventSourceOptions());
+        es.addEventListener('error', function (e) { return opt.onerror || hold.onerror || _this.onError; });
+        es.addEventListener('message', opt.onmessage || hold.onmessage || this.onMessage);
+        var fn = this.options.onReconnect;
+        if (fn != null)
+            fn.call(es, opt.error);
+        if (hold.removeEventListener) {
+            hold.removeEventListener('error', this.onError);
+            hold.removeEventListener('message', this.onMessage);
+        }
+        hold.close();
+        return this.eventSource = es;
+    };
+    ServerEventsClient.prototype.start = function () {
+        var _this = this;
+        this.stopped = false;
+        if (this.eventSource == null || this.eventSource.readyState === EventSource.CLOSED) {
+            var url = this.eventStreamUri;
+            if (this.options.resolveStreamUrl != null) {
+                url = this.options.resolveStreamUrl(url);
+            }
+            this.eventSource = this.EventSource
+                ? new this.EventSource(url, this.getEventSourceOptions())
+                : new EventSource(url, this.getEventSourceOptions());
+            this.eventSource.addEventListener('error', this.onError);
+            this.eventSource.addEventListener('message', function (e) { return _this.onMessage(e); });
+        }
+        return this;
+    };
+    ServerEventsClient.prototype.stop = function () {
+        this.stopped = true;
+        if (this.eventSource) {
+            this.eventSource.close();
+        }
+        var opt = this.options;
+        if (opt && opt.heartbeat) {
+            clearInterval(opt.heartbeat);
+        }
+        var hold = this.connectionInfo;
+        if (hold == null || hold.unRegisterUrl == null)
+            return new Promise(function (resolve, reject) { return resolve(); });
+        this.connectionInfo = null;
+        return fetch(new Request(hold.unRegisterUrl, { method: "POST", mode: "cors", credentials: this.serviceClient.credentials }))
+            .then(function (res) { if (!res.ok)
+            throw new Error(res.status + " - " + res.statusText); })
+            .catch(this.onError);
+    };
+    ServerEventsClient.prototype.invokeReceiver = function (r, cmd, el, request, name) {
+        if (r) {
+            if (typeof r == "function") {
+                r = this.resolver.tryResolve(r);
+            }
+            cmd = cmd.replace("-", "");
+            r.client = this;
+            r.request = request;
+            if (typeof (r[cmd]) == "function") {
+                r[cmd].call(el || r, request.body, request);
+            }
+            else if (cmd in r) {
+                r[cmd] = request.body;
+            }
+            else {
+                var cmdLower = cmd.toLowerCase();
+                for (var k in r) {
+                    if (k.toLowerCase() == cmdLower) {
+                        if (typeof r[k] == "function") {
+                            r[k].call(el || r, request.body, request);
+                        }
+                        else {
+                            r[k] = request.body;
+                        }
+                        return;
+                    }
+                }
+                var noSuchMethod = r["noSuchMethod"];
+                if (typeof noSuchMethod == "function") {
+                    noSuchMethod.call(el || r, request.target, request);
+                }
+            }
+        }
+    };
+    ServerEventsClient.prototype.hasConnected = function () {
+        return this.connectionInfo != null;
+    };
+    ServerEventsClient.prototype.registerHandler = function (name, fn) {
+        if (!this.options.handlers)
+            this.options.handlers = {};
+        this.options.handlers[name] = fn;
+        return this;
+    };
+    ServerEventsClient.prototype.setResolver = function (resolver) {
+        this.options.resolver = resolver;
+        return this;
+    };
+    ServerEventsClient.prototype.registerReceiver = function (receiver) {
+        return this.registerNamedReceiver("cmd", receiver);
+    };
+    ServerEventsClient.prototype.registerNamedReceiver = function (name, receiver) {
+        if (!this.options.receivers)
+            this.options.receivers = {};
+        this.options.receivers[name] = receiver;
+        return this;
+    };
+    ServerEventsClient.prototype.unregisterReceiver = function (name) {
+        if (name === void 0) { name = "cmd"; }
+        if (this.options.receivers) {
+            delete this.options.receivers[name];
+        }
+        return this;
+    };
+    ServerEventsClient.prototype.updateChannels = function (channels) {
+        this.channels = channels;
+        var url = this.eventSource != null
+            ? this.eventSource.url
+            : this.eventStreamUri;
+        this.eventStreamUri = url.substring(0, Math.min(url.indexOf("?"), url.length)) + "?channels=" + channels.join(",") + "&t=" + new Date().getTime();
+    };
+    ServerEventsClient.prototype.update = function (subscribe, unsubscribe) {
+        var sub = typeof subscribe == "string" ? subscribe.split(',') : subscribe;
+        var unsub = typeof unsubscribe == "string" ? unsubscribe.split(',') : unsubscribe;
+        var channels = [];
+        for (var i in this.channels) {
+            var c = this.channels[i];
+            if (unsub == null || unsub.indexOf(c) === -1) {
+                channels.push(c);
+            }
+        }
+        if (sub) {
+            for (var i in sub) {
+                var c = sub[i];
+                if (channels.indexOf(c) === -1) {
+                    channels.push(c);
+                }
+            }
+        }
+        this.updateChannels(channels);
+    };
+    ServerEventsClient.prototype.addListener = function (eventName, handler) {
+        var handlers = this.listeners[eventName] || (this.listeners[eventName] = []);
+        handlers.push(handler);
+        return this;
+    };
+    ServerEventsClient.prototype.removeListener = function (eventName, handler) {
+        var handlers = this.listeners[eventName];
+        if (handlers) {
+            var pos = handlers.indexOf(handler);
+            if (pos >= 0) {
+                handlers.splice(pos, 1);
+            }
+        }
+        return this;
+    };
+    ServerEventsClient.prototype.raiseEvent = function (eventName, msg) {
+        var _this = this;
+        var handlers = this.listeners[eventName];
+        if (handlers) {
+            handlers.forEach(function (x) {
+                try {
+                    x(msg);
+                }
+                catch (e) {
+                    _this.onError(e);
+                }
+            });
+        }
+    };
+    ServerEventsClient.prototype.getConnectionInfo = function () {
+        if (this.connectionInfo == null)
+            throw "Not Connected";
+        return this.connectionInfo;
+    };
+    ServerEventsClient.prototype.getSubscriptionId = function () {
+        return this.getConnectionInfo().id;
+    };
+    ServerEventsClient.prototype.updateSubscriber = function (request) {
+        var _this = this;
+        if (request.id == null)
+            request.id = this.getSubscriptionId();
+        return this.serviceClient.post(request)
+            .then(function (x) {
+            _this.update(request.subscribeChannels, request.unsubscribeChannels);
+        }).catch(this.onError);
+    };
+    ServerEventsClient.prototype.subscribeToChannels = function () {
+        var _this = this;
+        var channels = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            channels[_i] = arguments[_i];
+        }
+        var request = new UpdateEventSubscriber();
+        request.id = this.getSubscriptionId();
+        request.subscribeChannels = channels;
+        return this.serviceClient.post(request)
+            .then(function (x) {
+            _this.update(channels, null);
+        }).catch(this.onError);
+    };
+    ServerEventsClient.prototype.unsubscribeFromChannels = function () {
+        var _this = this;
+        var channels = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            channels[_i] = arguments[_i];
+        }
+        var request = new UpdateEventSubscriber();
+        request.id = this.getSubscriptionId();
+        request.unsubscribeChannels = channels;
+        return this.serviceClient.post(request)
+            .then(function (x) {
+            _this.update(null, channels);
+        }).catch(this.onError);
+    };
+    ServerEventsClient.prototype.getChannelSubscribers = function () {
+        var _this = this;
+        var request = new GetEventSubscribers();
+        request.channels = this.channels;
+        return this.serviceClient.get(request)
+            .then(function (r) { return r.map(function (x) { return _this.toServerEventUser(x); }); })
+            .catch(function (e) {
+            _this.onError(e);
+            return [];
+        });
+    };
+    ServerEventsClient.prototype.toServerEventUser = function (map) {
+        var channels = map["channels"];
+        var to = new ServerEventUser();
+        to.userId = map["userId"];
+        to.displayName = map["displayName"];
+        to.profileUrl = map["profileUrl"];
+        to.channels = channels ? channels.split(',') : null;
+        for (var k in map) {
+            if (k == "userId" || k == "displayName" ||
+                k == "profileUrl" || k == "channels")
+                continue;
+            if (to.meta == null)
+                to.meta = {};
+            to.meta[k] = map[k];
+        }
+        return to;
+    };
+    ServerEventsClient.UnknownChannel = "*";
+    return ServerEventsClient;
+}());
+exports.ServerEventsClient = ServerEventsClient;
+var ServerEventReceiver = /** @class */ (function () {
+    function ServerEventReceiver() {
+    }
+    ServerEventReceiver.prototype.noSuchMethod = function (selector, message) { };
+    return ServerEventReceiver;
+}());
+exports.ServerEventReceiver = ServerEventReceiver;
+var UpdateEventSubscriber = /** @class */ (function () {
+    function UpdateEventSubscriber() {
+    }
+    UpdateEventSubscriber.prototype.createResponse = function () { return new UpdateEventSubscriberResponse(); };
+    UpdateEventSubscriber.prototype.getTypeName = function () { return "UpdateEventSubscriber"; };
+    return UpdateEventSubscriber;
+}());
+exports.UpdateEventSubscriber = UpdateEventSubscriber;
+var UpdateEventSubscriberResponse = /** @class */ (function () {
+    function UpdateEventSubscriberResponse() {
+    }
+    return UpdateEventSubscriberResponse;
+}());
+exports.UpdateEventSubscriberResponse = UpdateEventSubscriberResponse;
+var GetEventSubscribers = /** @class */ (function () {
+    function GetEventSubscribers() {
+    }
+    GetEventSubscribers.prototype.createResponse = function () { return []; };
+    GetEventSubscribers.prototype.getTypeName = function () { return "GetEventSubscribers"; };
+    return GetEventSubscribers;
+}());
+exports.GetEventSubscribers = GetEventSubscribers;
+var ServerEventUser = /** @class */ (function () {
+    function ServerEventUser() {
+    }
+    return ServerEventUser;
+}());
+exports.ServerEventUser = ServerEventUser;
+var HttpMethods = /** @class */ (function () {
+    function HttpMethods() {
+    }
+    HttpMethods.Get = "GET";
+    HttpMethods.Post = "POST";
+    HttpMethods.Put = "PUT";
+    HttpMethods.Delete = "DELETE";
+    HttpMethods.Patch = "PATCH";
+    HttpMethods.Head = "HEAD";
+    HttpMethods.Options = "OPTIONS";
+    HttpMethods.hasRequestBody = function (method) {
+        return !(method === "GET" || method === "DELETE" || method === "HEAD" || method === "OPTIONS");
+    };
+    return HttpMethods;
+}());
+exports.HttpMethods = HttpMethods;
+var GetAccessToken = /** @class */ (function () {
+    function GetAccessToken() {
+    }
+    GetAccessToken.prototype.createResponse = function () { return new GetAccessTokenResponse(); };
+    GetAccessToken.prototype.getTypeName = function () { return "GetAccessToken"; };
+    return GetAccessToken;
+}());
+var GetAccessTokenResponse = /** @class */ (function () {
+    function GetAccessTokenResponse() {
+    }
+    return GetAccessTokenResponse;
+}());
+exports.GetAccessTokenResponse = GetAccessTokenResponse;
+var JsonServiceClient = /** @class */ (function () {
+    function JsonServiceClient(baseUrl) {
+        if (baseUrl === void 0) { baseUrl = "/"; }
+        this.baseUrl = baseUrl;
+        this.replyBaseUrl = exports.combinePaths(baseUrl, "json", "reply") + "/";
+        this.oneWayBaseUrl = exports.combinePaths(baseUrl, "json", "oneway") + "/";
+        this.mode = "cors";
+        this.credentials = 'include';
+        this.headers = new Headers();
+        this.headers.set("Content-Type", "application/json");
+        this.manageCookies = typeof document == "undefined"; //because node-fetch doesn't
+        this.cookies = {};
+    }
+    JsonServiceClient.prototype.setCredentials = function (userName, password) {
+        this.userName = userName;
+        this.password = password;
+    };
+    // @deprecated use bearerToken property
+    JsonServiceClient.prototype.setBearerToken = function (token) {
+        this.bearerToken = token;
+    };
+    JsonServiceClient.prototype.get = function (request, args) {
+        return typeof request != "string"
+            ? this.send(HttpMethods.Get, request, args)
+            : this.send(HttpMethods.Get, null, args, this.toAbsoluteUrl(request));
+    };
+    JsonServiceClient.prototype.delete = function (request, args) {
+        return typeof request != "string"
+            ? this.send(HttpMethods.Delete, request, args)
+            : this.send(HttpMethods.Delete, null, args, this.toAbsoluteUrl(request));
+    };
+    JsonServiceClient.prototype.post = function (request, args) {
+        return this.send(HttpMethods.Post, request, args);
+    };
+    JsonServiceClient.prototype.postToUrl = function (url, request, args) {
+        return this.send(HttpMethods.Post, request, args, this.toAbsoluteUrl(url));
+    };
+    JsonServiceClient.prototype.postBody = function (request, body, args) {
+        return this.sendBody(HttpMethods.Post, request, body, args);
+    };
+    JsonServiceClient.prototype.put = function (request, args) {
+        return this.send(HttpMethods.Put, request, args);
+    };
+    JsonServiceClient.prototype.putToUrl = function (url, request, args) {
+        return this.send(HttpMethods.Put, request, args, this.toAbsoluteUrl(url));
+    };
+    JsonServiceClient.prototype.putBody = function (request, body, args) {
+        return this.sendBody(HttpMethods.Put, request, body, args);
+    };
+    JsonServiceClient.prototype.patch = function (request, args) {
+        return this.send(HttpMethods.Patch, request, args);
+    };
+    JsonServiceClient.prototype.patchToUrl = function (url, request, args) {
+        return this.send(HttpMethods.Patch, request, args, this.toAbsoluteUrl(url));
+    };
+    JsonServiceClient.prototype.patchBody = function (request, body, args) {
+        return this.sendBody(HttpMethods.Patch, request, body, args);
+    };
+    JsonServiceClient.prototype.sendAll = function (requests) {
+        if (requests.length == 0)
+            return Promise.resolve([]);
+        var url = exports.combinePaths(this.replyBaseUrl, exports.nameOf(requests[0]) + "[]");
+        return this.send(HttpMethods.Post, requests, null, url);
+    };
+    JsonServiceClient.prototype.sendAllOneWay = function (requests) {
+        if (requests.length == 0)
+            return Promise.resolve(void 0);
+        var url = exports.combinePaths(this.oneWayBaseUrl, exports.nameOf(requests[0]) + "[]");
+        return this.send(HttpMethods.Post, requests, null, url)
+            .then(function (r) { return void 0; });
+    };
+    JsonServiceClient.prototype.createUrlFromDto = function (method, request) {
+        var url = exports.combinePaths(this.replyBaseUrl, exports.nameOf(request));
+        var hasRequestBody = HttpMethods.hasRequestBody(method);
+        if (!hasRequestBody)
+            url = exports.appendQueryString(url, request);
+        return url;
+    };
+    JsonServiceClient.prototype.toAbsoluteUrl = function (relativeOrAbsoluteUrl) {
+        return relativeOrAbsoluteUrl.startsWith("http://") ||
+            relativeOrAbsoluteUrl.startsWith("https://")
+            ? relativeOrAbsoluteUrl
+            : exports.combinePaths(this.baseUrl, relativeOrAbsoluteUrl);
+    };
+    JsonServiceClient.prototype.createRequest = function (_a) {
+        var _this = this;
+        var method = _a.method, request = _a.request, url = _a.url, args = _a.args, body = _a.body;
+        if (!url)
+            url = this.createUrlFromDto(method, request);
+        if (args)
+            url = exports.appendQueryString(url, args);
+        if (this.bearerToken != null) {
+            this.headers.set("Authorization", "Bearer " + this.bearerToken);
+        }
+        else if (this.userName != null) {
+            this.headers.set('Authorization', 'Basic ' + JsonServiceClient.toBase64(this.userName + ":" + this.password));
+        }
+        if (this.manageCookies) {
+            var cookies = Object.keys(this.cookies)
+                .map(function (x) {
+                var c = _this.cookies[x];
+                return c.expires && c.expires < new Date()
+                    ? null
+                    : c.name + "=" + encodeURIComponent(c.value);
+            })
+                .filter(function (x) { return !!x; });
+            if (cookies.length > 0)
+                this.headers.set("Cookie", cookies.join("; "));
+            else
+                this.headers.delete("Cookie");
+        }
+        var headers = new Headers(this.headers);
+        var hasRequestBody = HttpMethods.hasRequestBody(method);
+        var reqInit = {
+            url: url,
+            method: method,
+            mode: this.mode,
+            credentials: this.credentials,
+            headers: headers,
+            compress: false,
+        };
+        if (hasRequestBody) {
+            reqInit.body = body || JSON.stringify(request);
+            if (typeof window != "undefined" && body instanceof FormData) {
+                headers.delete('Content-Type'); //set by FormData
+            }
+        }
+        if (this.requestFilter != null)
+            this.requestFilter(reqInit);
+        return reqInit;
+    };
+    JsonServiceClient.prototype.createResponse = function (res, request) {
+        var _this = this;
+        if (!res.ok)
+            throw res;
+        if (this.manageCookies) {
+            var setCookies = [];
+            res.headers.forEach(function (v, k) {
+                if ("set-cookie" == k.toLowerCase())
+                    setCookies.push(v);
+            });
+            setCookies.forEach(function (x) {
+                var cookie = exports.parseCookie(x);
+                if (cookie)
+                    _this.cookies[cookie.name] = cookie;
+            });
+        }
+        if (this.responseFilter != null)
+            this.responseFilter(res);
+        var x = request && typeof request != "string" && typeof request.createResponse == 'function'
+            ? request.createResponse()
+            : null;
+        if (typeof x === 'string')
+            return res.text().then(function (o) { return o; });
+        var contentType = res.headers.get("content-type");
+        var isJson = contentType && contentType.indexOf("application/json") !== -1;
+        if (isJson) {
+            return res.json().then(function (o) { return o; });
+        }
+        if (typeof Uint8Array != "undefined" && x instanceof Uint8Array) {
+            if (typeof res.arrayBuffer != 'function')
+                throw new Error("This fetch polyfill does not implement 'arrayBuffer'");
+            return res.arrayBuffer().then(function (o) { return new Uint8Array(o); });
+        }
+        else if (typeof Blob == "function" && x instanceof Blob) {
+            if (typeof res.blob != 'function')
+                throw new Error("This fetch polyfill does not implement 'blob'");
+            return res.blob().then(function (o) { return o; });
+        }
+        var contentLength = res.headers.get("content-length");
+        if (contentLength === "0" || (contentLength == null && !isJson)) {
+            return x;
+        }
+        return res.json().then(function (o) { return o; }); //fallback
+    };
+    JsonServiceClient.prototype.handleError = function (holdRes, res, type) {
+        var _this = this;
+        if (type === void 0) { type = null; }
+        if (res instanceof Error)
+            throw this.raiseError(holdRes, res);
+        // res.json can only be called once.
+        if (res.bodyUsed)
+            throw this.raiseError(res, createErrorResponse(res.status, res.statusText, type));
+        var isErrorResponse = typeof res.json == "undefined" && res.responseStatus;
+        if (isErrorResponse) {
+            return new Promise(function (resolve, reject) {
+                return reject(_this.raiseError(null, res));
+            });
+        }
+        return res.json().then(function (o) {
+            var errorDto = exports.sanitize(o);
+            if (!errorDto.responseStatus)
+                throw createErrorResponse(res.status, res.statusText, type);
+            if (type != null)
+                errorDto.type = type;
+            throw errorDto;
+        }).catch(function (error) {
+            // No responseStatus body, set from `res` Body object
+            if (error instanceof Error
+                || (typeof window != "undefined" && error instanceof window.DOMException /*MS Edge*/)) {
+                throw _this.raiseError(res, createErrorResponse(res.status, res.statusText, type));
+            }
+            throw _this.raiseError(res, error);
+        });
+    };
+    JsonServiceClient.prototype.send = function (method, request, args, url) {
+        return this.sendRequest({ method: method, request: request, args: args, url: url });
+    };
+    JsonServiceClient.prototype.sendBody = function (method, request, body, args) {
+        var url = exports.combinePaths(this.replyBaseUrl, exports.nameOf(request));
+        return this.sendRequest({
+            method: method,
+            request: body,
+            body: typeof body == "string"
+                ? body
+                : typeof window != "undefined" && body instanceof FormData
+                    ? body
+                    : JSON.stringify(body),
+            url: exports.appendQueryString(url, request),
+            args: args,
+            returns: request
+        });
+    };
+    JsonServiceClient.prototype.sendRequest = function (info) {
+        var _this = this;
+        var req = this.createRequest(info);
+        var returns = info.returns || info.request;
+        var holdRes = null;
+        var resendRequest = function () {
+            var req = _this.createRequest(info);
+            if (_this.urlFilter)
+                _this.urlFilter(req.url);
+            return fetch(req.url, req)
+                .then(function (res) { return _this.createResponse(res, returns); })
+                .catch(function (res) { return _this.handleError(holdRes, res); });
+        };
+        if (this.urlFilter)
+            this.urlFilter(req.url);
+        return fetch(req.url, req)
+            .then(function (res) {
+            holdRes = res;
+            var response = _this.createResponse(res, returns);
+            return response;
+        })
+            .catch(function (res) {
+            if (res.status === 401) {
+                if (_this.refreshToken) {
+                    var jwtReq_1 = new GetAccessToken();
+                    jwtReq_1.refreshToken = _this.refreshToken;
+                    var url = _this.refreshTokenUri || _this.createUrlFromDto(HttpMethods.Post, jwtReq_1);
+                    var jwtRequest = _this.createRequest({ method: HttpMethods.Post, request: jwtReq_1, args: null, url: url });
+                    return fetch(url, jwtRequest)
+                        .then(function (r) { return _this.createResponse(r, jwtReq_1).then(function (jwtResponse) {
+                        _this.bearerToken = jwtResponse.accessToken;
+                        return resendRequest();
+                    }); })
+                        .catch(function (res) {
+                        return _this.handleError(holdRes, res, "RefreshTokenException");
+                    });
+                }
+                if (_this.onAuthenticationRequired) {
+                    return _this.onAuthenticationRequired().then(resendRequest);
+                }
+            }
+            return _this.handleError(holdRes, res);
+        });
+    };
+    JsonServiceClient.prototype.raiseError = function (res, error) {
+        if (this.exceptionFilter != null) {
+            this.exceptionFilter(res, error);
+        }
+        return error;
+    };
+    return JsonServiceClient;
+}());
+exports.JsonServiceClient = JsonServiceClient;
+var createErrorResponse = function (errorCode, message, type) {
+    if (type === void 0) { type = null; }
+    var error = new ErrorResponse();
+    if (type != null)
+        error.type = type;
+    error.responseStatus = new ResponseStatus();
+    error.responseStatus.errorCode = errorCode && errorCode.toString();
+    error.responseStatus.message = message;
+    return error;
+};
+exports.toCamelCase = function (key) {
+    return !key ? key : key.charAt(0).toLowerCase() + key.substring(1);
+};
+exports.sanitize = function (status) {
+    if (status.responseStatus)
+        return status;
+    if (status.errors)
+        return status;
+    var to = {};
+    for (var k_1 in status) {
+        if (status.hasOwnProperty(k_1)) {
+            if (status[k_1] instanceof Object)
+                to[exports.toCamelCase(k_1)] = exports.sanitize(status[k_1]);
+            else
+                to[exports.toCamelCase(k_1)] = status[k_1];
+        }
+    }
+    to.errors = [];
+    if (status.Errors != null) {
+        for (var i = 0, len = status.Errors.length; i < len; i++) {
+            var o = status.Errors[i];
+            var err = {};
+            for (var k in o)
+                err[exports.toCamelCase(k)] = o[k];
+            to.errors.push(err);
+        }
+    }
+    return to;
+};
+exports.nameOf = function (o) {
+    if (!o)
+        return "null";
+    if (typeof o.getTypeName == "function")
+        return o.getTypeName();
+    var ctor = o && o.constructor;
+    if (ctor == null)
+        throw o + " doesn't have constructor";
+    if (ctor.name)
+        return ctor.name;
+    var str = ctor.toString();
+    return str.substring(9, str.indexOf("(")); //"function ".length == 9
+};
+/* utils */
+function log(o, prefix) {
+    if (prefix === void 0) { prefix = "LOG"; }
+    console.log(prefix, o);
+    return o;
+}
+exports.css = function (selector, name, value) {
+    var els = typeof selector == "string"
+        ? document.querySelectorAll(selector)
+        : selector;
+    for (var i = 0; i < els.length; i++) {
+        var el = els[i];
+        if (el != null && el.style != null) {
+            el.style[name] = value;
+        }
+    }
+};
+exports.splitOnFirst = function (s, c) {
+    if (!s)
+        return [s];
+    var pos = s.indexOf(c);
+    return pos >= 0 ? [s.substring(0, pos), s.substring(pos + 1)] : [s];
+};
+exports.splitOnLast = function (s, c) {
+    if (!s)
+        return [s];
+    var pos = s.lastIndexOf(c);
+    return pos >= 0
+        ? [s.substring(0, pos), s.substring(pos + 1)]
+        : [s];
+};
+var splitCase = function (t) {
+    return typeof t != 'string' ? t : t.replace(/([A-Z]|[0-9]+)/g, ' $1').replace(/_/g, ' ').trim();
+};
+exports.humanize = function (s) { return (!s || s.indexOf(' ') >= 0 ? s : splitCase(s)); };
+exports.queryString = function (url) {
+    if (!url || url.indexOf('?') === -1)
+        return {};
+    var pairs = exports.splitOnFirst(url, '?')[1].split('&');
+    var map = {};
+    for (var i = 0; i < pairs.length; ++i) {
+        var p = pairs[i].split('=');
+        map[p[0]] = p.length > 1
+            ? decodeURIComponent(p[1].replace(/\+/g, ' '))
+            : null;
+    }
+    return map;
+};
+exports.combinePaths = function () {
+    var paths = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        paths[_i] = arguments[_i];
+    }
+    var parts = [], i, l;
+    for (i = 0, l = paths.length; i < l; i++) {
+        var arg = paths[i];
+        parts = arg.indexOf("://") === -1
+            ? parts.concat(arg.split("/"))
+            : parts.concat(arg.lastIndexOf("/") === arg.length - 1 ? arg.substring(0, arg.length - 1) : arg);
+    }
+    var combinedPaths = [];
+    for (i = 0, l = parts.length; i < l; i++) {
+        var part = parts[i];
+        if (!part || part === ".")
+            continue;
+        if (part === "..")
+            combinedPaths.pop();
+        else
+            combinedPaths.push(part);
+    }
+    if (parts[0] === "")
+        combinedPaths.unshift("");
+    return combinedPaths.join("/") || (combinedPaths.length ? "/" : ".");
+};
+exports.createPath = function (route, args) {
+    var argKeys = {};
+    for (var k in args) {
+        argKeys[k.toLowerCase()] = k;
+    }
+    var parts = route.split("/");
+    var url = "";
+    for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        if (p == null)
+            p = "";
+        if (p[0] === "{" && p[p.length - 1] === "}") {
+            var key = argKeys[p.substring(1, p.length - 1).toLowerCase()];
+            if (key) {
+                p = args[key];
+                delete args[key];
+            }
+        }
+        if (url.length > 0)
+            url += "/";
+        url += p;
+    }
+    return url;
+};
+exports.createUrl = function (route, args) {
+    var url = exports.createPath(route, args);
+    return exports.appendQueryString(url, args);
+};
+exports.appendQueryString = function (url, args) {
+    for (var k in args) {
+        if (args.hasOwnProperty(k)) {
+            url += url.indexOf("?") >= 0 ? "&" : "?";
+            url += k + "=" + qsValue(args[k]);
+        }
+    }
+    return url;
+};
+var qsValue = function (arg) {
+    if (arg == null)
+        return "";
+    if (typeof Uint8Array != "undefined" && arg instanceof Uint8Array)
+        return exports.bytesToBase64(arg);
+    return encodeURIComponent(arg) || "";
+};
+//from: https://github.com/madmurphy/stringview.js/blob/master/stringview.js
+exports.bytesToBase64 = function (aBytes) {
+    var eqLen = (3 - (aBytes.length % 3)) % 3, sB64Enc = "";
+    for (var nMod3, nLen = aBytes.length, nUint24 = 0, nIdx = 0; nIdx < nLen; nIdx++) {
+        nMod3 = nIdx % 3;
+        nUint24 |= aBytes[nIdx] << (16 >>> nMod3 & 24);
+        if (nMod3 === 2 || aBytes.length - nIdx === 1) {
+            sB64Enc += String.fromCharCode(uint6ToB64(nUint24 >>> 18 & 63), uint6ToB64(nUint24 >>> 12 & 63), uint6ToB64(nUint24 >>> 6 & 63), uint6ToB64(nUint24 & 63));
+            nUint24 = 0;
+        }
+    }
+    return eqLen === 0
+        ? sB64Enc
+        : sB64Enc.substring(0, sB64Enc.length - eqLen) + (eqLen === 1 ? "=" : "==");
+};
+var uint6ToB64 = function (nUint6) {
+    return nUint6 < 26 ?
+        nUint6 + 65
+        : nUint6 < 52 ?
+            nUint6 + 71
+            : nUint6 < 62 ?
+                nUint6 - 4
+                : nUint6 === 62 ? 43
+                    : nUint6 === 63 ? 47 : 65;
+};
+var _btoa = typeof btoa == 'function'
+    ? btoa
+    : function (str) { return new Buffer(str).toString('base64'); };
+//from: http://stackoverflow.com/a/30106551/85785
+JsonServiceClient.toBase64 = function (str) {
+    return _btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+        return String.fromCharCode(new Number('0x' + p1).valueOf());
+    }));
+};
+exports.stripQuotes = function (s) {
+    return s && s[0] == '"' && s[s.length] == '"' ? s.slice(1, -1) : s;
+};
+exports.tryDecode = function (s) {
+    try {
+        return decodeURIComponent(s);
+    }
+    catch (e) {
+        return s;
+    }
+};
+exports.parseCookie = function (setCookie) {
+    if (!setCookie)
+        return null;
+    var to = null;
+    var pairs = setCookie.split(/; */);
+    for (var i = 0; i < pairs.length; i++) {
+        var pair = pairs[i];
+        var parts = exports.splitOnFirst(pair, '=');
+        var name = parts[0].trim();
+        var value = parts.length > 1 ? exports.tryDecode(exports.stripQuotes(parts[1].trim())) : null;
+        if (i == 0) {
+            to = { name: name, value: value, path: "/" };
+        }
+        else {
+            var lower = name.toLowerCase();
+            if (lower == "httponly") {
+                to.httpOnly = true;
+            }
+            else if (lower == "secure") {
+                to.secure = true;
+            }
+            else if (lower == "expires") {
+                to.expires = new Date(value);
+                // MS Edge returns Invalid Date when using '-' in "12-Mar-2037"
+                if (to.expires.toString() === "Invalid Date") {
+                    to.expires = new Date(value.replace(/-/g, " "));
+                }
+            }
+            else {
+                to[name] = value;
+            }
+        }
+    }
+    return to;
+};
+exports.normalizeKey = function (key) { return key.toLowerCase().replace(/_/g, ''); };
+var isArray = function (o) { return Object.prototype.toString.call(o) === '[object Array]'; };
+exports.normalize = function (dto, deep) {
+    if (isArray(dto)) {
+        if (!deep)
+            return dto;
+        var to = [];
+        for (var i = 0; i < dto.length; i++) {
+            to[i] = exports.normalize(dto[i], deep);
+        }
+        return to;
+    }
+    if (typeof dto != "object")
+        return dto;
+    var o = {};
+    for (var k in dto) {
+        o[exports.normalizeKey(k)] = deep ? exports.normalize(dto[k], deep) : dto[k];
+    }
+    return o;
+};
+exports.getField = function (o, name) {
+    return o == null || name == null ? null :
+        o[name] ||
+            o[Object.keys(o).filter(function (k) { return exports.normalizeKey(k) === exports.normalizeKey(name); })[0] || ''];
+};
+exports.parseResponseStatus = function (json, defaultMsg) {
+    if (defaultMsg === void 0) { defaultMsg = null; }
+    try {
+        var err = JSON.parse(json);
+        return exports.sanitize(err.ResponseStatus || err.responseStatus);
+    }
+    catch (e) {
+        return {
+            message: defaultMsg || e.message || e,
+            __error: { error: e, json: json }
+        };
+    }
+};
+function toFormData(o) {
+    if (typeof window == "undefined")
+        return;
+    var formData = new FormData();
+    for (var name in o) {
+        formData.append(name, o[name]);
+    }
+    return formData;
+}
+exports.toFormData = toFormData;
+function toObject(keys) {
+    var _this = this;
+    var to = {};
+    if (!keys)
+        return to;
+    if (typeof keys != "object")
+        throw new Error("keys must be an Array of object keys");
+    var arr = Array.prototype.slice.call(keys);
+    arr.forEach(function (key) {
+        if (_this[key]) {
+            to[key] = _this[key];
+        }
+    });
+    return to;
+}
+exports.toObject = toObject;
+function errorResponseSummary() {
+    var responseStatus = this.responseStatus || this.ResponseStatus;
+    if (responseStatus == null)
+        return undefined;
+    var status = responseStatus.ErrorCode ? exports.sanitize(responseStatus) : responseStatus;
+    return !status.errors || status.errors.length == 0
+        ? status.message || status.errorCode
+        : undefined;
+}
+exports.errorResponseSummary = errorResponseSummary;
+function errorResponseExcept(fieldNames) {
+    var responseStatus = this.responseStatus || this.ResponseStatus;
+    if (responseStatus == null)
+        return undefined;
+    var status = responseStatus.ErrorCode ? exports.sanitize(responseStatus) : responseStatus;
+    if (typeof fieldNames == 'string')
+        fieldNames = arguments.length == 1 ? [fieldNames] : Array.prototype.slice.call(arguments);
+    if (fieldNames && !(status.errors == null || status.errors.length == 0)) {
+        var lowerFieldsNames = fieldNames.map(function (x) { return (x || '').toLowerCase(); });
+        for (var _i = 0, _a = status.errors; _i < _a.length; _i++) {
+            var field = _a[_i];
+            if (lowerFieldsNames.indexOf((field.fieldName || '').toLowerCase()) !== -1) {
+                return undefined;
+            }
+        }
+        for (var _b = 0, _c = status.errors; _b < _c.length; _b++) {
+            var field = _c[_b];
+            if (lowerFieldsNames.indexOf((field.fieldName || '').toLowerCase()) === -1) {
+                return field.message || field.errorCode;
+            }
+        }
+    }
+    return status.message || status.errorCode || undefined;
+}
+exports.errorResponseExcept = errorResponseExcept;
+function errorResponse(fieldName) {
+    if (fieldName == null)
+        return errorResponseSummary.call(this);
+    var responseStatus = this.responseStatus || this.ResponseStatus;
+    if (responseStatus == null)
+        return undefined;
+    var status = responseStatus.ErrorCode ? exports.sanitize(responseStatus) : responseStatus;
+    if (status.errors == null || status.errors.length == 0)
+        return undefined;
+    var field = status.errors.find(function (x) { return (x.fieldName || '').toLowerCase() == fieldName.toLowerCase(); });
+    return field
+        ? field.message || field.errorCode
+        : undefined;
+}
+exports.errorResponse = errorResponse;
+exports.toDate = function (s) { return new Date(parseFloat(/Date\(([^)]+)\)/.exec(s)[1])); };
+exports.toDateFmt = function (s) { return exports.dateFmt(exports.toDate(s)); };
+exports.padInt = function (n) { return n < 10 ? '0' + n : n; };
+exports.dateFmt = function (d) {
+    if (d === void 0) { d = new Date(); }
+    return d.getFullYear() + '/' + exports.padInt(d.getMonth() + 1) + '/' + exports.padInt(d.getDate());
+};
+exports.dateFmtHM = function (d) {
+    if (d === void 0) { d = new Date(); }
+    return d.getFullYear() + '/' + exports.padInt(d.getMonth() + 1) + '/' + exports.padInt(d.getDate()) + ' ' + exports.padInt(d.getHours()) + ":" + exports.padInt(d.getMinutes());
+};
+exports.timeFmt12 = function (d) {
+    if (d === void 0) { d = new Date(); }
+    return exports.padInt((d.getHours() + 24) % 12 || 12) + ":" + exports.padInt(d.getMinutes()) + ":" + exports.padInt(d.getSeconds()) + " " + (d.getHours() > 12 ? "PM" : "AM");
+};
+//# sourceMappingURL=index.js.map
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7).Buffer))
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__; /*!
@@ -14207,1004 +15518,6 @@ module.exports = g;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(11)))
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
-Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(8);
-var ResponseStatus = (function () {
-    function ResponseStatus() {
-    }
-    return ResponseStatus;
-}());
-exports.ResponseStatus = ResponseStatus;
-var ResponseError = (function () {
-    function ResponseError() {
-    }
-    return ResponseError;
-}());
-exports.ResponseError = ResponseError;
-var ErrorResponse = (function () {
-    function ErrorResponse() {
-    }
-    return ErrorResponse;
-}());
-exports.ErrorResponse = ErrorResponse;
-var NewInstanceResolver = (function () {
-    function NewInstanceResolver() {
-    }
-    NewInstanceResolver.prototype.tryResolve = function (ctor) {
-        return new ctor();
-    };
-    return NewInstanceResolver;
-}());
-exports.NewInstanceResolver = NewInstanceResolver;
-var SingletonInstanceResolver = (function () {
-    function SingletonInstanceResolver() {
-    }
-    SingletonInstanceResolver.prototype.tryResolve = function (ctor) {
-        return ctor.instance
-            || (ctor.instance = new ctor());
-    };
-    return SingletonInstanceResolver;
-}());
-exports.SingletonInstanceResolver = SingletonInstanceResolver;
-var TypeMap = {
-    onConnect: "ServerEventConnect",
-    onHeartbeat: "ServerEventHeartbeat",
-    onJoin: "ServerEventJoin",
-    onLeave: "ServerEventLeave",
-    onUpdate: "ServerEventUpdate"
-};
-/**
- * EventSource
- */
-var ReadyState;
-(function (ReadyState) {
-    ReadyState[ReadyState["CONNECTING"] = 0] = "CONNECTING";
-    ReadyState[ReadyState["OPEN"] = 1] = "OPEN";
-    ReadyState[ReadyState["CLOSED"] = 2] = "CLOSED";
-})(ReadyState = exports.ReadyState || (exports.ReadyState = {}));
-var ServerEventsClient = (function () {
-    function ServerEventsClient(baseUrl, channels, options, eventSource) {
-        if (options === void 0) { options = {}; }
-        if (eventSource === void 0) { eventSource = null; }
-        var _this = this;
-        this.channels = channels;
-        this.options = options;
-        this.eventSource = eventSource;
-        this.onMessage = function (e) {
-            if (_this.stopped)
-                return;
-            var opt = _this.options;
-            if (typeof document == "undefined") {
-                var document = {
-                    querySelectorAll: function (sel) { return []; }
-                };
-            }
-            var parts = exports.splitOnFirst(e.data, " ");
-            var channel = null;
-            var selector = parts[0];
-            var selParts = exports.splitOnFirst(selector, "@");
-            if (selParts.length > 1) {
-                channel = selParts[0];
-                selector = selParts[1];
-            }
-            var json = parts[1];
-            var body = null;
-            try {
-                body = json ? JSON.parse(json) : null;
-            }
-            catch (ignore) { }
-            parts = exports.splitOnFirst(selector, ".");
-            if (parts.length <= 1)
-                throw "invalid selector format: " + selector;
-            var op = parts[0], target = parts[1].replace(new RegExp("%20", "g"), " ");
-            var tokens = exports.splitOnFirst(target, "$");
-            var cmd = tokens[0], cssSelector = tokens[1];
-            var els = cssSelector && document.querySelectorAll(cssSelector);
-            var el = els && els[0];
-            var eventId = e.lastEventId;
-            var data = e.data;
-            var type = TypeMap[cmd] || "ServerEventMessage";
-            var request = { eventId: eventId, data: data, type: type,
-                channel: channel, selector: selector, json: json, body: body, op: op, target: tokens[0], cssSelector: cssSelector, meta: {} };
-            var mergedBody = typeof body == "object"
-                ? Object.assign({}, request, body)
-                : request;
-            if (opt.validate && opt.validate(request) === false)
-                return;
-            var headers = new Headers();
-            headers.set("Content-Type", "text/plain");
-            if (op === "cmd") {
-                if (cmd === "onConnect") {
-                    _this.connectionInfo = mergedBody;
-                    if (typeof body.heartbeatIntervalMs == "string")
-                        _this.connectionInfo.heartbeatIntervalMs = parseInt(body.heartbeatIntervalMs);
-                    if (typeof body.idleTimeoutMs == "string")
-                        _this.connectionInfo.idleTimeoutMs = parseInt(body.idleTimeoutMs);
-                    Object.assign(opt, body);
-                    var fn = opt.handlers["onConnect"];
-                    if (fn) {
-                        fn.call(el || document.body, _this.connectionInfo, request);
-                    }
-                    if (opt.heartbeatUrl) {
-                        if (opt.heartbeat) {
-                            clearInterval(opt.heartbeat);
-                        }
-                        opt.heartbeat = setInterval(function () {
-                            if (_this.eventSource.readyState === EventSource.CLOSED) {
-                                clearInterval(opt.heartbeat);
-                                var stopFn = opt.handlers["onStop"];
-                                if (stopFn != null)
-                                    stopFn.apply(_this.eventSource);
-                                _this.reconnectServerEvents({ error: new Error("EventSource is CLOSED") });
-                                return;
-                            }
-                            fetch(new Request(opt.heartbeatUrl, { method: "POST", mode: "cors", headers: headers }))
-                                .then(function (res) { if (!res.ok)
-                                throw new Error(res.status + " - " + res.statusText); })
-                                .catch(function (error) { return _this.reconnectServerEvents({ error: error }); });
-                        }, (_this.connectionInfo && _this.connectionInfo.heartbeatIntervalMs) || opt.heartbeatIntervalMs || 10000);
-                    }
-                    if (opt.unRegisterUrl) {
-                        if (typeof window != "undefined") {
-                            window.onunload = function () { return _this.stop(); };
-                        }
-                    }
-                    _this.updateSubscriberUrl = opt.updateSubscriberUrl;
-                    _this.updateChannels((opt.channels || "").split(","));
-                }
-                else {
-                    var isCmdMsg = cmd == "onJoin" || cmd == "onLeave" || cmd == "onUpdate";
-                    var fn = opt.handlers[cmd];
-                    if (fn) {
-                        if (isCmdMsg) {
-                            fn.call(el || document.body, mergedBody);
-                        }
-                        else {
-                            fn.call(el || document.body, body, request);
-                        }
-                    }
-                    else {
-                        if (!isCmdMsg) {
-                            var r = opt.receivers && opt.receivers["cmd"];
-                            _this.invokeReceiver(r, cmd, el, request, "cmd");
-                        }
-                    }
-                    if (isCmdMsg) {
-                        fn = opt.handlers["onCommand"];
-                        if (fn) {
-                            fn.call(el || document.body, mergedBody);
-                        }
-                    }
-                }
-            }
-            else if (op === "trigger") {
-                _this.raiseEvent(target, request);
-            }
-            else if (op === "css") {
-                exports.css(els || document.querySelectorAll("body"), cmd, body);
-            }
-            //Named Receiver
-            var r = opt.receivers && opt.receivers[op];
-            _this.invokeReceiver(r, cmd, el, request, op);
-            if (!TypeMap[cmd]) {
-                var fn = opt.handlers["onMessage"];
-                if (fn) {
-                    fn.call(el || document.body, mergedBody);
-                }
-            }
-            if (opt.onTick)
-                opt.onTick();
-        };
-        this.onError = function (error) {
-            if (_this.stopped)
-                return;
-            if (!error)
-                error = event;
-            var fn = _this.options.onException;
-            if (fn != null)
-                fn.call(_this.eventSource, error);
-            if (_this.options.onTick)
-                _this.options.onTick();
-        };
-        if (this.channels.length === 0)
-            throw "at least 1 channel is required";
-        this.resolver = this.options.resolver || new NewInstanceResolver();
-        this.eventStreamUri = exports.combinePaths(baseUrl, "event-stream") + "?";
-        this.updateChannels(channels);
-        this.serviceClient = new JsonServiceClient(baseUrl);
-        this.listeners = {};
-        if (!this.options.handlers)
-            this.options.handlers = {};
-    }
-    ServerEventsClient.prototype.reconnectServerEvents = function (opt) {
-        var _this = this;
-        if (opt === void 0) { opt = {}; }
-        if (this.stopped)
-            return;
-        if (opt.error)
-            this.onError(opt.error);
-        var hold = this.eventSource;
-        var es = this.EventSource
-            ? new this.EventSource(opt.url || this.eventStreamUri || hold.url)
-            : new EventSource(opt.url || this.eventStreamUri || hold.url);
-        es.addEventListener('error', function (e) { return opt.onerror || hold.onerror || _this.onError; });
-        es.addEventListener('message', opt.onmessage || hold.onmessage || this.onMessage);
-        var fn = this.options.onReconnect;
-        if (fn != null)
-            fn.call(es, opt.error);
-        if (hold.removeEventListener) {
-            hold.removeEventListener('error', this.onError);
-            hold.removeEventListener('message', this.onMessage);
-        }
-        hold.close();
-        return this.eventSource = es;
-    };
-    ServerEventsClient.prototype.start = function () {
-        var _this = this;
-        if (this.eventSource == null || this.eventSource.readyState === EventSource.CLOSED) {
-            this.eventSource = this.EventSource
-                ? new this.EventSource(this.eventStreamUri)
-                : new EventSource(this.eventStreamUri);
-            this.eventSource.addEventListener('error', this.onError);
-            this.eventSource.addEventListener('message', function (e) { return _this.onMessage(e); });
-        }
-        return this;
-    };
-    ServerEventsClient.prototype.stop = function () {
-        this.stopped = true;
-        if (this.eventSource) {
-            this.eventSource.close();
-        }
-        var hold = this.connectionInfo;
-        if (hold == null || hold.unRegisterUrl == null)
-            return new Promise(function (resolve, reject) { return resolve(); });
-        this.connectionInfo = null;
-        return fetch(new Request(hold.unRegisterUrl, { method: "POST", mode: "cors" }))
-            .then(function (res) { if (!res.ok)
-            throw new Error(res.status + " - " + res.statusText); })
-            .catch(this.onError);
-    };
-    ServerEventsClient.prototype.invokeReceiver = function (r, cmd, el, request, name) {
-        if (r) {
-            if (typeof r == "function") {
-                r = this.resolver.tryResolve(r);
-            }
-            cmd = cmd.replace("-", "");
-            r.client = this;
-            r.request = request;
-            if (typeof (r[cmd]) == "function") {
-                r[cmd].call(el || r, request.body, request);
-            }
-            else if (cmd in r) {
-                r[cmd] = request.body;
-            }
-            else {
-                var cmdLower = cmd.toLowerCase();
-                for (var k in r) {
-                    if (k.toLowerCase() == cmdLower) {
-                        if (typeof r[k] == "function") {
-                            r[k].call(el || r, request.body, request);
-                        }
-                        else {
-                            r[k] = request.body;
-                        }
-                        return;
-                    }
-                }
-                var noSuchMethod = r["noSuchMethod"];
-                if (typeof noSuchMethod == "function") {
-                    noSuchMethod.call(el || r, request.target, request);
-                }
-            }
-        }
-    };
-    ServerEventsClient.prototype.hasConnected = function () {
-        return this.connectionInfo != null;
-    };
-    ServerEventsClient.prototype.registerHandler = function (name, fn) {
-        if (!this.options.handlers)
-            this.options.handlers = {};
-        this.options.handlers[name] = fn;
-        return this;
-    };
-    ServerEventsClient.prototype.setResolver = function (resolver) {
-        this.options.resolver = resolver;
-        return this;
-    };
-    ServerEventsClient.prototype.registerReceiver = function (receiver) {
-        return this.registerNamedReceiver("cmd", receiver);
-    };
-    ServerEventsClient.prototype.registerNamedReceiver = function (name, receiver) {
-        if (!this.options.receivers)
-            this.options.receivers = {};
-        this.options.receivers[name] = receiver;
-        return this;
-    };
-    ServerEventsClient.prototype.unregisterReceiver = function (name) {
-        if (name === void 0) { name = "cmd"; }
-        if (this.options.receivers) {
-            delete this.options.receivers[name];
-        }
-        return this;
-    };
-    ServerEventsClient.prototype.updateChannels = function (channels) {
-        this.channels = channels;
-        var url = this.eventSource != null
-            ? this.eventSource.url
-            : this.eventStreamUri;
-        this.eventStreamUri = url.substring(0, Math.min(url.indexOf("?"), url.length)) + "?channels=" + channels.join(",") + "&t=" + new Date().getTime();
-    };
-    ServerEventsClient.prototype.update = function (subscribe, unsubscribe) {
-        var sub = typeof subscribe == "string" ? subscribe.split(',') : subscribe;
-        var unsub = typeof unsubscribe == "string" ? unsubscribe.split(',') : unsubscribe;
-        var channels = [];
-        for (var i in this.channels) {
-            var c = this.channels[i];
-            if (unsub == null || unsub.indexOf(c) === -1) {
-                channels.push(c);
-            }
-        }
-        if (sub) {
-            for (var i in sub) {
-                var c = sub[i];
-                if (channels.indexOf(c) === -1) {
-                    channels.push(c);
-                }
-            }
-        }
-        this.updateChannels(channels);
-    };
-    ServerEventsClient.prototype.addListener = function (eventName, handler) {
-        var handlers = this.listeners[eventName] || (this.listeners[eventName] = []);
-        handlers.push(handler);
-        return this;
-    };
-    ServerEventsClient.prototype.removeListener = function (eventName, handler) {
-        var handlers = this.listeners[eventName];
-        if (handlers) {
-            var pos = handlers.indexOf(handler);
-            if (pos >= 0) {
-                handlers.splice(pos, 1);
-            }
-        }
-        return this;
-    };
-    ServerEventsClient.prototype.raiseEvent = function (eventName, msg) {
-        var _this = this;
-        var handlers = this.listeners[eventName];
-        if (handlers) {
-            handlers.forEach(function (x) {
-                try {
-                    x(msg);
-                }
-                catch (e) {
-                    _this.onError(e);
-                }
-            });
-        }
-    };
-    ServerEventsClient.prototype.getConnectionInfo = function () {
-        if (this.connectionInfo == null)
-            throw "Not Connected";
-        return this.connectionInfo;
-    };
-    ServerEventsClient.prototype.getSubscriptionId = function () {
-        return this.getConnectionInfo().id;
-    };
-    ServerEventsClient.prototype.updateSubscriber = function (request) {
-        var _this = this;
-        if (request.id == null)
-            request.id = this.getSubscriptionId();
-        return this.serviceClient.post(request)
-            .then(function (x) {
-            _this.update(request.subscribeChannels, request.unsubscribeChannels);
-            return null;
-        }).catch(this.onError);
-    };
-    ServerEventsClient.prototype.subscribeToChannels = function () {
-        var _this = this;
-        var channels = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            channels[_i] = arguments[_i];
-        }
-        var request = new UpdateEventSubscriber();
-        request.id = this.getSubscriptionId();
-        request.subscribeChannels = channels;
-        return this.serviceClient.post(request)
-            .then(function (x) {
-            _this.update(channels, null);
-        }).catch(this.onError);
-    };
-    ServerEventsClient.prototype.unsubscribeFromChannels = function () {
-        var _this = this;
-        var channels = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            channels[_i] = arguments[_i];
-        }
-        var request = new UpdateEventSubscriber();
-        request.id = this.getSubscriptionId();
-        request.unsubscribeChannels = channels;
-        return this.serviceClient.post(request)
-            .then(function (x) {
-            _this.update(null, channels);
-        }).catch(this.onError);
-    };
-    ServerEventsClient.prototype.getChannelSubscribers = function () {
-        var _this = this;
-        var request = new GetEventSubscribers();
-        request.channels = this.channels;
-        return this.serviceClient.get(request)
-            .then(function (r) { return r.map(function (x) { return _this.toServerEventUser(x); }); })
-            .catch(this.onError);
-    };
-    ServerEventsClient.prototype.toServerEventUser = function (map) {
-        var channels = map["channels"];
-        var to = new ServerEventUser();
-        to.userId = map["userId"];
-        to.displayName = map["displayName"];
-        to.profileUrl = map["profileUrl"];
-        to.channels = channels ? channels.split(',') : null;
-        for (var k in map) {
-            if (k == "userId" || k == "displayName" ||
-                k == "profileUrl" || k == "channels")
-                continue;
-            if (to.meta == null)
-                to.meta = {};
-            to.meta[k] = map[k];
-        }
-        return to;
-    };
-    return ServerEventsClient;
-}());
-ServerEventsClient.UnknownChannel = "*";
-exports.ServerEventsClient = ServerEventsClient;
-var ServerEventReceiver = (function () {
-    function ServerEventReceiver() {
-    }
-    ServerEventReceiver.prototype.noSuchMethod = function (selector, message) { };
-    return ServerEventReceiver;
-}());
-exports.ServerEventReceiver = ServerEventReceiver;
-var UpdateEventSubscriber = (function () {
-    function UpdateEventSubscriber() {
-    }
-    UpdateEventSubscriber.prototype.createResponse = function () { return new UpdateEventSubscriberResponse(); };
-    UpdateEventSubscriber.prototype.getTypeName = function () { return "UpdateEventSubscriber"; };
-    return UpdateEventSubscriber;
-}());
-exports.UpdateEventSubscriber = UpdateEventSubscriber;
-var UpdateEventSubscriberResponse = (function () {
-    function UpdateEventSubscriberResponse() {
-    }
-    return UpdateEventSubscriberResponse;
-}());
-exports.UpdateEventSubscriberResponse = UpdateEventSubscriberResponse;
-var GetEventSubscribers = (function () {
-    function GetEventSubscribers() {
-    }
-    GetEventSubscribers.prototype.createResponse = function () { return []; };
-    GetEventSubscribers.prototype.getTypeName = function () { return "GetEventSubscribers"; };
-    return GetEventSubscribers;
-}());
-exports.GetEventSubscribers = GetEventSubscribers;
-var ServerEventUser = (function () {
-    function ServerEventUser() {
-    }
-    return ServerEventUser;
-}());
-exports.ServerEventUser = ServerEventUser;
-var HttpMethods = (function () {
-    function HttpMethods() {
-    }
-    return HttpMethods;
-}());
-HttpMethods.Get = "GET";
-HttpMethods.Post = "POST";
-HttpMethods.Put = "PUT";
-HttpMethods.Delete = "DELETE";
-HttpMethods.Patch = "PATCH";
-HttpMethods.Head = "HEAD";
-HttpMethods.Options = "OPTIONS";
-HttpMethods.hasRequestBody = function (method) {
-    return !(method === "GET" || method === "DELETE" || method === "HEAD" || method === "OPTIONS");
-};
-exports.HttpMethods = HttpMethods;
-var GetAccessToken = (function () {
-    function GetAccessToken() {
-    }
-    GetAccessToken.prototype.createResponse = function () { return new GetAccessTokenResponse(); };
-    GetAccessToken.prototype.getTypeName = function () { return "GetAccessToken"; };
-    return GetAccessToken;
-}());
-var GetAccessTokenResponse = (function () {
-    function GetAccessTokenResponse() {
-    }
-    return GetAccessTokenResponse;
-}());
-exports.GetAccessTokenResponse = GetAccessTokenResponse;
-var JsonServiceClient = (function () {
-    function JsonServiceClient(baseUrl) {
-        if (baseUrl == null)
-            throw "baseUrl is required";
-        this.baseUrl = baseUrl;
-        this.replyBaseUrl = exports.combinePaths(baseUrl, "json", "reply") + "/";
-        this.oneWayBaseUrl = exports.combinePaths(baseUrl, "json", "oneway") + "/";
-        this.mode = "cors";
-        this.credentials = 'include';
-        this.headers = new Headers();
-        this.headers.set("Content-Type", "application/json");
-        this.manageCookies = typeof document == "undefined"; //because node-fetch doesn't
-        this.cookies = {};
-    }
-    JsonServiceClient.prototype.setCredentials = function (userName, password) {
-        this.userName = userName;
-        this.password = password;
-    };
-    // @deprecated use bearerToken property
-    JsonServiceClient.prototype.setBearerToken = function (token) {
-        this.bearerToken = token;
-    };
-    JsonServiceClient.prototype.get = function (request, args) {
-        return typeof request != "string"
-            ? this.send(HttpMethods.Get, request, args)
-            : this.send(HttpMethods.Get, null, args, this.toAbsoluteUrl(request));
-    };
-    JsonServiceClient.prototype.delete = function (request, args) {
-        return typeof request != "string"
-            ? this.send(HttpMethods.Delete, request, args)
-            : this.send(HttpMethods.Delete, null, args, this.toAbsoluteUrl(request));
-    };
-    JsonServiceClient.prototype.post = function (request, args) {
-        return this.send(HttpMethods.Post, request, args);
-    };
-    JsonServiceClient.prototype.postToUrl = function (url, request, args) {
-        return this.send(HttpMethods.Post, request, args, this.toAbsoluteUrl(url));
-    };
-    JsonServiceClient.prototype.put = function (request, args) {
-        return this.send(HttpMethods.Put, request, args);
-    };
-    JsonServiceClient.prototype.putToUrl = function (url, request, args) {
-        return this.send(HttpMethods.Put, request, args, this.toAbsoluteUrl(url));
-    };
-    JsonServiceClient.prototype.patch = function (request, args) {
-        return this.send(HttpMethods.Patch, request, args);
-    };
-    JsonServiceClient.prototype.patchToUrl = function (url, request, args) {
-        return this.send(HttpMethods.Patch, request, args, this.toAbsoluteUrl(url));
-    };
-    JsonServiceClient.prototype.createUrlFromDto = function (method, request) {
-        var url = exports.combinePaths(this.replyBaseUrl, exports.nameOf(request));
-        var hasRequestBody = HttpMethods.hasRequestBody(method);
-        if (!hasRequestBody)
-            url = exports.appendQueryString(url, request);
-        return url;
-    };
-    JsonServiceClient.prototype.toAbsoluteUrl = function (relativeOrAbsoluteUrl) {
-        return relativeOrAbsoluteUrl.startsWith("http://") ||
-            relativeOrAbsoluteUrl.startsWith("https://")
-            ? relativeOrAbsoluteUrl
-            : exports.combinePaths(this.baseUrl, relativeOrAbsoluteUrl);
-    };
-    JsonServiceClient.prototype.createRequest = function (method, request, args, url) {
-        var _this = this;
-        if (!url)
-            url = this.createUrlFromDto(method, request);
-        if (args)
-            url = exports.appendQueryString(url, args);
-        if (this.bearerToken != null) {
-            this.headers.set("Authorization", "Bearer " + this.bearerToken);
-        }
-        else if (this.userName != null) {
-            this.headers.set('Authorization', 'Basic ' + JsonServiceClient.toBase64(this.userName + ":" + this.password));
-        }
-        if (this.manageCookies) {
-            var cookies = Object.keys(this.cookies)
-                .map(function (x) {
-                var c = _this.cookies[x];
-                return c.expires && c.expires < new Date()
-                    ? null
-                    : c.name + "=" + encodeURIComponent(c.value);
-            })
-                .filter(function (x) { return !!x; });
-            if (cookies.length > 0)
-                this.headers.set("Cookie", cookies.join("; "));
-            else
-                this.headers.delete("Cookie");
-        }
-        // Set `compress` false due to common error
-        // https://github.com/bitinn/node-fetch/issues/93#issuecomment-200791658
-        var reqOptions = {
-            method: method,
-            mode: this.mode,
-            credentials: this.credentials,
-            headers: this.headers,
-            compress: false
-        };
-        var req = new Request(url, reqOptions);
-        if (HttpMethods.hasRequestBody(method))
-            req.body = JSON.stringify(request);
-        var opt = { url: url };
-        if (this.requestFilter != null)
-            this.requestFilter(req, opt);
-        return [req, opt];
-    };
-    JsonServiceClient.prototype.createResponse = function (res, request) {
-        var _this = this;
-        if (!res.ok)
-            throw res;
-        if (this.manageCookies) {
-            var setCookies = [];
-            res.headers.forEach(function (v, k) {
-                if ("set-cookie" == k.toLowerCase())
-                    setCookies.push(v);
-            });
-            setCookies.forEach(function (x) {
-                var cookie = exports.parseCookie(x);
-                if (cookie)
-                    _this.cookies[cookie.name] = cookie;
-            });
-        }
-        if (this.responseFilter != null)
-            this.responseFilter(res);
-        var x = request && typeof request != "string" && typeof request.createResponse == 'function'
-            ? request.createResponse()
-            : null;
-        if (typeof x === 'string')
-            return res.text().then(function (o) { return o; });
-        var contentType = res.headers.get("content-type");
-        var isJson = contentType && contentType.indexOf("application/json") !== -1;
-        if (isJson) {
-            return res.json().then(function (o) { return o; });
-        }
-        if (typeof Uint8Array != "undefined" && x instanceof Uint8Array) {
-            if (typeof res.arrayBuffer != 'function')
-                throw new Error("This fetch polyfill does not implement 'arrayBuffer'");
-            return res.arrayBuffer().then(function (o) { return new Uint8Array(o); });
-        }
-        else if (typeof Blob == "function" && x instanceof Blob) {
-            if (typeof res.blob != 'function')
-                throw new Error("This fetch polyfill does not implement 'blob'");
-            return res.blob().then(function (o) { return o; });
-        }
-        var contentLength = res.headers.get("content-length");
-        if (contentLength === "0" || (contentLength == null && !isJson)) {
-            return x;
-        }
-        return res.json().then(function (o) { return o; }); //fallback
-    };
-    JsonServiceClient.prototype.handleError = function (holdRes, res) {
-        var _this = this;
-        if (res instanceof Error)
-            throw this.raiseError(holdRes, res);
-        // res.json can only be called once.
-        if (res.bodyUsed)
-            throw this.raiseError(res, createErrorResponse(res.status, res.statusText));
-        return res.json().then(function (o) {
-            var errorDto = exports.sanitize(o);
-            if (!errorDto.responseStatus)
-                throw createErrorResponse(res.status, res.statusText);
-            throw errorDto;
-        }).catch(function (error) {
-            // No responseStatus body, set from `res` Body object
-            if (error instanceof Error)
-                throw _this.raiseError(res, createErrorResponse(res.status, res.statusText));
-            throw _this.raiseError(res, error);
-        });
-    };
-    JsonServiceClient.prototype.send = function (method, request, args, url) {
-        var _this = this;
-        var holdRes = null;
-        var _a = this.createRequest(method, request, args, url), req = _a[0], opt = _a[1];
-        return fetch(opt.url || req.url, req)
-            .then(function (res) {
-            holdRes = res;
-            var response = _this.createResponse(res, request);
-            return response;
-        })
-            .catch(function (res) {
-            if (res.status === 401) {
-                if (_this.refreshToken) {
-                    var jwtReq = new GetAccessToken();
-                    jwtReq.refreshToken = _this.refreshToken;
-                    var url = _this.refreshTokenUri || _this.createUrlFromDto(HttpMethods.Post, jwtReq);
-                    return _this.postToUrl(url, jwtReq)
-                        .then(function (r) {
-                        _this.bearerToken = r.accessToken;
-                        var _a = _this.createRequest(method, request, args), req = _a[0], opt = _a[1];
-                        return fetch(opt.url || req.url, req)
-                            .then(function (res) { return _this.createResponse(res, request); })
-                            .catch(function (res) { return _this.handleError(holdRes, res); });
-                    })
-                        .catch(function (res) { return _this.handleError(holdRes, res); });
-                }
-                if (_this.onAuthenticationRequired) {
-                    return _this.onAuthenticationRequired().then(function () {
-                        var _a = _this.createRequest(method, request, args), req = _a[0], opt = _a[1];
-                        return fetch(opt.url || req.url, req)
-                            .then(function (res) { return _this.createResponse(res, request); })
-                            .catch(function (res) { return _this.handleError(holdRes, res); });
-                    });
-                }
-            }
-            return _this.handleError(holdRes, res);
-        });
-    };
-    JsonServiceClient.prototype.raiseError = function (res, error) {
-        if (this.exceptionFilter != null) {
-            this.exceptionFilter(res, error);
-        }
-        return error;
-    };
-    return JsonServiceClient;
-}());
-exports.JsonServiceClient = JsonServiceClient;
-var createErrorResponse = function (errorCode, message) {
-    var error = new ErrorResponse();
-    error.responseStatus = new ResponseStatus();
-    error.responseStatus.errorCode = errorCode && errorCode.toString();
-    error.responseStatus.message = message;
-    return error;
-};
-exports.toCamelCase = function (key) {
-    return !key ? key : key.charAt(0).toLowerCase() + key.substring(1);
-};
-exports.sanitize = function (status) {
-    if (status.responseStatus)
-        return status;
-    if (status.errors)
-        return status;
-    var to = {};
-    for (var k_1 in status) {
-        if (status.hasOwnProperty(k_1)) {
-            if (status[k_1] instanceof Object)
-                to[exports.toCamelCase(k_1)] = exports.sanitize(status[k_1]);
-            else
-                to[exports.toCamelCase(k_1)] = status[k_1];
-        }
-    }
-    to.errors = [];
-    if (status.Errors != null) {
-        for (var i = 0, len = status.Errors.length; i < len; i++) {
-            var o = status.Errors[i];
-            var err = {};
-            for (var k in o)
-                err[exports.toCamelCase(k)] = o[k];
-            to.errors.push(err);
-        }
-    }
-    return to;
-};
-exports.nameOf = function (o) {
-    if (!o)
-        return "null";
-    if (typeof o.getTypeName == "function")
-        return o.getTypeName();
-    var ctor = o && o.constructor;
-    if (ctor == null)
-        throw o + " doesn't have constructor";
-    if (ctor.name)
-        return ctor.name;
-    var str = ctor.toString();
-    return str.substring(9, str.indexOf("(")); //"function ".length == 9
-};
-/* utils */
-function log(o, prefix) {
-    if (prefix === void 0) { prefix = "LOG"; }
-    console.log(prefix, o);
-    return o;
-}
-exports.css = function (selector, name, value) {
-    var els = typeof selector == "string"
-        ? document.querySelectorAll(selector)
-        : selector;
-    for (var i = 0; i < els.length; i++) {
-        var el = els[i];
-        if (el != null && el.style != null) {
-            el.style[name] = value;
-        }
-    }
-};
-exports.splitOnFirst = function (s, c) {
-    if (!s)
-        return [s];
-    var pos = s.indexOf(c);
-    return pos >= 0 ? [s.substring(0, pos), s.substring(pos + 1)] : [s];
-};
-exports.splitOnLast = function (s, c) {
-    if (!s)
-        return [s];
-    var pos = s.lastIndexOf(c);
-    return pos >= 0
-        ? [s.substring(0, pos), s.substring(pos + 1)]
-        : [s];
-};
-var splitCase = function (t) {
-    return typeof t != 'string' ? t : t.replace(/([A-Z]|[0-9]+)/g, ' $1').replace(/_/g, ' ').trim();
-};
-exports.humanize = function (s) { return (!s || s.indexOf(' ') >= 0 ? s : splitCase(s)); };
-exports.queryString = function (url) {
-    if (!url || url.indexOf('?') === -1)
-        return {};
-    var pairs = exports.splitOnFirst(url, '?')[1].split('&');
-    var map = {};
-    for (var i = 0; i < pairs.length; ++i) {
-        var p = pairs[i].split('=');
-        map[p[0]] = p.length > 1
-            ? decodeURIComponent(p[1].replace(/\+/g, ' '))
-            : null;
-    }
-    return map;
-};
-exports.combinePaths = function () {
-    var paths = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        paths[_i] = arguments[_i];
-    }
-    var parts = [], i, l;
-    for (i = 0, l = paths.length; i < l; i++) {
-        var arg = paths[i];
-        parts = arg.indexOf("://") === -1
-            ? parts.concat(arg.split("/"))
-            : parts.concat(arg.lastIndexOf("/") === arg.length - 1 ? arg.substring(0, arg.length - 1) : arg);
-    }
-    var combinedPaths = [];
-    for (i = 0, l = parts.length; i < l; i++) {
-        var part = parts[i];
-        if (!part || part === ".")
-            continue;
-        if (part === "..")
-            combinedPaths.pop();
-        else
-            combinedPaths.push(part);
-    }
-    if (parts[0] === "")
-        combinedPaths.unshift("");
-    return combinedPaths.join("/") || (combinedPaths.length ? "/" : ".");
-};
-exports.createPath = function (route, args) {
-    var argKeys = {};
-    for (var k in args) {
-        argKeys[k.toLowerCase()] = k;
-    }
-    var parts = route.split("/");
-    var url = "";
-    for (var i = 0; i < parts.length; i++) {
-        var p = parts[i];
-        if (p == null)
-            p = "";
-        if (p[0] === "{" && p[p.length - 1] === "}") {
-            var key = argKeys[p.substring(1, p.length - 1).toLowerCase()];
-            if (key) {
-                p = args[key];
-                delete args[key];
-            }
-        }
-        if (url.length > 0)
-            url += "/";
-        url += p;
-    }
-    return url;
-};
-exports.createUrl = function (route, args) {
-    var url = exports.createPath(route, args);
-    return exports.appendQueryString(url, args);
-};
-exports.appendQueryString = function (url, args) {
-    for (var k in args) {
-        if (args.hasOwnProperty(k)) {
-            url += url.indexOf("?") >= 0 ? "&" : "?";
-            url += k + "=" + qsValue(args[k]);
-        }
-    }
-    return url;
-};
-var qsValue = function (arg) {
-    if (arg == null)
-        return "";
-    if (typeof Uint8Array != "undefined" && arg instanceof Uint8Array)
-        return exports.bytesToBase64(arg);
-    return encodeURIComponent(arg) || "";
-};
-//from: https://github.com/madmurphy/stringview.js/blob/master/stringview.js
-exports.bytesToBase64 = function (aBytes) {
-    var eqLen = (3 - (aBytes.length % 3)) % 3, sB64Enc = "";
-    for (var nMod3, nLen = aBytes.length, nUint24 = 0, nIdx = 0; nIdx < nLen; nIdx++) {
-        nMod3 = nIdx % 3;
-        nUint24 |= aBytes[nIdx] << (16 >>> nMod3 & 24);
-        if (nMod3 === 2 || aBytes.length - nIdx === 1) {
-            sB64Enc += String.fromCharCode(uint6ToB64(nUint24 >>> 18 & 63), uint6ToB64(nUint24 >>> 12 & 63), uint6ToB64(nUint24 >>> 6 & 63), uint6ToB64(nUint24 & 63));
-            nUint24 = 0;
-        }
-    }
-    return eqLen === 0
-        ? sB64Enc
-        : sB64Enc.substring(0, sB64Enc.length - eqLen) + (eqLen === 1 ? "=" : "==");
-};
-var uint6ToB64 = function (nUint6) {
-    return nUint6 < 26 ?
-        nUint6 + 65
-        : nUint6 < 52 ?
-            nUint6 + 71
-            : nUint6 < 62 ?
-                nUint6 - 4
-                : nUint6 === 62 ? 43
-                    : nUint6 === 63 ? 47 : 65;
-};
-var _btoa = typeof btoa == 'function'
-    ? btoa
-    : function (str) { return new Buffer(str).toString('base64'); };
-//from: http://stackoverflow.com/a/30106551/85785
-JsonServiceClient.toBase64 = function (str) {
-    return _btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
-        return String.fromCharCode(new Number('0x' + p1).valueOf());
-    }));
-};
-exports.stripQuotes = function (s) {
-    return s && s[0] == '"' && s[s.length] == '"' ? s.slice(1, -1) : s;
-};
-exports.tryDecode = function (s) {
-    try {
-        return decodeURIComponent(s);
-    }
-    catch (e) {
-        return s;
-    }
-};
-exports.parseCookie = function (setCookie) {
-    if (!setCookie)
-        return null;
-    var to = null;
-    var pairs = setCookie.split(/; */);
-    for (var i = 0; i < pairs.length; i++) {
-        var pair = pairs[i];
-        var parts = exports.splitOnFirst(pair, '=');
-        var name = parts[0].trim();
-        var value = parts.length > 1 ? exports.tryDecode(exports.stripQuotes(parts[1].trim())) : null;
-        if (i == 0) {
-            to = { name: name, value: value, path: "/" };
-        }
-        else {
-            var lower = name.toLowerCase();
-            if (lower == "httponly") {
-                to.httpOnly = true;
-            }
-            else if (lower == "secure") {
-                to.secure = true;
-            }
-            else if (lower == "expires") {
-                to.expires = new Date(value);
-            }
-            else {
-                to[name] = value;
-            }
-        }
-    }
-    return to;
-};
-exports.toDate = function (s) { return new Date(parseFloat(/Date\(([^)]+)\)/.exec(s)[1])); };
-exports.toDateFmt = function (s) { return exports.dateFmt(exports.toDate(s)); };
-exports.padInt = function (n) { return n < 10 ? '0' + n : n; };
-exports.dateFmt = function (d) {
-    if (d === void 0) { d = new Date(); }
-    return d.getFullYear() + '/' + exports.padInt(d.getMonth() + 1) + '/' + exports.padInt(d.getDate());
-};
-exports.dateFmtHM = function (d) {
-    if (d === void 0) { d = new Date(); }
-    return d.getFullYear() + '/' + exports.padInt(d.getMonth() + 1) + '/' + exports.padInt(d.getDate()) + ' ' + exports.padInt(d.getHours()) + ":" + exports.padInt(d.getMinutes());
-};
-exports.timeFmt12 = function (d) {
-    if (d === void 0) { d = new Date(); }
-    return exports.padInt((d.getHours() + 24) % 12 || 12) + ":" + exports.padInt(d.getMinutes()) + ":" + exports.padInt(d.getSeconds()) + " " + (d.getHours() > 12 ? "PM" : "AM");
-};
-//# sourceMappingURL=index.js.map
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7).Buffer))
-
-/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15248,7 +15561,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     function pad(d) { return d < 10 ? '0' + d : d; };
     $.ss.dfmt = function (d) { return d.getFullYear() + '/' + pad(d.getMonth() + 1) + '/' + pad(d.getDate()); };
     $.ss.dfmthm = function (d) { return d.getFullYear() + '/' + pad(d.getMonth() + 1) + '/' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ":" + pad(d.getMinutes()); };
-    $.ss.tfmt12 = function (d) { return pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds()) + " " + (d.getHours() > 12 ? "PM" : "AM"); };
+    $.ss.tfmt12 = function (d) { return pad((d.getHours() + 24) % 12 || 12) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds()) + " " + (d.getHours() > 12 ? "PM" : "AM"); };
     $.ss.splitOnFirst = function (s, c) { if (!s) return [s]; var pos = s.indexOf(c); return pos >= 0 ? [s.substring(0, pos), s.substring(pos + 1)] : [s]; };
     $.ss.splitOnLast = function (s, c) { if (!s) return [s]; var pos = s.lastIndexOf(c); return pos >= 0 ? [s.substring(0, pos), s.substring(pos + 1)] : [s]; };
     $.ss.getSelection = function () {
@@ -15287,6 +15600,26 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         }
         return map;
     };
+    $.ss.toUrl = function (url, args) {
+        for (var k in args) {
+            url += url.indexOf('?') >= 0 ? '&' : '?';
+            url += k + "=" + $.ss.encodeValue(args[k]);
+        }
+        return url;
+    };
+    $.ss.encodeValue = function (o) {
+        if (o == null) return "";
+        if ($.isArray(o)) {
+            var s = "";
+            for (var i = 0; i < o.length; i++) {
+                if (s.length > 0)
+                    s += ',';
+                s += $.ss.encodeValue(o[i]);
+            }
+            return s;
+        }
+        return encodeURIComponent(o);
+    };
     $.ss.bindAll = function (o) {
         for (var k in o) {
             if (typeof o[k] == 'function')
@@ -15314,15 +15647,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             if (url.length > 0) url += '/';
             url += p;
         }
-        return url;
+        return route[0] === '/' ? '/' + url : url;
     };
     $.ss.createUrl = function(route, args) {
         var url = $.ss.createPath(route, args);
-        for (var k in args) {
-            url += url.indexOf('?') >= 0 ? '&' : '?';
-            url += k + "=" + encodeURIComponent(args[k]);
-        }
-        return url;
+        return $.ss.toUrl(url, args);
     };
     function splitCase(t) {
         return typeof t != 'string' ? t : t.replace(/([A-Z]|[0-9]+)/g, ' $1').replace(/_/g, ' ');
@@ -15619,7 +15948,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         $.ss.eventChannels = channels;
         if (!$.ss.eventSource) return;
         var url = $.ss.eventSource.url;
-        $.ss.eventSourceUrl = url.substring(0, Math.min(url.indexOf('?'), url.length)) + "?channels=" + channels.join(',');
+        var qs = $.ss.queryString(url);
+        qs['channels'] = channels;
+        delete qs['channel'];
+        $.ss.eventSourceUrl = $.ss.toUrl(url.substring(0, Math.min(url.indexOf('?'), url.length)), qs);
     };
     $.ss.updateSubscriberInfo = function (subscribe, unsubscribe) {
         var sub = typeof subscribe == "string" ? subscribe.split(',') : subscribe;
@@ -15694,7 +16026,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         $.ss.eventSource = this[0];
         $.ss.eventOptions = opt = opt || {};
         if (opt.handlers) {
-            $.extend($.ss.handlers, opt.handlers);
+            $.extend($.ss.handlers, opt.handlers || {});
         }
         function onMessage(e) {
             var parts = $.ss.splitOnFirst(e.data, ' ');
@@ -15720,15 +16052,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             var tokens = $.ss.splitOnFirst(target, '$'),
                 cmd = tokens[0], cssSel = tokens[1],
                 $els = cssSel && $(cssSel), el = $els && $els[0];
-            if (op == "cmd") {
-                if (cmd == "onConnect") {
+
+            $.extend(e, { cmd: cmd, op: op, selector: selector, "$target": target, cssSelector: cssSel, json: json }); //target is readonly field
+            if (op === "cmd") {
+                if (cmd === "onConnect") {
                     $.extend(opt, msg);
                     if (opt.heartbeatUrl) {
                         if (opt.heartbeat) {
                             window.clearInterval(opt.heartbeat);
                         }
                         opt.heartbeat = window.setInterval(function () {
-                            if ($.ss.eventSource.readyState == 2) //CLOSED
+                            if ($.ss.eventSource.readyState === 2) //CLOSED
                             {
                                 window.clearInterval(opt.heartbeat);
                                 var stopFn = $.ss.handlers["onStop"];
@@ -15750,7 +16084,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                         }, parseInt(opt.heartbeatIntervalMs) || 10000);
                     }
                     if (opt.unRegisterUrl) {
-                        $(window).unload(function () {
+                        $(window).on("unload", function () {
                             $.post(opt.unRegisterUrl, null, function (r) { });
                         });
                     }
@@ -15762,10 +16096,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     fn.call(el || document.body, msg, e);
                 }
             }
-            else if (op == "trigger") {
+            else if (op === "trigger") {
                 $(el || document).trigger(cmd, [msg, e]);
             }
-            else if (op == "css") {
+            else if (op === "css") {
                 $($els || document.body).css(cmd, msg, e);
             }
             else {
@@ -15773,22 +16107,36 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 $.ss.invokeReceiver(r, cmd, el, msg, e, op);
             }
 
-            if (opt.success) {
-                opt.success(selector, msg, e);
-            }
+            var fn = $.ss.handlers["onMessage"];
+            if (fn) fn.call(el || document.body, msg, e);
+
+            if (opt.success) opt.success(selector, msg, e); //deprecated
         }
+
         $.ss.eventSource.onmessage = onMessage;
+
+        var hold = $.ss.eventSource.onerror;
+        $.ss.eventSource.onerror = function () {
+            var args = arguments;
+            window.setTimeout(function () {
+                $.ss.reconnectServerEvents({ errorArgs: args });
+                if (hold)
+                    hold.apply(args);
+            }, 10000);
+        };
     };
 });
+
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
 /* Options:
-Date: 2017-02-10 11:04:42
-Version: 4.00
+Date: 2018-04-13 15:53:43
+Version: 5.00
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: http://localhost:56500
 
@@ -15802,7 +16150,6 @@ BaseUrl: http://localhost:56500
 //ExcludeTypes:
 //DefaultImports:
 */
-
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -15815,69 +16162,76 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 // @DataContract
-var ResponseError = (function () {
+var ResponseError = /** @class */ (function () {
     function ResponseError() {
     }
     return ResponseError;
 }());
 exports.ResponseError = ResponseError;
 // @DataContract
-var ResponseStatus = (function () {
+var ResponseStatus = /** @class */ (function () {
     function ResponseStatus() {
     }
     return ResponseStatus;
 }());
 exports.ResponseStatus = ResponseStatus;
-var ExternalType = (function () {
+var ExternalType = /** @class */ (function () {
     function ExternalType() {
     }
     return ExternalType;
 }());
 exports.ExternalType = ExternalType;
-var MetadataTestNestedChild = (function () {
+// @DataContract
+var AuthUserSession = /** @class */ (function () {
+    function AuthUserSession() {
+    }
+    return AuthUserSession;
+}());
+exports.AuthUserSession = AuthUserSession;
+var MetadataTestNestedChild = /** @class */ (function () {
     function MetadataTestNestedChild() {
     }
     return MetadataTestNestedChild;
 }());
 exports.MetadataTestNestedChild = MetadataTestNestedChild;
-var MetadataTestChild = (function () {
+var MetadataTestChild = /** @class */ (function () {
     function MetadataTestChild() {
     }
     return MetadataTestChild;
 }());
 exports.MetadataTestChild = MetadataTestChild;
-var MenuItemExampleItem = (function () {
+var MenuItemExampleItem = /** @class */ (function () {
     function MenuItemExampleItem() {
     }
     return MenuItemExampleItem;
 }());
 exports.MenuItemExampleItem = MenuItemExampleItem;
-var MenuItemExample = (function () {
+var MenuItemExample = /** @class */ (function () {
     function MenuItemExample() {
     }
     return MenuItemExample;
 }());
 exports.MenuItemExample = MenuItemExample;
 // @DataContract
-var MenuExample = (function () {
+var MenuExample = /** @class */ (function () {
     function MenuExample() {
     }
     return MenuExample;
 }());
 exports.MenuExample = MenuExample;
-var NestedClass = (function () {
+var NestedClass = /** @class */ (function () {
     function NestedClass() {
     }
     return NestedClass;
 }());
 exports.NestedClass = NestedClass;
-var ListResult = (function () {
+var ListResult = /** @class */ (function () {
     function ListResult() {
     }
     return ListResult;
 }());
 exports.ListResult = ListResult;
-var ArrayResult = (function () {
+var ArrayResult = /** @class */ (function () {
     function ArrayResult() {
     }
     return ArrayResult;
@@ -15890,98 +16244,85 @@ var EnumFlags;
     EnumFlags[EnumFlags["Value2"] = 2] = "Value2";
     EnumFlags[EnumFlags["Value3"] = 4] = "Value3";
 })(EnumFlags = exports.EnumFlags || (exports.EnumFlags = {}));
-var Poco = (function () {
-    function Poco() {
-    }
-    return Poco;
-}());
-exports.Poco = Poco;
-var AllCollectionTypes = (function () {
-    function AllCollectionTypes() {
-    }
-    return AllCollectionTypes;
-}());
-exports.AllCollectionTypes = AllCollectionTypes;
-var KeyValuePair = (function () {
+var KeyValuePair = /** @class */ (function () {
     function KeyValuePair() {
     }
     return KeyValuePair;
 }());
 exports.KeyValuePair = KeyValuePair;
-var SubType = (function () {
+var SubType = /** @class */ (function () {
     function SubType() {
     }
     return SubType;
 }());
 exports.SubType = SubType;
-var HelloBase = (function () {
+var HelloBase = /** @class */ (function () {
     function HelloBase() {
     }
     return HelloBase;
 }());
 exports.HelloBase = HelloBase;
-var HelloResponseBase = (function () {
+var HelloResponseBase = /** @class */ (function () {
     function HelloResponseBase() {
     }
     return HelloResponseBase;
 }());
 exports.HelloResponseBase = HelloResponseBase;
-var HelloBase_1 = (function () {
+var Poco = /** @class */ (function () {
+    function Poco() {
+    }
+    return Poco;
+}());
+exports.Poco = Poco;
+var HelloBase_1 = /** @class */ (function () {
     function HelloBase_1() {
     }
     return HelloBase_1;
 }());
 exports.HelloBase_1 = HelloBase_1;
-var Item = (function () {
+var Item = /** @class */ (function () {
     function Item() {
     }
     return Item;
 }());
 exports.Item = Item;
-var HelloWithReturnResponse = (function () {
+var HelloWithReturnResponse = /** @class */ (function () {
     function HelloWithReturnResponse() {
     }
     return HelloWithReturnResponse;
 }());
 exports.HelloWithReturnResponse = HelloWithReturnResponse;
-var HelloType = (function () {
+var HelloType = /** @class */ (function () {
     function HelloType() {
     }
     return HelloType;
 }());
 exports.HelloType = HelloType;
-var EmptyClass = (function () {
+var EmptyClass = /** @class */ (function () {
     function EmptyClass() {
     }
     return EmptyClass;
 }());
 exports.EmptyClass = EmptyClass;
-var InnerType = (function () {
+var InnerType = /** @class */ (function () {
     function InnerType() {
     }
     return InnerType;
 }());
 exports.InnerType = InnerType;
-var PingService = (function () {
+var PingService = /** @class */ (function () {
     function PingService() {
     }
     return PingService;
 }());
 exports.PingService = PingService;
-var ReturnedDto = (function () {
+var ReturnedDto = /** @class */ (function () {
     function ReturnedDto() {
     }
     return ReturnedDto;
 }());
 exports.ReturnedDto = ReturnedDto;
-// @DataContract
-var AuthUserSession = (function () {
-    function AuthUserSession() {
-    }
-    return AuthUserSession;
-}());
-exports.AuthUserSession = AuthUserSession;
-var CustomUserSession = (function (_super) {
+var CustomUserSession = /** @class */ (function (_super) {
     __extends(CustomUserSession, _super);
     function CustomUserSession() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -15989,156 +16330,168 @@ var CustomUserSession = (function (_super) {
     return CustomUserSession;
 }(AuthUserSession));
 exports.CustomUserSession = CustomUserSession;
-var UnAuthInfo = (function () {
+var UnAuthInfo = /** @class */ (function () {
     function UnAuthInfo() {
     }
     return UnAuthInfo;
 }());
 exports.UnAuthInfo = UnAuthInfo;
-var Channel = (function () {
+var Channel = /** @class */ (function () {
     function Channel() {
     }
     return Channel;
 }());
 exports.Channel = Channel;
-var Device = (function () {
+var Device = /** @class */ (function () {
     function Device() {
     }
     return Device;
 }());
 exports.Device = Device;
-var Logger = (function () {
+var Logger = /** @class */ (function () {
     function Logger() {
     }
     return Logger;
 }());
 exports.Logger = Logger;
-var QueryBase = (function () {
-    function QueryBase() {
-    }
-    return QueryBase;
-}());
-exports.QueryBase = QueryBase;
-var QueryBase_1 = (function (_super) {
-    __extends(QueryBase_1, _super);
-    function QueryBase_1() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return QueryBase_1;
-}(QueryBase));
-exports.QueryBase_1 = QueryBase_1;
-var OnlyDefinedInGenericType = (function () {
-    function OnlyDefinedInGenericType() {
-    }
-    return OnlyDefinedInGenericType;
-}());
-exports.OnlyDefinedInGenericType = OnlyDefinedInGenericType;
-var QueryBase_2 = (function (_super) {
-    __extends(QueryBase_2, _super);
-    function QueryBase_2() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return QueryBase_2;
-}(QueryBase));
-exports.QueryBase_2 = QueryBase_2;
-var OnlyDefinedInGenericTypeFrom = (function () {
-    function OnlyDefinedInGenericTypeFrom() {
-    }
-    return OnlyDefinedInGenericTypeFrom;
-}());
-exports.OnlyDefinedInGenericTypeFrom = OnlyDefinedInGenericTypeFrom;
-var OnlyDefinedInGenericTypeInto = (function () {
-    function OnlyDefinedInGenericTypeInto() {
-    }
-    return OnlyDefinedInGenericTypeInto;
-}());
-exports.OnlyDefinedInGenericTypeInto = OnlyDefinedInGenericTypeInto;
-var Rockstar = (function () {
+var Rockstar = /** @class */ (function () {
     function Rockstar() {
     }
     return Rockstar;
 }());
 exports.Rockstar = Rockstar;
-var TypesGroup = (function () {
+var QueryBase = /** @class */ (function () {
+    function QueryBase() {
+    }
+    return QueryBase;
+}());
+exports.QueryBase = QueryBase;
+var QueryDb_1 = /** @class */ (function (_super) {
+    __extends(QueryDb_1, _super);
+    function QueryDb_1() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return QueryDb_1;
+}(QueryBase));
+exports.QueryDb_1 = QueryDb_1;
+var OnlyDefinedInGenericType = /** @class */ (function () {
+    function OnlyDefinedInGenericType() {
+    }
+    return OnlyDefinedInGenericType;
+}());
+exports.OnlyDefinedInGenericType = OnlyDefinedInGenericType;
+var QueryDb_2 = /** @class */ (function (_super) {
+    __extends(QueryDb_2, _super);
+    function QueryDb_2() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return QueryDb_2;
+}(QueryBase));
+exports.QueryDb_2 = QueryDb_2;
+var OnlyDefinedInGenericTypeFrom = /** @class */ (function () {
+    function OnlyDefinedInGenericTypeFrom() {
+    }
+    return OnlyDefinedInGenericTypeFrom;
+}());
+exports.OnlyDefinedInGenericTypeFrom = OnlyDefinedInGenericTypeFrom;
+var OnlyDefinedInGenericTypeInto = /** @class */ (function () {
+    function OnlyDefinedInGenericTypeInto() {
+    }
+    return OnlyDefinedInGenericTypeInto;
+}());
+exports.OnlyDefinedInGenericTypeInto = OnlyDefinedInGenericTypeInto;
+var TypesGroup = /** @class */ (function () {
     function TypesGroup() {
     }
     return TypesGroup;
 }());
 exports.TypesGroup = TypesGroup;
-var CustomHttpErrorResponse = (function () {
+var CustomHttpErrorResponse = /** @class */ (function () {
     function CustomHttpErrorResponse() {
     }
     return CustomHttpErrorResponse;
 }());
 exports.CustomHttpErrorResponse = CustomHttpErrorResponse;
-var ThrowTypeResponse = (function () {
+var ThrowTypeResponse = /** @class */ (function () {
     function ThrowTypeResponse() {
     }
     return ThrowTypeResponse;
 }());
 exports.ThrowTypeResponse = ThrowTypeResponse;
-var ThrowValidationResponse = (function () {
+var ThrowValidationResponse = /** @class */ (function () {
     function ThrowValidationResponse() {
     }
     return ThrowValidationResponse;
 }());
 exports.ThrowValidationResponse = ThrowValidationResponse;
-var ThrowBusinessErrorResponse = (function () {
+var ThrowBusinessErrorResponse = /** @class */ (function () {
     function ThrowBusinessErrorResponse() {
     }
     return ThrowBusinessErrorResponse;
 }());
 exports.ThrowBusinessErrorResponse = ThrowBusinessErrorResponse;
-var ExternalOperationResponse = (function () {
+var ExternalOperationResponse = /** @class */ (function () {
     function ExternalOperationResponse() {
     }
     return ExternalOperationResponse;
 }());
 exports.ExternalOperationResponse = ExternalOperationResponse;
-var ExternalOperation2Response = (function () {
+var ExternalOperation2Response = /** @class */ (function () {
     function ExternalOperation2Response() {
     }
     return ExternalOperation2Response;
 }());
 exports.ExternalOperation2Response = ExternalOperation2Response;
-var ExternalReturnTypeResponse = (function () {
+var ExternalReturnTypeResponse = /** @class */ (function () {
     function ExternalReturnTypeResponse() {
     }
     return ExternalReturnTypeResponse;
 }());
 exports.ExternalReturnTypeResponse = ExternalReturnTypeResponse;
-var Account = (function () {
+var Account = /** @class */ (function () {
     function Account() {
     }
     return Account;
 }());
 exports.Account = Account;
-var Project = (function () {
+var Project = /** @class */ (function () {
     function Project() {
     }
     return Project;
 }());
 exports.Project = Project;
-var MetadataTestResponse = (function () {
+var CreateJwtResponse = /** @class */ (function () {
+    function CreateJwtResponse() {
+    }
+    return CreateJwtResponse;
+}());
+exports.CreateJwtResponse = CreateJwtResponse;
+var CreateRefreshJwtResponse = /** @class */ (function () {
+    function CreateRefreshJwtResponse() {
+    }
+    return CreateRefreshJwtResponse;
+}());
+exports.CreateRefreshJwtResponse = CreateRefreshJwtResponse;
+var MetadataTestResponse = /** @class */ (function () {
     function MetadataTestResponse() {
     }
     return MetadataTestResponse;
 }());
 exports.MetadataTestResponse = MetadataTestResponse;
 // @DataContract
-var GetExampleResponse = (function () {
+var GetExampleResponse = /** @class */ (function () {
     function GetExampleResponse() {
     }
     return GetExampleResponse;
 }());
 exports.GetExampleResponse = GetExampleResponse;
-var GetRandomIdsResponse = (function () {
+var GetRandomIdsResponse = /** @class */ (function () {
     function GetRandomIdsResponse() {
     }
     return GetRandomIdsResponse;
 }());
 exports.GetRandomIdsResponse = GetRandomIdsResponse;
-var HelloResponse = (function () {
+var HelloResponse = /** @class */ (function () {
     function HelloResponse() {
     }
     return HelloResponse;
@@ -16148,25 +16501,31 @@ exports.HelloResponse = HelloResponse;
 * Description on HelloAllResponse type
 */
 // @DataContract
-var HelloAnnotatedResponse = (function () {
+var HelloAnnotatedResponse = /** @class */ (function () {
     function HelloAnnotatedResponse() {
     }
     return HelloAnnotatedResponse;
 }());
 exports.HelloAnnotatedResponse = HelloAnnotatedResponse;
-var AllTypes = (function () {
+var AllTypes = /** @class */ (function () {
     function AllTypes() {
     }
     return AllTypes;
 }());
 exports.AllTypes = AllTypes;
-var HelloAllTypesResponse = (function () {
+var AllCollectionTypes = /** @class */ (function () {
+    function AllCollectionTypes() {
+    }
+    return AllCollectionTypes;
+}());
+exports.AllCollectionTypes = AllCollectionTypes;
+var HelloAllTypesResponse = /** @class */ (function () {
     function HelloAllTypesResponse() {
     }
     return HelloAllTypesResponse;
 }());
 exports.HelloAllTypesResponse = HelloAllTypesResponse;
-var HelloDateTime = (function () {
+var HelloDateTime = /** @class */ (function () {
     function HelloDateTime() {
     }
     HelloDateTime.prototype.createResponse = function () { return new HelloDateTime(); };
@@ -16175,7 +16534,7 @@ var HelloDateTime = (function () {
 }());
 exports.HelloDateTime = HelloDateTime;
 // @DataContract
-var HelloWithDataContractResponse = (function () {
+var HelloWithDataContractResponse = /** @class */ (function () {
     function HelloWithDataContractResponse() {
     }
     return HelloWithDataContractResponse;
@@ -16184,13 +16543,13 @@ exports.HelloWithDataContractResponse = HelloWithDataContractResponse;
 /**
 * Description on HelloWithDescriptionResponse type
 */
-var HelloWithDescriptionResponse = (function () {
+var HelloWithDescriptionResponse = /** @class */ (function () {
     function HelloWithDescriptionResponse() {
     }
     return HelloWithDescriptionResponse;
 }());
 exports.HelloWithDescriptionResponse = HelloWithDescriptionResponse;
-var HelloWithInheritanceResponse = (function (_super) {
+var HelloWithInheritanceResponse = /** @class */ (function (_super) {
     __extends(HelloWithInheritanceResponse, _super);
     function HelloWithInheritanceResponse() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -16198,7 +16557,7 @@ var HelloWithInheritanceResponse = (function (_super) {
     return HelloWithInheritanceResponse;
 }(HelloResponseBase));
 exports.HelloWithInheritanceResponse = HelloWithInheritanceResponse;
-var HelloWithAlternateReturnResponse = (function (_super) {
+var HelloWithAlternateReturnResponse = /** @class */ (function (_super) {
     __extends(HelloWithAlternateReturnResponse, _super);
     function HelloWithAlternateReturnResponse() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -16206,38 +16565,38 @@ var HelloWithAlternateReturnResponse = (function (_super) {
     return HelloWithAlternateReturnResponse;
 }(HelloWithReturnResponse));
 exports.HelloWithAlternateReturnResponse = HelloWithAlternateReturnResponse;
-var HelloWithRouteResponse = (function () {
+var HelloWithRouteResponse = /** @class */ (function () {
     function HelloWithRouteResponse() {
     }
     return HelloWithRouteResponse;
 }());
 exports.HelloWithRouteResponse = HelloWithRouteResponse;
-var HelloWithTypeResponse = (function () {
+var HelloWithTypeResponse = /** @class */ (function () {
     function HelloWithTypeResponse() {
     }
     return HelloWithTypeResponse;
 }());
 exports.HelloWithTypeResponse = HelloWithTypeResponse;
-var HelloInnerTypesResponse = (function () {
+var HelloInnerTypesResponse = /** @class */ (function () {
     function HelloInnerTypesResponse() {
     }
     return HelloInnerTypesResponse;
 }());
 exports.HelloInnerTypesResponse = HelloInnerTypesResponse;
-var HelloVerbResponse = (function () {
+var HelloVerbResponse = /** @class */ (function () {
     function HelloVerbResponse() {
     }
     return HelloVerbResponse;
 }());
 exports.HelloVerbResponse = HelloVerbResponse;
-var EnumResponse = (function () {
+var EnumResponse = /** @class */ (function () {
     function EnumResponse() {
     }
     return EnumResponse;
 }());
 exports.EnumResponse = EnumResponse;
 // @Route("/hellotypes/{Name}")
-var HelloTypes = (function () {
+var HelloTypes = /** @class */ (function () {
     function HelloTypes() {
     }
     HelloTypes.prototype.createResponse = function () { return new HelloTypes(); };
@@ -16246,50 +16605,58 @@ var HelloTypes = (function () {
 }());
 exports.HelloTypes = HelloTypes;
 // @DataContract
-var HelloZipResponse = (function () {
+var HelloZipResponse = /** @class */ (function () {
     function HelloZipResponse() {
     }
     return HelloZipResponse;
 }());
 exports.HelloZipResponse = HelloZipResponse;
-var PingResponse = (function () {
+var PingResponse = /** @class */ (function () {
     function PingResponse() {
     }
     return PingResponse;
 }());
 exports.PingResponse = PingResponse;
-var RequiresRoleResponse = (function () {
+var RequiresRoleResponse = /** @class */ (function () {
     function RequiresRoleResponse() {
     }
     return RequiresRoleResponse;
 }());
 exports.RequiresRoleResponse = RequiresRoleResponse;
-var SendVerbResponse = (function () {
+var SendVerbResponse = /** @class */ (function () {
     function SendVerbResponse() {
     }
     return SendVerbResponse;
 }());
 exports.SendVerbResponse = SendVerbResponse;
-var GetSessionResponse = (function () {
+var GetSessionResponse = /** @class */ (function () {
     function GetSessionResponse() {
     }
     return GetSessionResponse;
 }());
 exports.GetSessionResponse = GetSessionResponse;
-var StoreLogsResponse = (function () {
+var StoreLogsResponse = /** @class */ (function () {
     function StoreLogsResponse() {
     }
     return StoreLogsResponse;
 }());
 exports.StoreLogsResponse = StoreLogsResponse;
-var TestAuthResponse = (function () {
+var TestAuthResponse = /** @class */ (function () {
     function TestAuthResponse() {
     }
     return TestAuthResponse;
 }());
 exports.TestAuthResponse = TestAuthResponse;
+var RequiresAdmin = /** @class */ (function () {
+    function RequiresAdmin() {
+    }
+    RequiresAdmin.prototype.createResponse = function () { return new RequiresAdmin(); };
+    RequiresAdmin.prototype.getTypeName = function () { return "RequiresAdmin"; };
+    return RequiresAdmin;
+}());
+exports.RequiresAdmin = RequiresAdmin;
 // @Route("/wait/{ForMs}")
-var Wait = (function () {
+var Wait = /** @class */ (function () {
     function Wait() {
     }
     Wait.prototype.createResponse = function () { return new Wait(); };
@@ -16298,7 +16665,7 @@ var Wait = (function () {
 }());
 exports.Wait = Wait;
 // @Route("/echo/types")
-var EchoTypes = (function () {
+var EchoTypes = /** @class */ (function () {
     function EchoTypes() {
     }
     EchoTypes.prototype.createResponse = function () { return new EchoTypes(); };
@@ -16307,7 +16674,7 @@ var EchoTypes = (function () {
 }());
 exports.EchoTypes = EchoTypes;
 // @Route("/echo/collections")
-var EchoCollections = (function () {
+var EchoCollections = /** @class */ (function () {
     function EchoCollections() {
     }
     EchoCollections.prototype.createResponse = function () { return new EchoCollections(); };
@@ -16315,7 +16682,7 @@ var EchoCollections = (function () {
     return EchoCollections;
 }());
 exports.EchoCollections = EchoCollections;
-var EchoComplexTypes = (function () {
+var EchoComplexTypes = /** @class */ (function () {
     function EchoComplexTypes() {
     }
     EchoComplexTypes.prototype.createResponse = function () { return new EchoComplexTypes(); };
@@ -16323,35 +16690,60 @@ var EchoComplexTypes = (function () {
     return EchoComplexTypes;
 }());
 exports.EchoComplexTypes = EchoComplexTypes;
+// @Route("/rockstars", "POST")
+var StoreRockstars = /** @class */ (function (_super) {
+    __extends(StoreRockstars, _super);
+    function StoreRockstars() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    StoreRockstars.prototype.createResponse = function () { return new StoreRockstars(); };
+    StoreRockstars.prototype.getTypeName = function () { return "StoreRockstars"; };
+    return StoreRockstars;
+}(Array));
+exports.StoreRockstars = StoreRockstars;
 // @DataContract
-var AuthenticateResponse = (function () {
+var AuthenticateResponse = /** @class */ (function () {
     function AuthenticateResponse() {
     }
     return AuthenticateResponse;
 }());
 exports.AuthenticateResponse = AuthenticateResponse;
 // @DataContract
-var AssignRolesResponse = (function () {
+var AssignRolesResponse = /** @class */ (function () {
     function AssignRolesResponse() {
     }
     return AssignRolesResponse;
 }());
 exports.AssignRolesResponse = AssignRolesResponse;
 // @DataContract
-var UnAssignRolesResponse = (function () {
+var UnAssignRolesResponse = /** @class */ (function () {
     function UnAssignRolesResponse() {
     }
     return UnAssignRolesResponse;
 }());
 exports.UnAssignRolesResponse = UnAssignRolesResponse;
 // @DataContract
-var QueryResponse = (function () {
+var ConvertSessionToTokenResponse = /** @class */ (function () {
+    function ConvertSessionToTokenResponse() {
+    }
+    return ConvertSessionToTokenResponse;
+}());
+exports.ConvertSessionToTokenResponse = ConvertSessionToTokenResponse;
+// @DataContract
+var GetAccessTokenResponse = /** @class */ (function () {
+    function GetAccessTokenResponse() {
+    }
+    return GetAccessTokenResponse;
+}());
+exports.GetAccessTokenResponse = GetAccessTokenResponse;
+// @DataContract
+var QueryResponse = /** @class */ (function () {
     function QueryResponse() {
     }
     return QueryResponse;
 }());
 exports.QueryResponse = QueryResponse;
-var CustomHttpError = (function () {
+var CustomHttpError = /** @class */ (function () {
     function CustomHttpError() {
     }
     CustomHttpError.prototype.createResponse = function () { return new CustomHttpErrorResponse(); };
@@ -16360,7 +16752,7 @@ var CustomHttpError = (function () {
 }());
 exports.CustomHttpError = CustomHttpError;
 // @Route("/throwhttperror/{Status}")
-var ThrowHttpError = (function () {
+var ThrowHttpError = /** @class */ (function () {
     function ThrowHttpError() {
     }
     return ThrowHttpError;
@@ -16368,7 +16760,7 @@ var ThrowHttpError = (function () {
 exports.ThrowHttpError = ThrowHttpError;
 // @Route("/throw404")
 // @Route("/throw404/{Message}")
-var Throw404 = (function () {
+var Throw404 = /** @class */ (function () {
     function Throw404() {
     }
     return Throw404;
@@ -16376,14 +16768,14 @@ var Throw404 = (function () {
 exports.Throw404 = Throw404;
 // @Route("/throwcustom400")
 // @Route("/throwcustom400/{Message}")
-var ThrowCustom400 = (function () {
+var ThrowCustom400 = /** @class */ (function () {
     function ThrowCustom400() {
     }
     return ThrowCustom400;
 }());
 exports.ThrowCustom400 = ThrowCustom400;
 // @Route("/throw/{Type}")
-var ThrowType = (function () {
+var ThrowType = /** @class */ (function () {
     function ThrowType() {
     }
     ThrowType.prototype.createResponse = function () { return new ThrowTypeResponse(); };
@@ -16392,7 +16784,7 @@ var ThrowType = (function () {
 }());
 exports.ThrowType = ThrowType;
 // @Route("/throwvalidation")
-var ThrowValidation = (function () {
+var ThrowValidation = /** @class */ (function () {
     function ThrowValidation() {
     }
     ThrowValidation.prototype.createResponse = function () { return new ThrowValidationResponse(); };
@@ -16401,7 +16793,7 @@ var ThrowValidation = (function () {
 }());
 exports.ThrowValidation = ThrowValidation;
 // @Route("/throwbusinesserror")
-var ThrowBusinessError = (function () {
+var ThrowBusinessError = /** @class */ (function () {
     function ThrowBusinessError() {
     }
     ThrowBusinessError.prototype.createResponse = function () { return new ThrowBusinessErrorResponse(); };
@@ -16409,7 +16801,7 @@ var ThrowBusinessError = (function () {
     return ThrowBusinessError;
 }());
 exports.ThrowBusinessError = ThrowBusinessError;
-var ExternalOperation = (function () {
+var ExternalOperation = /** @class */ (function () {
     function ExternalOperation() {
     }
     ExternalOperation.prototype.createResponse = function () { return new ExternalOperationResponse(); };
@@ -16417,7 +16809,7 @@ var ExternalOperation = (function () {
     return ExternalOperation;
 }());
 exports.ExternalOperation = ExternalOperation;
-var ExternalOperation2 = (function () {
+var ExternalOperation2 = /** @class */ (function () {
     function ExternalOperation2() {
     }
     ExternalOperation2.prototype.createResponse = function () { return new ExternalOperation2Response(); };
@@ -16425,7 +16817,7 @@ var ExternalOperation2 = (function () {
     return ExternalOperation2;
 }());
 exports.ExternalOperation2 = ExternalOperation2;
-var ExternalOperation3 = (function () {
+var ExternalOperation3 = /** @class */ (function () {
     function ExternalOperation3() {
     }
     ExternalOperation3.prototype.createResponse = function () { return new ExternalReturnTypeResponse(); };
@@ -16433,20 +16825,19 @@ var ExternalOperation3 = (function () {
     return ExternalOperation3;
 }());
 exports.ExternalOperation3 = ExternalOperation3;
-var ExternalOperation4 = (function () {
+var ExternalOperation4 = /** @class */ (function () {
     function ExternalOperation4() {
     }
     return ExternalOperation4;
 }());
 exports.ExternalOperation4 = ExternalOperation4;
-// @Route("/{Path*}")
-var RootPathRoutes = (function () {
+var RootPathRoutes = /** @class */ (function () {
     function RootPathRoutes() {
     }
     return RootPathRoutes;
 }());
 exports.RootPathRoutes = RootPathRoutes;
-var GetAccount = (function () {
+var GetAccount = /** @class */ (function () {
     function GetAccount() {
     }
     GetAccount.prototype.createResponse = function () { return new Account(); };
@@ -16454,7 +16845,7 @@ var GetAccount = (function () {
     return GetAccount;
 }());
 exports.GetAccount = GetAccount;
-var GetProject = (function () {
+var GetProject = /** @class */ (function () {
     function GetProject() {
     }
     GetProject.prototype.createResponse = function () { return new Project(); };
@@ -16463,56 +16854,85 @@ var GetProject = (function () {
 }());
 exports.GetProject = GetProject;
 // @Route("/image-stream")
-var ImageAsStream = (function () {
+var ImageAsStream = /** @class */ (function () {
     function ImageAsStream() {
     }
     return ImageAsStream;
 }());
 exports.ImageAsStream = ImageAsStream;
 // @Route("/image-bytes")
-var ImageAsBytes = (function () {
+var ImageAsBytes = /** @class */ (function () {
     function ImageAsBytes() {
     }
     return ImageAsBytes;
 }());
 exports.ImageAsBytes = ImageAsBytes;
 // @Route("/image-custom")
-var ImageAsCustomResult = (function () {
+var ImageAsCustomResult = /** @class */ (function () {
     function ImageAsCustomResult() {
     }
     return ImageAsCustomResult;
 }());
 exports.ImageAsCustomResult = ImageAsCustomResult;
 // @Route("/image-response")
-var ImageWriteToResponse = (function () {
+var ImageWriteToResponse = /** @class */ (function () {
     function ImageWriteToResponse() {
     }
     return ImageWriteToResponse;
 }());
 exports.ImageWriteToResponse = ImageWriteToResponse;
 // @Route("/image-file")
-var ImageAsFile = (function () {
+var ImageAsFile = /** @class */ (function () {
     function ImageAsFile() {
     }
     return ImageAsFile;
 }());
 exports.ImageAsFile = ImageAsFile;
 // @Route("/image-redirect")
-var ImageAsRedirect = (function () {
+var ImageAsRedirect = /** @class */ (function () {
     function ImageAsRedirect() {
     }
     return ImageAsRedirect;
 }());
 exports.ImageAsRedirect = ImageAsRedirect;
 // @Route("/image-draw/{Name}")
-var DrawImage = (function () {
+var DrawImage = /** @class */ (function () {
     function DrawImage() {
     }
     return DrawImage;
 }());
 exports.DrawImage = DrawImage;
+// @Route("/jwt")
+var CreateJwt = /** @class */ (function (_super) {
+    __extends(CreateJwt, _super);
+    function CreateJwt() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    CreateJwt.prototype.createResponse = function () { return new CreateJwtResponse(); };
+    CreateJwt.prototype.getTypeName = function () { return "CreateJwt"; };
+    return CreateJwt;
+}(AuthUserSession));
+exports.CreateJwt = CreateJwt;
+// @Route("/jwt-refresh")
+var CreateRefreshJwt = /** @class */ (function () {
+    function CreateRefreshJwt() {
+    }
+    CreateRefreshJwt.prototype.createResponse = function () { return new CreateRefreshJwtResponse(); };
+    CreateRefreshJwt.prototype.getTypeName = function () { return "CreateRefreshJwt"; };
+    return CreateRefreshJwt;
+}());
+exports.CreateRefreshJwt = CreateRefreshJwt;
+// @Route("/logs")
+var ViewLogs = /** @class */ (function () {
+    function ViewLogs() {
+    }
+    ViewLogs.prototype.createResponse = function () { return ""; };
+    ViewLogs.prototype.getTypeName = function () { return "ViewLogs"; };
+    return ViewLogs;
+}());
+exports.ViewLogs = ViewLogs;
 // @Route("/metadatatest")
-var MetadataTest = (function () {
+var MetadataTest = /** @class */ (function () {
     function MetadataTest() {
     }
     MetadataTest.prototype.createResponse = function () { return new MetadataTestResponse(); };
@@ -16521,7 +16941,7 @@ var MetadataTest = (function () {
 }());
 exports.MetadataTest = MetadataTest;
 // @Route("/metadatatest-array")
-var MetadataTestArray = (function () {
+var MetadataTestArray = /** @class */ (function () {
     function MetadataTestArray() {
     }
     MetadataTestArray.prototype.createResponse = function () { return new Array(); };
@@ -16531,7 +16951,7 @@ var MetadataTestArray = (function () {
 exports.MetadataTestArray = MetadataTestArray;
 // @Route("/example", "GET")
 // @DataContract
-var GetExample = (function () {
+var GetExample = /** @class */ (function () {
     function GetExample() {
     }
     GetExample.prototype.createResponse = function () { return new GetExampleResponse(); };
@@ -16540,7 +16960,7 @@ var GetExample = (function () {
 }());
 exports.GetExample = GetExample;
 // @Route("/randomids")
-var GetRandomIds = (function () {
+var GetRandomIds = /** @class */ (function () {
     function GetRandomIds() {
     }
     GetRandomIds.prototype.createResponse = function () { return new GetRandomIdsResponse(); };
@@ -16549,15 +16969,29 @@ var GetRandomIds = (function () {
 }());
 exports.GetRandomIds = GetRandomIds;
 // @Route("/textfile-test")
-var TextFileTest = (function () {
+var TextFileTest = /** @class */ (function () {
     function TextFileTest() {
     }
     return TextFileTest;
 }());
 exports.TextFileTest = TextFileTest;
+// @Route("/return/text")
+var ReturnText = /** @class */ (function () {
+    function ReturnText() {
+    }
+    return ReturnText;
+}());
+exports.ReturnText = ReturnText;
+// @Route("/return/html")
+var ReturnHtml = /** @class */ (function () {
+    function ReturnHtml() {
+    }
+    return ReturnHtml;
+}());
+exports.ReturnHtml = ReturnHtml;
 // @Route("/hello")
 // @Route("/hello/{Name}")
-var Hello = (function () {
+var Hello = /** @class */ (function () {
     function Hello() {
     }
     Hello.prototype.createResponse = function () { return new HelloResponse(); };
@@ -16569,7 +17003,7 @@ exports.Hello = Hello;
 * Description on HelloAll type
 */
 // @DataContract
-var HelloAnnotated = (function () {
+var HelloAnnotated = /** @class */ (function () {
     function HelloAnnotated() {
     }
     HelloAnnotated.prototype.createResponse = function () { return new HelloAnnotatedResponse(); };
@@ -16577,7 +17011,7 @@ var HelloAnnotated = (function () {
     return HelloAnnotated;
 }());
 exports.HelloAnnotated = HelloAnnotated;
-var HelloWithNestedClass = (function () {
+var HelloWithNestedClass = /** @class */ (function () {
     function HelloWithNestedClass() {
     }
     HelloWithNestedClass.prototype.createResponse = function () { return new HelloResponse(); };
@@ -16585,7 +17019,7 @@ var HelloWithNestedClass = (function () {
     return HelloWithNestedClass;
 }());
 exports.HelloWithNestedClass = HelloWithNestedClass;
-var HelloList = (function () {
+var HelloList = /** @class */ (function () {
     function HelloList() {
     }
     HelloList.prototype.createResponse = function () { return new Array(); };
@@ -16593,7 +17027,7 @@ var HelloList = (function () {
     return HelloList;
 }());
 exports.HelloList = HelloList;
-var HelloArray = (function () {
+var HelloArray = /** @class */ (function () {
     function HelloArray() {
     }
     HelloArray.prototype.createResponse = function () { return new Array(); };
@@ -16601,13 +17035,13 @@ var HelloArray = (function () {
     return HelloArray;
 }());
 exports.HelloArray = HelloArray;
-var HelloWithEnum = (function () {
+var HelloWithEnum = /** @class */ (function () {
     function HelloWithEnum() {
     }
     return HelloWithEnum;
 }());
 exports.HelloWithEnum = HelloWithEnum;
-var RestrictedAttributes = (function () {
+var RestrictedAttributes = /** @class */ (function () {
     function RestrictedAttributes() {
     }
     return RestrictedAttributes;
@@ -16617,17 +17051,17 @@ exports.RestrictedAttributes = RestrictedAttributes;
 * AllowedAttributes Description
 */
 // @Route("/allowed-attributes", "GET")
-// @Api("AllowedAttributes Description")
-// @ApiResponse(400, "Your request was not understood")
+// @Api(Description="AllowedAttributes Description")
+// @ApiResponse(Description="Your request was not understood", StatusCode=400)
 // @DataContract
-var AllowedAttributes = (function () {
+var AllowedAttributes = /** @class */ (function () {
     function AllowedAttributes() {
     }
     return AllowedAttributes;
 }());
 exports.AllowedAttributes = AllowedAttributes;
 // @Route("/all-types")
-var HelloAllTypes = (function () {
+var HelloAllTypes = /** @class */ (function () {
     function HelloAllTypes() {
     }
     HelloAllTypes.prototype.createResponse = function () { return new HelloAllTypesResponse(); };
@@ -16635,7 +17069,7 @@ var HelloAllTypes = (function () {
     return HelloAllTypes;
 }());
 exports.HelloAllTypes = HelloAllTypes;
-var HelloString = (function () {
+var HelloString = /** @class */ (function () {
     function HelloString() {
     }
     HelloString.prototype.createResponse = function () { return ""; };
@@ -16643,14 +17077,14 @@ var HelloString = (function () {
     return HelloString;
 }());
 exports.HelloString = HelloString;
-var HelloVoid = (function () {
+var HelloVoid = /** @class */ (function () {
     function HelloVoid() {
     }
     return HelloVoid;
 }());
 exports.HelloVoid = HelloVoid;
 // @DataContract
-var HelloWithDataContract = (function () {
+var HelloWithDataContract = /** @class */ (function () {
     function HelloWithDataContract() {
     }
     HelloWithDataContract.prototype.createResponse = function () { return new HelloWithDataContractResponse(); };
@@ -16661,7 +17095,7 @@ exports.HelloWithDataContract = HelloWithDataContract;
 /**
 * Description on HelloWithDescription type
 */
-var HelloWithDescription = (function () {
+var HelloWithDescription = /** @class */ (function () {
     function HelloWithDescription() {
     }
     HelloWithDescription.prototype.createResponse = function () { return new HelloWithDescriptionResponse(); };
@@ -16669,7 +17103,7 @@ var HelloWithDescription = (function () {
     return HelloWithDescription;
 }());
 exports.HelloWithDescription = HelloWithDescription;
-var HelloWithInheritance = (function (_super) {
+var HelloWithInheritance = /** @class */ (function (_super) {
     __extends(HelloWithInheritance, _super);
     function HelloWithInheritance() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -16679,7 +17113,7 @@ var HelloWithInheritance = (function (_super) {
     return HelloWithInheritance;
 }(HelloBase));
 exports.HelloWithInheritance = HelloWithInheritance;
-var HelloWithGenericInheritance = (function (_super) {
+var HelloWithGenericInheritance = /** @class */ (function (_super) {
     __extends(HelloWithGenericInheritance, _super);
     function HelloWithGenericInheritance() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -16687,7 +17121,7 @@ var HelloWithGenericInheritance = (function (_super) {
     return HelloWithGenericInheritance;
 }(HelloBase_1));
 exports.HelloWithGenericInheritance = HelloWithGenericInheritance;
-var HelloWithGenericInheritance2 = (function (_super) {
+var HelloWithGenericInheritance2 = /** @class */ (function (_super) {
     __extends(HelloWithGenericInheritance2, _super);
     function HelloWithGenericInheritance2() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -16695,7 +17129,7 @@ var HelloWithGenericInheritance2 = (function (_super) {
     return HelloWithGenericInheritance2;
 }(HelloBase_1));
 exports.HelloWithGenericInheritance2 = HelloWithGenericInheritance2;
-var HelloWithNestedInheritance = (function (_super) {
+var HelloWithNestedInheritance = /** @class */ (function (_super) {
     __extends(HelloWithNestedInheritance, _super);
     function HelloWithNestedInheritance() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -16703,7 +17137,7 @@ var HelloWithNestedInheritance = (function (_super) {
     return HelloWithNestedInheritance;
 }(HelloBase_1));
 exports.HelloWithNestedInheritance = HelloWithNestedInheritance;
-var HelloWithReturn = (function () {
+var HelloWithReturn = /** @class */ (function () {
     function HelloWithReturn() {
     }
     HelloWithReturn.prototype.createResponse = function () { return new HelloWithAlternateReturnResponse(); };
@@ -16712,7 +17146,7 @@ var HelloWithReturn = (function () {
 }());
 exports.HelloWithReturn = HelloWithReturn;
 // @Route("/helloroute")
-var HelloWithRoute = (function () {
+var HelloWithRoute = /** @class */ (function () {
     function HelloWithRoute() {
     }
     HelloWithRoute.prototype.createResponse = function () { return new HelloWithRouteResponse(); };
@@ -16720,7 +17154,7 @@ var HelloWithRoute = (function () {
     return HelloWithRoute;
 }());
 exports.HelloWithRoute = HelloWithRoute;
-var HelloWithType = (function () {
+var HelloWithType = /** @class */ (function () {
     function HelloWithType() {
     }
     HelloWithType.prototype.createResponse = function () { return new HelloWithTypeResponse(); };
@@ -16728,13 +17162,13 @@ var HelloWithType = (function () {
     return HelloWithType;
 }());
 exports.HelloWithType = HelloWithType;
-var HelloInterface = (function () {
+var HelloInterface = /** @class */ (function () {
     function HelloInterface() {
     }
     return HelloInterface;
 }());
 exports.HelloInterface = HelloInterface;
-var HelloInnerTypes = (function () {
+var HelloInnerTypes = /** @class */ (function () {
     function HelloInnerTypes() {
     }
     HelloInnerTypes.prototype.createResponse = function () { return new HelloInnerTypesResponse(); };
@@ -16742,13 +17176,13 @@ var HelloInnerTypes = (function () {
     return HelloInnerTypes;
 }());
 exports.HelloInnerTypes = HelloInnerTypes;
-var HelloBuiltin = (function () {
+var HelloBuiltin = /** @class */ (function () {
     function HelloBuiltin() {
     }
     return HelloBuiltin;
 }());
 exports.HelloBuiltin = HelloBuiltin;
-var HelloGet = (function () {
+var HelloGet = /** @class */ (function () {
     function HelloGet() {
     }
     HelloGet.prototype.createResponse = function () { return new HelloVerbResponse(); };
@@ -16756,7 +17190,7 @@ var HelloGet = (function () {
     return HelloGet;
 }());
 exports.HelloGet = HelloGet;
-var HelloPost = (function (_super) {
+var HelloPost = /** @class */ (function (_super) {
     __extends(HelloPost, _super);
     function HelloPost() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -16766,7 +17200,7 @@ var HelloPost = (function (_super) {
     return HelloPost;
 }(HelloBase));
 exports.HelloPost = HelloPost;
-var HelloPut = (function () {
+var HelloPut = /** @class */ (function () {
     function HelloPut() {
     }
     HelloPut.prototype.createResponse = function () { return new HelloVerbResponse(); };
@@ -16774,7 +17208,7 @@ var HelloPut = (function () {
     return HelloPut;
 }());
 exports.HelloPut = HelloPut;
-var HelloDelete = (function () {
+var HelloDelete = /** @class */ (function () {
     function HelloDelete() {
     }
     HelloDelete.prototype.createResponse = function () { return new HelloVerbResponse(); };
@@ -16782,7 +17216,7 @@ var HelloDelete = (function () {
     return HelloDelete;
 }());
 exports.HelloDelete = HelloDelete;
-var HelloPatch = (function () {
+var HelloPatch = /** @class */ (function () {
     function HelloPatch() {
     }
     HelloPatch.prototype.createResponse = function () { return new HelloVerbResponse(); };
@@ -16790,7 +17224,7 @@ var HelloPatch = (function () {
     return HelloPatch;
 }());
 exports.HelloPatch = HelloPatch;
-var HelloReturnVoid = (function () {
+var HelloReturnVoid = /** @class */ (function () {
     function HelloReturnVoid() {
     }
     HelloReturnVoid.prototype.createResponse = function () { };
@@ -16798,7 +17232,7 @@ var HelloReturnVoid = (function () {
     return HelloReturnVoid;
 }());
 exports.HelloReturnVoid = HelloReturnVoid;
-var EnumRequest = (function () {
+var EnumRequest = /** @class */ (function () {
     function EnumRequest() {
     }
     EnumRequest.prototype.createResponse = function () { return new EnumResponse(); };
@@ -16808,7 +17242,7 @@ var EnumRequest = (function () {
 exports.EnumRequest = EnumRequest;
 // @Route("/hellozip")
 // @DataContract
-var HelloZip = (function () {
+var HelloZip = /** @class */ (function () {
     function HelloZip() {
     }
     HelloZip.prototype.createResponse = function () { return new HelloZipResponse(); };
@@ -16817,7 +17251,7 @@ var HelloZip = (function () {
 }());
 exports.HelloZip = HelloZip;
 // @Route("/ping")
-var Ping = (function () {
+var Ping = /** @class */ (function () {
     function Ping() {
     }
     Ping.prototype.createResponse = function () { return new PingResponse(); };
@@ -16826,14 +17260,14 @@ var Ping = (function () {
 }());
 exports.Ping = Ping;
 // @Route("/reset-connections")
-var ResetConnections = (function () {
+var ResetConnections = /** @class */ (function () {
     function ResetConnections() {
     }
     return ResetConnections;
 }());
 exports.ResetConnections = ResetConnections;
 // @Route("/requires-role")
-var RequiresRole = (function () {
+var RequiresRole = /** @class */ (function () {
     function RequiresRole() {
     }
     RequiresRole.prototype.createResponse = function () { return new RequiresRoleResponse(); };
@@ -16842,7 +17276,7 @@ var RequiresRole = (function () {
 }());
 exports.RequiresRole = RequiresRole;
 // @Route("/return/string")
-var ReturnString = (function () {
+var ReturnString = /** @class */ (function () {
     function ReturnString() {
     }
     ReturnString.prototype.createResponse = function () { return ""; };
@@ -16851,7 +17285,7 @@ var ReturnString = (function () {
 }());
 exports.ReturnString = ReturnString;
 // @Route("/return/bytes")
-var ReturnBytes = (function () {
+var ReturnBytes = /** @class */ (function () {
     function ReturnBytes() {
     }
     ReturnBytes.prototype.createResponse = function () { return new Uint8Array(0); };
@@ -16860,7 +17294,7 @@ var ReturnBytes = (function () {
 }());
 exports.ReturnBytes = ReturnBytes;
 // @Route("/return/stream")
-var ReturnStream = (function () {
+var ReturnStream = /** @class */ (function () {
     function ReturnStream() {
     }
     ReturnStream.prototype.createResponse = function () { return new Blob(); };
@@ -16869,7 +17303,7 @@ var ReturnStream = (function () {
 }());
 exports.ReturnStream = ReturnStream;
 // @Route("/Request1", "GET")
-var GetRequest1 = (function () {
+var GetRequest1 = /** @class */ (function () {
     function GetRequest1() {
     }
     GetRequest1.prototype.createResponse = function () { return new Array(); };
@@ -16878,7 +17312,7 @@ var GetRequest1 = (function () {
 }());
 exports.GetRequest1 = GetRequest1;
 // @Route("/Request2", "GET")
-var GetRequest2 = (function () {
+var GetRequest2 = /** @class */ (function () {
     function GetRequest2() {
     }
     GetRequest2.prototype.createResponse = function () { return new Array(); };
@@ -16886,7 +17320,34 @@ var GetRequest2 = (function () {
     return GetRequest2;
 }());
 exports.GetRequest2 = GetRequest2;
-var SendDefault = (function () {
+// @Route("/sendjson")
+var SendJson = /** @class */ (function () {
+    function SendJson() {
+    }
+    SendJson.prototype.createResponse = function () { return ""; };
+    SendJson.prototype.getTypeName = function () { return "SendJson"; };
+    return SendJson;
+}());
+exports.SendJson = SendJson;
+// @Route("/sendtext")
+var SendText = /** @class */ (function () {
+    function SendText() {
+    }
+    SendText.prototype.createResponse = function () { return ""; };
+    SendText.prototype.getTypeName = function () { return "SendText"; };
+    return SendText;
+}());
+exports.SendText = SendText;
+// @Route("/sendraw")
+var SendRaw = /** @class */ (function () {
+    function SendRaw() {
+    }
+    SendRaw.prototype.createResponse = function () { return new Uint8Array(0); };
+    SendRaw.prototype.getTypeName = function () { return "SendRaw"; };
+    return SendRaw;
+}());
+exports.SendRaw = SendRaw;
+var SendDefault = /** @class */ (function () {
     function SendDefault() {
     }
     SendDefault.prototype.createResponse = function () { return new SendVerbResponse(); };
@@ -16895,7 +17356,7 @@ var SendDefault = (function () {
 }());
 exports.SendDefault = SendDefault;
 // @Route("/sendrestget/{Id}", "GET")
-var SendRestGet = (function () {
+var SendRestGet = /** @class */ (function () {
     function SendRestGet() {
     }
     SendRestGet.prototype.createResponse = function () { return new SendVerbResponse(); };
@@ -16903,7 +17364,7 @@ var SendRestGet = (function () {
     return SendRestGet;
 }());
 exports.SendRestGet = SendRestGet;
-var SendGet = (function () {
+var SendGet = /** @class */ (function () {
     function SendGet() {
     }
     SendGet.prototype.createResponse = function () { return new SendVerbResponse(); };
@@ -16911,7 +17372,7 @@ var SendGet = (function () {
     return SendGet;
 }());
 exports.SendGet = SendGet;
-var SendPost = (function () {
+var SendPost = /** @class */ (function () {
     function SendPost() {
     }
     SendPost.prototype.createResponse = function () { return new SendVerbResponse(); };
@@ -16919,7 +17380,7 @@ var SendPost = (function () {
     return SendPost;
 }());
 exports.SendPost = SendPost;
-var SendPut = (function () {
+var SendPut = /** @class */ (function () {
     function SendPut() {
     }
     SendPut.prototype.createResponse = function () { return new SendVerbResponse(); };
@@ -16927,8 +17388,16 @@ var SendPut = (function () {
     return SendPut;
 }());
 exports.SendPut = SendPut;
+var SendReturnVoid = /** @class */ (function () {
+    function SendReturnVoid() {
+    }
+    SendReturnVoid.prototype.createResponse = function () { };
+    SendReturnVoid.prototype.getTypeName = function () { return "SendReturnVoid"; };
+    return SendReturnVoid;
+}());
+exports.SendReturnVoid = SendReturnVoid;
 // @Route("/session")
-var GetSession = (function () {
+var GetSession = /** @class */ (function () {
     function GetSession() {
     }
     GetSession.prototype.createResponse = function () { return new GetSessionResponse(); };
@@ -16937,7 +17406,7 @@ var GetSession = (function () {
 }());
 exports.GetSession = GetSession;
 // @Route("/session/edit/{CustomName}")
-var UpdateSession = (function () {
+var UpdateSession = /** @class */ (function () {
     function UpdateSession() {
     }
     UpdateSession.prototype.createResponse = function () { return new GetSessionResponse(); };
@@ -16945,7 +17414,7 @@ var UpdateSession = (function () {
     return UpdateSession;
 }());
 exports.UpdateSession = UpdateSession;
-var StoreLogs = (function () {
+var StoreLogs = /** @class */ (function () {
     function StoreLogs() {
     }
     StoreLogs.prototype.createResponse = function () { return new StoreLogsResponse(); };
@@ -16954,7 +17423,7 @@ var StoreLogs = (function () {
 }());
 exports.StoreLogs = StoreLogs;
 // @Route("/testauth")
-var TestAuth = (function () {
+var TestAuth = /** @class */ (function () {
     function TestAuth() {
     }
     TestAuth.prototype.createResponse = function () { return new TestAuthResponse(); };
@@ -16962,15 +17431,33 @@ var TestAuth = (function () {
     return TestAuth;
 }());
 exports.TestAuth = TestAuth;
+// @Route("/testdata/AllTypes")
+var TestDataAllTypes = /** @class */ (function () {
+    function TestDataAllTypes() {
+    }
+    TestDataAllTypes.prototype.createResponse = function () { return new AllTypes(); };
+    TestDataAllTypes.prototype.getTypeName = function () { return "TestDataAllTypes"; };
+    return TestDataAllTypes;
+}());
+exports.TestDataAllTypes = TestDataAllTypes;
+// @Route("/testdata/AllCollectionTypes")
+var TestDataAllCollectionTypes = /** @class */ (function () {
+    function TestDataAllCollectionTypes() {
+    }
+    TestDataAllCollectionTypes.prototype.createResponse = function () { return new AllCollectionTypes(); };
+    TestDataAllCollectionTypes.prototype.getTypeName = function () { return "TestDataAllCollectionTypes"; };
+    return TestDataAllCollectionTypes;
+}());
+exports.TestDataAllCollectionTypes = TestDataAllCollectionTypes;
 // @Route("/void-response")
-var TestVoidResponse = (function () {
+var TestVoidResponse = /** @class */ (function () {
     function TestVoidResponse() {
     }
     return TestVoidResponse;
 }());
 exports.TestVoidResponse = TestVoidResponse;
 // @Route("/null-response")
-var TestNullResponse = (function () {
+var TestNullResponse = /** @class */ (function () {
     function TestNullResponse() {
     }
     return TestNullResponse;
@@ -16981,7 +17468,7 @@ exports.TestNullResponse = TestNullResponse;
 // @Route("/authenticate")
 // @Route("/authenticate/{provider}")
 // @DataContract
-var Authenticate = (function () {
+var Authenticate = /** @class */ (function () {
     function Authenticate() {
     }
     Authenticate.prototype.createResponse = function () { return new AuthenticateResponse(); };
@@ -16991,7 +17478,7 @@ var Authenticate = (function () {
 exports.Authenticate = Authenticate;
 // @Route("/assignroles")
 // @DataContract
-var AssignRoles = (function () {
+var AssignRoles = /** @class */ (function () {
     function AssignRoles() {
     }
     AssignRoles.prototype.createResponse = function () { return new AssignRolesResponse(); };
@@ -17001,7 +17488,7 @@ var AssignRoles = (function () {
 exports.AssignRoles = AssignRoles;
 // @Route("/unassignroles")
 // @DataContract
-var UnAssignRoles = (function () {
+var UnAssignRoles = /** @class */ (function () {
     function UnAssignRoles() {
     }
     UnAssignRoles.prototype.createResponse = function () { return new UnAssignRolesResponse(); };
@@ -17009,7 +17496,27 @@ var UnAssignRoles = (function () {
     return UnAssignRoles;
 }());
 exports.UnAssignRoles = UnAssignRoles;
-var QueryPocoBase = (function (_super) {
+// @Route("/session-to-token")
+// @DataContract
+var ConvertSessionToToken = /** @class */ (function () {
+    function ConvertSessionToToken() {
+    }
+    ConvertSessionToToken.prototype.createResponse = function () { return new ConvertSessionToTokenResponse(); };
+    ConvertSessionToToken.prototype.getTypeName = function () { return "ConvertSessionToToken"; };
+    return ConvertSessionToToken;
+}());
+exports.ConvertSessionToToken = ConvertSessionToToken;
+// @Route("/access-token")
+// @DataContract
+var GetAccessToken = /** @class */ (function () {
+    function GetAccessToken() {
+    }
+    GetAccessToken.prototype.createResponse = function () { return new GetAccessTokenResponse(); };
+    GetAccessToken.prototype.getTypeName = function () { return "GetAccessToken"; };
+    return GetAccessToken;
+}());
+exports.GetAccessToken = GetAccessToken;
+var QueryPocoBase = /** @class */ (function (_super) {
     __extends(QueryPocoBase, _super);
     function QueryPocoBase() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -17017,9 +17524,9 @@ var QueryPocoBase = (function (_super) {
     QueryPocoBase.prototype.createResponse = function () { return new QueryResponse(); };
     QueryPocoBase.prototype.getTypeName = function () { return "QueryPocoBase"; };
     return QueryPocoBase;
-}(QueryBase_1));
+}(QueryDb_1));
 exports.QueryPocoBase = QueryPocoBase;
-var QueryPocoIntoBase = (function (_super) {
+var QueryPocoIntoBase = /** @class */ (function (_super) {
     __extends(QueryPocoIntoBase, _super);
     function QueryPocoIntoBase() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -17027,10 +17534,10 @@ var QueryPocoIntoBase = (function (_super) {
     QueryPocoIntoBase.prototype.createResponse = function () { return new QueryResponse(); };
     QueryPocoIntoBase.prototype.getTypeName = function () { return "QueryPocoIntoBase"; };
     return QueryPocoIntoBase;
-}(QueryBase_2));
+}(QueryDb_2));
 exports.QueryPocoIntoBase = QueryPocoIntoBase;
-// @Route("/rockstars")
-var QueryRockstars = (function (_super) {
+// @Route("/rockstars", "GET")
+var QueryRockstars = /** @class */ (function (_super) {
     __extends(QueryRockstars, _super);
     function QueryRockstars() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -17038,7 +17545,7 @@ var QueryRockstars = (function (_super) {
     QueryRockstars.prototype.createResponse = function () { return new QueryResponse(); };
     QueryRockstars.prototype.getTypeName = function () { return "QueryRockstars"; };
     return QueryRockstars;
-}(QueryBase_1));
+}(QueryDb_1));
 exports.QueryRockstars = QueryRockstars;
 
 
@@ -17063,6 +17570,8 @@ for (var i = 0, len = code.length; i < len; ++i) {
   revLookup[code.charCodeAt(i)] = i
 }
 
+// Support decoding URL-safe base64 strings, as Node.js does.
+// See: https://en.wikipedia.org/wiki/Base64#URL_applications
 revLookup['-'.charCodeAt(0)] = 62
 revLookup['_'.charCodeAt(0)] = 63
 
@@ -17082,22 +17591,22 @@ function placeHoldersCount (b64) {
 
 function byteLength (b64) {
   // base64 is 4/3 + up to two characters of the original data
-  return b64.length * 3 / 4 - placeHoldersCount(b64)
+  return (b64.length * 3 / 4) - placeHoldersCount(b64)
 }
 
 function toByteArray (b64) {
-  var i, j, l, tmp, placeHolders, arr
+  var i, l, tmp, placeHolders, arr
   var len = b64.length
   placeHolders = placeHoldersCount(b64)
 
-  arr = new Arr(len * 3 / 4 - placeHolders)
+  arr = new Arr((len * 3 / 4) - placeHolders)
 
   // if there are placeholders, only get up to the last complete 4 chars
   l = placeHolders > 0 ? len - 4 : len
 
   var L = 0
 
-  for (i = 0, j = 0; i < l; i += 4, j += 3) {
+  for (i = 0; i < l; i += 4) {
     tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)]
     arr[L++] = (tmp >> 16) & 0xFF
     arr[L++] = (tmp >> 8) & 0xFF
@@ -17124,7 +17633,7 @@ function encodeChunk (uint8, start, end) {
   var tmp
   var output = []
   for (var i = start; i < end; i += 3) {
-    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
+    tmp = ((uint8[i] << 16) & 0xFF0000) + ((uint8[i + 1] << 8) & 0xFF00) + (uint8[i + 2] & 0xFF)
     output.push(tripletToBase64(tmp))
   }
   return output.join('')
@@ -18979,7 +19488,7 @@ module.exports = globalObj.fetch.bind(globalObj);
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
-  var eLen = nBytes * 8 - mLen - 1
+  var eLen = (nBytes * 8) - mLen - 1
   var eMax = (1 << eLen) - 1
   var eBias = eMax >> 1
   var nBits = -7
@@ -18992,12 +19501,12 @@ exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   e = s & ((1 << (-nBits)) - 1)
   s >>= (-nBits)
   nBits += eLen
-  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+  for (; nBits > 0; e = (e * 256) + buffer[offset + i], i += d, nBits -= 8) {}
 
   m = e & ((1 << (-nBits)) - 1)
   e >>= (-nBits)
   nBits += mLen
-  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+  for (; nBits > 0; m = (m * 256) + buffer[offset + i], i += d, nBits -= 8) {}
 
   if (e === 0) {
     e = 1 - eBias
@@ -19012,7 +19521,7 @@ exports.read = function (buffer, offset, isLE, mLen, nBytes) {
 
 exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   var e, m, c
-  var eLen = nBytes * 8 - mLen - 1
+  var eLen = (nBytes * 8) - mLen - 1
   var eMax = (1 << eLen) - 1
   var eBias = eMax >> 1
   var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
@@ -19045,7 +19554,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
       m = 0
       e = eMax
     } else if (e + eBias >= 1) {
-      m = (value * c - 1) * Math.pow(2, mLen)
+      m = ((value * c) - 1) * Math.pow(2, mLen)
       e = e + eBias
     } else {
       m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
@@ -19248,6 +19757,10 @@ process.off = noop;
 process.removeListener = noop;
 process.removeAllListeners = noop;
 process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
 
 process.binding = function (name) {
     throw new Error('process.binding is not supported');
@@ -19268,9 +19781,9 @@ process.umask = function() { return 0; };
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var $ = __webpack_require__(0);
-__webpack_require__(2);
+__webpack_require__(3);
 __webpack_require__(4);
-var servicestack_client_1 = __webpack_require__(3);
+var client_1 = __webpack_require__(2);
 //import { JsonServiceClient } from "./JsonServiceClient";
 var Test_dtos_1 = __webpack_require__(5);
 function createUrl(path, params) {
@@ -19280,7 +19793,7 @@ function createUrl(path, params) {
     }
     return path;
 }
-var client = new servicestack_client_1.JsonServiceClient("/");
+var client = new client_1.JsonServiceClient("/");
 $(document).bindHandlers({
     sayHello: function () {
         var request = new Test_dtos_1.Hello();
@@ -19343,7 +19856,7 @@ $(document).bindHandlers({
         });
     },
     basicAuth: function () {
-        var testAuth = new servicestack_client_1.JsonServiceClient("/");
+        var testAuth = new client_1.JsonServiceClient("/");
         testAuth.userName = $("#txtBasicAuthUser").val();
         testAuth.password = $("#txtBasicAuthPass").val();
         testAuth.post(new Test_dtos_1.TestAuth())
@@ -19361,6 +19874,21 @@ $(document).bindHandlers({
 function handleError(e, id) {
     console.log('error: ', e);
     $(id).html("Error: " + JSON.stringify(e.responseStatus));
+}
+var $results = document.getElementById("results");
+function show(r) {
+    console.log(r);
+    $results.innerHTML += "<h3>" + JSON.stringify(r) + "</h3>";
+}
+function testClient() {
+    client.get(Object.assign(new Test_dtos_1.Hello(), { name: "GET" })).then(show);
+    client.post(Object.assign(new Test_dtos_1.Hello(), { name: "POST" })).then(show);
+    client.put(Object.assign(new Test_dtos_1.Hello(), { name: "PUT" })).then(show);
+}
+;
+if ($results) {
+    console.log('testClient()');
+    testClient();
 }
 
 
@@ -19728,7 +20256,10 @@ function handleError(e, id) {
 
   function parseHeaders(rawHeaders) {
     var headers = new Headers()
-    rawHeaders.split(/\r?\n/).forEach(function(line) {
+    // Replace instances of \r\n and \n followed by at least one space or horizontal tab with a space
+    // https://tools.ietf.org/html/rfc7230#section-3.2
+    var preProcessedHeaders = rawHeaders.replace(/\r?\n[\t ]+/g, ' ')
+    preProcessedHeaders.split(/\r?\n/).forEach(function(line) {
       var parts = line.split(':')
       var key = parts.shift().trim()
       if (key) {
@@ -19747,7 +20278,7 @@ function handleError(e, id) {
     }
 
     this.type = 'default'
-    this.status = 'status' in options ? options.status : 200
+    this.status = options.status === undefined ? 200 : options.status
     this.ok = this.status >= 200 && this.status < 300
     this.statusText = 'statusText' in options ? options.statusText : 'OK'
     this.headers = new Headers(options.headers)
@@ -19814,6 +20345,8 @@ function handleError(e, id) {
 
       if (request.credentials === 'include') {
         xhr.withCredentials = true
+      } else if (request.credentials === 'omit') {
+        xhr.withCredentials = false
       }
 
       if ('responseType' in xhr && support.blob) {

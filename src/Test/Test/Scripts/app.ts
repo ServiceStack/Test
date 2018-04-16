@@ -1,7 +1,7 @@
 ﻿import * as $ from "jquery";
 import "es6-shim";
 import "ss-utils"; 
-import { JsonServiceClient } from "servicestack-client";
+import { JsonServiceClient } from "@servicestack/client";
 //import { JsonServiceClient } from "./JsonServiceClient";
 
 import {
@@ -111,3 +111,22 @@ function handleError(e, id) {
     console.log('error: ', e);
     $(id).html("Error: " + JSON.stringify(e.responseStatus));
 }
+
+var $results = document.getElementById("results");
+
+function show(r) {
+    console.log(r);
+    $results.innerHTML += "<h3>" + JSON.stringify(r) + "</h3>";
+}
+
+function testClient() {
+    client.get(Object.assign(new Hello(), { name: "GET" })).then(show);
+    client.post(Object.assign(new Hello(), { name: "POST" })).then(show);
+    client.put(Object.assign(new Hello(), { name: "PUT" })).then(show);
+};
+
+if ($results) {
+    console.log('testClient()');
+    testClient();
+}
+
