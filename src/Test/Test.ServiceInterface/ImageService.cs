@@ -10,31 +10,31 @@ using ServiceStack.Web;
 namespace Test.ServiceInterface
 {
     [Route("/image-stream")]
-    public class ImageAsStream
+    public class ImageAsStream : IReturn<Stream>
     {
         public string Format { get; set; }
     }
 
     [Route("/image-bytes")]
-    public class ImageAsBytes
+    public class ImageAsBytes : IReturn<byte[]>
     {
         public string Format { get; set; }
     }
 
     [Route("/image-custom")]
-    public class ImageAsCustomResult
+    public class ImageAsCustomResult : IReturn<byte[]>
     {
         public string Format { get; set; }
     }
 
     [Route("/image-response")]
-    public class ImageWriteToResponse
+    public class ImageWriteToResponse : IReturn<byte[]>
     {
         public string Format { get; set; }
     }
 
     [Route("/image-file")]
-    public class ImageAsFile
+    public class ImageAsFile : IReturn<byte[]>
     {
         public string Format { get; set; }
     }
@@ -251,7 +251,7 @@ namespace Test.ServiceInterface
             else if (ImageFormat.Bmp.Equals(imageFormat))
                 ext = "bmp";
 
-            return "image/{0}".Fmt(ext);
+            return $"image/{ext}";
         }
     }
 }
