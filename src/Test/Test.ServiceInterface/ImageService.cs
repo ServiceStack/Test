@@ -45,8 +45,8 @@ namespace Test.ServiceInterface
         public string Format { get; set; }
     }
 
-    [Route("/image-draw/{Name}")]
-    public class DrawImage
+    [Route("/hello-image/{Name}")]
+    public class HelloImage : IReturn<byte[]>
     {
         public string Name { get; set; }
         public string Format { get; set; }
@@ -54,6 +54,7 @@ namespace Test.ServiceInterface
         public int? Width { get; set; }
         public int? Height { get; set; }
         public int? FontSize { get; set; }
+        public string FontFamily { get; set; }
         public string Foreground { get; set; }
         public string Background { get; set; }
     }
@@ -129,20 +130,24 @@ namespace Test.ServiceInterface
             return HttpResult.Redirect("/img/" + fileName);
         }
 
-        public Stream Get(DrawImage request)
+        Color ToColor(string color) => color.StartsWith("#")
+            ? ColorTranslator.FromHtml(color)
+            : Color.FromName(color);
+
+        public Stream Get(HelloImage request)
         {
             var width = request.Width.GetValueOrDefault(640);
             var height = request.Height.GetValueOrDefault(360);
-            var bgColor = request.Background != null ? Color.FromName(request.Background) : Color.ForestGreen;
-            var fgColor = request.Foreground != null ? Color.FromName(request.Foreground) : Color.White;
+            var bgColor = request.Background != null ? ToColor(request.Background) : Color.ForestGreen;
+            var fgColor = request.Foreground != null ? ToColor(request.Foreground) : Color.White;
 
             var image = new Bitmap(width, height);
             using (var g = Graphics.FromImage(image))
             {
                 g.Clear(bgColor);
 
-                var drawString = "Hello, {0}!".Fmt(request.Name);
-                var drawFont = new Font("Times", request.FontSize.GetValueOrDefault(40));
+                var drawString = $"Hello, {request.Name}!";
+                var drawFont = new Font(request.FontFamily ?? "Times", request.FontSize.GetValueOrDefault(40));
                 var drawBrush = new SolidBrush(fgColor);
                 var drawRect = new RectangleF(0, 0, width, height);
 

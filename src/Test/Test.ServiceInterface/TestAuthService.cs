@@ -1,4 +1,5 @@
 ﻿using ServiceStack;
+using Test.ServiceModel;
 
 namespace Test.ServiceInterface
 {
@@ -15,9 +16,16 @@ namespace Test.ServiceInterface
         public ResponseStatus ResponseStatus { get; set; }
     }
 
+    public class HelloAuth : IReturn<HelloResponse>
+    {
+        public string Name { get; set; }
+    }
+
     [Authenticate]
     public class TestAuthService : Service
     {
+        public object Any(HelloAuth request) => new HelloResponse { Result = $"Hello, {request.Name}!"};
+
         public object Any(TestAuth request)
         {
             var session = base.SessionAs<CustomUserSession>();
