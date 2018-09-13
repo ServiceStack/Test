@@ -80,8 +80,17 @@ namespace Test.ServiceInterface
         public Dictionary<int, string> IntStringMap { get; set; }
     }
 
+    [Route("/custom")]
+    [Route("/custom/{Data}")]
+    public class CustomRoute : IReturn<CustomRoute>
+    {
+        public string Data { get; set; }
+    }
+
     public class TestServices : Service
     {
+        public object Any(CustomRoute request) => request;
+
         public void Any(TestVoidResponse response)
         {
         }

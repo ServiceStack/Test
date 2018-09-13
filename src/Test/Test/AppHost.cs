@@ -55,6 +55,8 @@ namespace Test
                 Return204NoContentForEmptyResponse = true,
             });
 
+            Plugins.Add(new SoapFormat());
+
             container.Register<IRedisClientsManager>(c =>
                 new RedisManagerPool("localhost:6379"));
             container.Register(c => c.Resolve<IRedisClientsManager>().GetCacheClient());

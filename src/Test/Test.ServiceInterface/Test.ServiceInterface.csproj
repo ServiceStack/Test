@@ -63,6 +63,7 @@
     <Compile Include="TestAuthService.cs" />
     <Compile Include="TestDataService.cs" />
     <Compile Include="TestServices.cs" />
+    <Compile Include="SoapTestServices.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\ServiceStack.OrmLite\src\ServiceStack.OrmLite\ServiceStack.OrmLite.csproj">
