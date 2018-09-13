@@ -65,9 +65,10 @@ namespace Mvc
                     new DigestAuthProvider(AppSettings),        //Sign-in with HTTP Digest Auth
                     new TwitterAuthProvider(AppSettings),       //Sign-in with Twitter
                     new FacebookAuthProvider(AppSettings),      //Sign-in with Facebook
+                    new GoogleAuthProvider(AppSettings),        //Sign-in with Google OAuth2 Provider
                     new YahooOpenIdOAuthProvider(AppSettings),  //Sign-in with Yahoo OpenId
                     new OpenIdOAuthProvider(AppSettings),       //Sign-in with Custom OpenId
-                    new GoogleOAuth2Provider(AppSettings),      //Sign-in with Google OAuth2 Provider
+                    new GoogleOAuth2Provider(AppSettings),      //Sign-in with Google OAuth2 Provider (with DotNetOpenAuth)
                     new LinkedInOAuth2Provider(AppSettings),    //Sign-in with LinkedIn OAuth2 Provider
                     new GithubAuthProvider(AppSettings),        //Sign-in with GitHub OAuth Provider
                     new YandexAuthProvider(AppSettings),        //Sign-in with Yandex OAuth Provider        
