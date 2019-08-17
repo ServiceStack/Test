@@ -21,7 +21,7 @@ using Test.ServiceModel;
 
 namespace Test
 {
-    public class AppHost : AppHostBase
+    public partial class AppHost : AppHostBase
     {
         /// <summary>
         /// Default constructor.
@@ -38,6 +38,8 @@ namespace Test
             LogManager.LogFactory = new StringBuilderLogFactory(debugEnabled:true);
         }
 
+        static partial void PreConfigure(Container container);
+
         /// <summary>
         /// Application specific configuration
         /// This method should initialize any IoC resources utilized by your web service classes.
@@ -45,14 +47,15 @@ namespace Test
         /// <param name="container"></param>
         public override void Configure(Container container)
         {
-            this.GlobalHtmlErrorHttpHandler = new RazorHandler("/error");
+            PreConfigure(container);
 
-            JsConfig.EmitCamelCaseNames = true;
+            this.GlobalHtmlErrorHttpHandler = new RazorHandler("/error");
 
             SetConfig(new HostConfig
             {
                 DebugMode = true,
                 Return204NoContentForEmptyResponse = true,
+                UseCamelCase = true,
             });
 
             Plugins.Add(new SoapFormat());

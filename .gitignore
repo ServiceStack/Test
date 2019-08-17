@@ -3,6 +3,7 @@
 [Oo]bj/
 .idea/
 .vs/
+*.secrets.cs
 
 # mstest test results
 TestResults
