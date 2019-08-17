@@ -38,7 +38,9 @@ namespace Test
             LogManager.LogFactory = new StringBuilderLogFactory(debugEnabled:true);
         }
 
-        static partial void PreConfigure(Container container);
+        public static void Load() => PreInit();
+        static partial void PreInit();
+        
 
         /// <summary>
         /// Application specific configuration
@@ -47,8 +49,6 @@ namespace Test
         /// <param name="container"></param>
         public override void Configure(Container container)
         {
-            PreConfigure(container);
-
             this.GlobalHtmlErrorHttpHandler = new RazorHandler("/error");
 
             SetConfig(new HostConfig
