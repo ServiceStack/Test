@@ -10,6 +10,8 @@ namespace Test.ServiceInterface
     public class DummyTypes
     {
         public List<HelloResponse> HelloResponses { get; set; }
+        public List<ListResult> ListResult { get; set; }
+        public ArrayResult[] ArrayResult { get; set; }
     }
 
     public class DummyTypesService : Service
