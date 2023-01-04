@@ -19,6 +19,6 @@
     "ss-utils": "^0.2.1",
     "ts-loader": "^2.3.7",
     "typescript": "^2.8.1",
-    "webpack": "^2.7.0"
+    "webpack": "^5.75.0"
   }
 }
